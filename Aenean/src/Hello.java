@@ -8,6 +8,10 @@ public class Hello {
 		System.out.println(testA.getClass());
 		printTest(testA);
 		printTest(testB);
+		
+		PowerSwitch powerSwitch = PowerSwitch.ON;
+		powerSwitch = PowerSwitch.OFF;
+		System.out.println(powerSwitch);
 	}
 	
 	public static void printTest(Test test) {
