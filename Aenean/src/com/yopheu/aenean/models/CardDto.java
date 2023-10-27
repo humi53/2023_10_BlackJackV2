@@ -1,6 +1,6 @@
 package com.yopheu.aenean.models;
 
-public class Card {
+public class CardDto {
 	private String suit;
-	private String sNum;
+	private String denomination;
 }
