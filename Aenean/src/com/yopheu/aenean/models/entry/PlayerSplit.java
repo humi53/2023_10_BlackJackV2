@@ -1,5 +1,5 @@
 package com.yopheu.aenean.models.entry;
 
-public class PlayMachine {
+public class PlayerSplit {
 
 }

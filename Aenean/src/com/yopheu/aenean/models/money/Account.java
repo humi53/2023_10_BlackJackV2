@@ -1,28 +1,27 @@
 package com.yopheu.aenean.models.money;
 
-public class Money {
+public class Account {
 
 	protected int money = 0;	
 	
-	public boolean add(int money) {
+	public boolean addMoney(int money) {
 		this.money += money;
 		return true;
 	}
 
-	public boolean sub(int money) {
-		int temp = this.money - money;
-		if(temp < 0) return false;
+	public boolean subMoney(int money) {
+		if(this.money < money) return false;
 		this.money -= money;
 		return true;		
 	}
 
-	public boolean totalSet(int money) {
+	public boolean setMoney(int money) {
 		if(money <= 0) return false;
 		this.money = money;
 		return true;
 	}
 
-	public int get() {
+	public int getMoney() {
 		return this.money;
 	}
 
