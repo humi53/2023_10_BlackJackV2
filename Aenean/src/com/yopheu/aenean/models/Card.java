@@ -1,24 +1,25 @@
 package com.yopheu.aenean.models;
 
 public class Card {
-	private String suit;
-	private String denomination;
+	private int suit;
+	private int denomination;
 	
-	public Card(String suit, String denomination) {
+	public Card(int suit, int denomination) {
 		this.suit = suit;
 		this.denomination = denomination;
 	}
+	public Card() {	}
 	
-	public String getSuit() {
+	public int getSuit() {
 		return suit;
 	}
-	public void setSuit(String suit) {
+	public void setSuit(int suit) {
 		this.suit = suit;
 	}
-	public String getDenomination() {
+	public int getDenomination() {
 		return denomination;
 	}
-	public void setDenomination(String denomination) {
+	public void setDenomination(int denomination) {
 		this.denomination = denomination;
 	}
 	

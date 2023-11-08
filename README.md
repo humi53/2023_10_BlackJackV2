@@ -90,12 +90,17 @@
 
 ### CardDto의 구조.
   + `suit`문양 과 `denomination` 숫자로 이루어짐
-  + `suit` 
-    * ◆ Diamond
-    * ♣ Clover
-    * ♥ Heart
-    * ♠ Spade
+  + `suit`
+    * ♠ Spade 
+    * ◆ Diamond 
+    * ♥ Heart 
+    * ♣ Clover 
   + `denomination`
-    * 숫자 2 ~ 9
+    *  숫자 2 ~ 9
     * 10(T), J, Q, K = 10 : 여기서는 10을 T로 표현해본다.
     * A = 1 or 11
+- 프로그램 상에서는 문자열이나 특수문자로 가지고 있을필요에 대해서 모르겠다.
+- 숫자형태의 데이터를 가지고 있다. 필요할때만 이미지나 문자열을 이용해 출력하면 될것이라 생각.
+- 그래서 `Card` 객체의 `suit`와 `denomination`는 숫자를 가지고 잇으면 될것 같다.
+    * 리스트in데이터 : A(1), T(10), J(11), Q(12), K(13)
+    * SPADE(0, "♠"), DIAMOND(1, "♦"), HART(2, "♥"), CLOVER(3, "♣");
