@@ -47,7 +47,11 @@ public class CardDeckModuleImplV1 implements CardDeckModule{
 		if(cardDeck.isEmpty()) {
 			addCardDeck();
 		}
-		System.out.println(cardDeck.size());
 		return cardDeck;
+	}
+	
+	@Override
+	public void setCardDeck(Queue<Card> cardDeck){
+		this.cardDeck = cardDeck;
 	}
 }

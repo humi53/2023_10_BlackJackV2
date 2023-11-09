@@ -10,9 +10,17 @@ import com.yopheu.aenean.models.money.UQAccount;
 
 public class Player implements Entry {
 	protected Account account = null;	// 전체 잔고
-	protected int betMoney = 0;		// 배팅에 걸린돈
+	// 배팅은 3가지이다.
+	// 기본배팅값 (다음배팅때 재활용) (보이진 않음?)
+	// 실제걸린배팅값 (더블 등등) (보이는 값)
+	// 사용된돈 (현 게임에서 사용된돈.)
+	
 	// 20, 40, 100, 200, 400, 500, 1000
-	protected int currentUseMoney = 0;	// 현재 사용된 돈 (이기게 되면 +됨)
+	protected int basicBet = 0;		// 기본 배팅값
+	protected int nowBet = 0;	// 실제 배팅
+	protected int useMoney = 0;	// 현재 사용된 돈 (이기게 되면 +됨)
+	protected int accrueMoney = 0;	// 전체 실익 누적
+	
 	protected boolean insurance = false;	// 딜러오픈카드가 A일경우
 	protected PlayingState playingState = PlayingState.WAITING;
 	protected PlayResultState playResultState = PlayResultState.PENDING;
@@ -25,14 +33,14 @@ public class Player implements Entry {
 	public void init() {
 		setMoney(50000);	// 기본잔고
 		arrCard = new ArrayList<>();
-		name = "Player1";
 	}
 	
 	/**
 	 * Player 공통 account 설정
 	 */
-	public Player() { 
+	public Player(String name) { 
 		this.account = UQAccount.getInstance();
+		this.name = name;
 		init();
 	}
 
@@ -40,12 +48,16 @@ public class Player implements Entry {
 	 * Player 독립 account 설정
 	 * @param account : 계정별 account // split할때도 쓰임.
 	 */
-	public Player(Account account) {
+	public Player(Account account, String name) {
 		this.account = account;
+		this.name = name;
 		init();
 	}
 	
-	
+	public String getName() {
+		return name;
+	}
+
 	// account의 금액 설정.
 	@Override
 	public boolean setMoney(int money) {
@@ -62,22 +74,35 @@ public class Player implements Entry {
 		return account.getMoney();
 	}
 	// 베팅하기 
-	public boolean bettingMoney(int betMoney) {
+	public boolean betting(int betMoney) {
 		if(!account.subMoney(betMoney)) {
 			return false;
 		} else {
-			this.currentUseMoney = -betMoney;
-			this.betMoney = betMoney;	
+			this.useMoney = -betMoney;
+			this.basicBet += betMoney;	
+			this.nowBet += betMoney;
 			return true;
 		}
 	}
+	public void cancelBet() {
+		account.addMoney(nowBet);
+		this.nowBet = 0;
+		this.basicBet = 0;
+		this.useMoney = 0;
+	}
+	public int getBasicBet() {
+		return basicBet;
+	}
+	public int getNowBet() {
+		return nowBet;
+	}
 	// 더블배팅하기
 	public boolean doubleDown() {
-		if(!account.subMoney(betMoney)) {
+		if(!account.subMoney(basicBet)) {
 			return false;
 		} else {
-			this.currentUseMoney += -this.betMoney;
-			this.betMoney += this.betMoney;
+			this.useMoney += -this.basicBet;
+			this.nowBet += this.basicBet;
 			return true;
 		}
 	}

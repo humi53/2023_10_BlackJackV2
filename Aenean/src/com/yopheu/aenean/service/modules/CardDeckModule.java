@@ -7,4 +7,5 @@ import com.yopheu.aenean.models.Card;
 public interface CardDeckModule {
 	Queue<Card> getCardDeck();
 	void addCardDeck();
+	void setCardDeck(Queue<Card> cardDeck);
 }

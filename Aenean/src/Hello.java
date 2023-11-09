@@ -28,8 +28,6 @@ public class Hello {
 //		CardDeckModule cardDeckModuleImplV1 = new CardDeckModuleImplV1();
 //		cardDeckModuleImplV1.getCardDeck();
 		
-		GameService gameService = new GameServiceImplV1();
-		
 		
 		
 	}
