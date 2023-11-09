@@ -17,6 +17,7 @@ public class CardDeckModuleImplV1 implements CardDeckModule{
 		cardDeck = new LinkedList<Card>();
 	}
 	
+	// 카드를 생성한다.
 	// 섞인 카드덱을 추가한다.
 	@Override
 	public void addCardDeck() {
@@ -30,7 +31,6 @@ public class CardDeckModuleImplV1 implements CardDeckModule{
 		arrCardDeck.clear();
 	}
 	
-	// 카드 리스트에 카드를 생성한다
 	// 카드를 섞는다
 	private List<Card> mixCard(List<Card> arrCard){
 		for(int i = 0; i < 10000; i++) {

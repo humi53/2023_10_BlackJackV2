@@ -1,6 +1,8 @@
 import com.yopheu.aenean.config.PlayResultState;
 import com.yopheu.aenean.models.CardDenomination;
 import com.yopheu.aenean.models.CardSuit;
+import com.yopheu.aenean.service.GameService;
+import com.yopheu.aenean.service.impl.GameServiceImplV1;
 import com.yopheu.aenean.service.modules.CardDeckModule;
 import com.yopheu.aenean.service.modules.impl.CardDeckModuleImplV1;
 
@@ -23,11 +25,13 @@ public class Hello {
 		
 		CardDenomination cardDenomination = CardDenomination.fromValue(13);
 		System.out.println(cardDenomination);
-		CardDeckModule cardDeckModuleImplV1 = new CardDeckModuleImplV1();
-		cardDeckModuleImplV1.addCardDeck();
-		cardDeckModuleImplV1.addCardDeck();
-		cardDeckModuleImplV1.addCardDeck();
-		cardDeckModuleImplV1.getCardDeck();
+//		CardDeckModule cardDeckModuleImplV1 = new CardDeckModuleImplV1();
+//		cardDeckModuleImplV1.getCardDeck();
+		
+		GameService gameService = new GameServiceImplV1();
+		
+		
+		
 	}
 	
 	public static void printTest(Test test) {

@@ -20,10 +20,12 @@ public class Player implements Entry {
 	protected PlayerSplit splitClone = null;
 	
 	protected ArrayList<Card> arrCard = null;
+	protected String name;
 	@Override
 	public void init() {
 		setMoney(50000);	// 기본잔고
 		arrCard = new ArrayList<>();
+		name = "Player1";
 	}
 	
 	/**

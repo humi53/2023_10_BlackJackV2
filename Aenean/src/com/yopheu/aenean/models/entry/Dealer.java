@@ -16,7 +16,7 @@ public class Dealer implements Entry{
 		arrCard = new ArrayList<>();
 	}
 	
-	// 딜러는 돈관련 설정이 없음.
+	// 딜러는 돈관련 설정이 없음. (아직)
 	@Override
 	public boolean setMoney(int money) {
 		// Dealer는 돈설정 없음
