@@ -16,4 +16,7 @@ public enum CardDenomination {
 		}
 		return null;
 	}
+//	public static int fromEnum(CardDenomination cardDenomination) {
+//		return 
+//	}
 }

@@ -27,7 +27,7 @@ public class Hello {
 		System.out.println(cardDenomination);
 //		CardDeckModule cardDeckModuleImplV1 = new CardDeckModuleImplV1();
 //		cardDeckModuleImplV1.getCardDeck();
-		
+		System.out.println(cardDenomination.fromValue(0));
 		
 		
 	}
