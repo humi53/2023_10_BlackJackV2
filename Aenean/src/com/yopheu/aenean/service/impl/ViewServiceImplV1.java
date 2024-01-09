@@ -8,11 +8,13 @@ import java.util.regex.Pattern;
 
 import com.yopheu.aenean.config.BetConfig;
 import com.yopheu.aenean.config.GameState;
+import com.yopheu.aenean.config.StrColor;
 import com.yopheu.aenean.models.Card;
 import com.yopheu.aenean.models.entry.Dealer;
 import com.yopheu.aenean.models.entry.Player;
 import com.yopheu.aenean.service.ViewService;
 import com.yopheu.aenean.service.modules.CommDataModule;
+import com.yopheu.aenean.view.ViewStar;
 
 public class ViewServiceImplV1 implements ViewService{
 	
@@ -116,6 +118,9 @@ public class ViewServiceImplV1 implements ViewService{
 	}
 	
 	public void sample() {
+		ViewStar text = new ViewStar("text한글", StrColor.YELLOW);
+		System.out.println(text.getColorStr());
+		System.out.println(text.space());
 		System.out.println("┌-────────--────────--────────--────────--────────--────────--────────--────────--────────-┐");
 		System.out.println("│                              Dealer: 100,000                                             │");
 		System.out.println("└-────────--────────--────────--────────--────────--────────--────────--────────--────────-┘");
