@@ -25,7 +25,7 @@ public class CommDataModuleImplV1 implements CommDataModule {
 		gameState = GameState.READY;
 		currentPlayer = null;
 	}
-	
+
 	@Override
 	public Queue<Card> getCardDeck() {
 		return cardDeck;

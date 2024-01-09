@@ -10,6 +10,11 @@ public class Dealer implements Entry{
 	protected PlayingState playingState = PlayingState.WAITING;
 	protected PlayResultState playResultState = PlayResultState.PENDING;
 	protected ArrayList<Card> arrCard = null;
+	
+	public Dealer() {
+		init();
+	}
+	
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub

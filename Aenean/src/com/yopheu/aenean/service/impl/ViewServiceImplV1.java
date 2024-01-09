@@ -1,8 +1,12 @@
 package com.yopheu.aenean.service.impl;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.yopheu.aenean.config.BetConfig;
 import com.yopheu.aenean.config.GameState;
 import com.yopheu.aenean.models.Card;
 import com.yopheu.aenean.models.entry.Dealer;
@@ -56,7 +60,13 @@ public class ViewServiceImplV1 implements ViewService{
 			singleMessage = "게임이 준비중인 것이에요.";
 			break;
 		case WILLBET:
-			singleMessage = "배팅 [20(1),40(2),100(3),200(4),400(5),500(6),1000(7)] 확인(Enter) 취소(0)";
+			singleMessage = "배팅 [ ";
+			for(int i=1; i<BetConfig.BET.length; i++) {
+				singleMessage += BetConfig.BET[i];
+				singleMessage += "(" + i + ") "; 
+			}
+			singleMessage += "] 확인(Enter) 취소(0)";
+			
 			singleMessage = String.format("%s\n%s[%s] : ", singleMessage, 
 					cData.getCurrentPlayer().getName(),
 					cData.getCurrentPlayer().getNowBet());
@@ -68,8 +78,80 @@ public class ViewServiceImplV1 implements ViewService{
 	}
 	
 	private void printView() {
-		selectMessage();
-		System.out.print(singleMessage);
+//		selectMessage();
+//		System.out.print(singleMessage);
+	}
+	private int boardTWidht = 9;
+	private String TWidht = "──────────";
+	private String boardTop = "";
+	private String boardBottom = "";
+	
+	private int totalSpace = boardTWidht * 10;
+	private int dealerChipLeftSpace = 29;  
+	
+	private String dealerChipPan = "";
+	private int sampleDealerChip = 10000;
+	
+	private String[] dealerCardPan = new String[] {"1","2","3"};
+	private String[] sampleDealerCard = new String[] {"┌──┐","│♠J│","└──┘"};
+	private String[] sampleDeck = new String[] {"┌──┐","│  │","└──┘"};
+	private void prepareBaord() {
+		boardTop = String.format("┌%s┐", TWidht.repeat(boardTWidht));	// 게임보드 상단
+		
+		// 딜러 점수판.
+		dealerChipPan = setLineStr(dealerChipLeftSpace, String.format("\u001B[33m Dealer:\u001B[0m %,d", sampleDealerChip), totalSpace);
+		// 딜러 카드.
+		
+		
+		boardBottom = String.format("└%s┘", TWidht.repeat(boardTWidht));	// 게임보드 하단
+	}
+	private String[] setCardPan1(String[] CardPan, int leftSpace, String[] data, String[] deck, int totalSpace, int rightSpace) {
+		return null;
+	}
+	private String setLineStr(int leftSpace, String data, int totalSpace) {
+		String result = "";
+		result = String.format("│%s%s%s│", " ".repeat(leftSpace), data, 
+				" ".repeat((totalSpace-leftSpace) - strSpace(data)));
+		return result;
+	}
+	
+	public void sample() {
+		System.out.println("┌-────────--────────--────────--────────--────────--────────--────────--────────--────────-┐");
+		System.out.println("│                              Dealer: 100,000                                             │");
+		System.out.println("└-────────--────────--────────--────────--────────--────────--────────--────────--────────-┘");
+		prepareBaord();
+		System.out.println(boardTop);
+		System.out.println(dealerChipPan);
+		for(String str : dealerCardPan) {
+			System.out.println(str);			
+		}
+		
+		System.out.println("│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                             ┌──┐   │");
+		System.out.println("│                            │♠J││♠J││♠J││♠J││♠J│                                             │BJ│   │");
+		System.out.println("│                            └──┘└──┘└──┘└──┘└──┘                                             └──┘   │");
+		System.out.println("│                                                                                                    │");
+		System.out.println("│                                                                                                    │");
+		System.out.println("│                                                                                                    │");
+		System.out.println("│                                                                                                    │");
+		System.out.println("│                                                                                                    │");
+		System.out.println("│                                                                                                    │");
+		System.out.println("│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                                    │");
+		System.out.println("│                            │♠J││♠J││♠J││♠J││♠J│                                                    │");
+		System.out.println("│                            └──┘└──┘└──┘└──┘└──┘                                                    │");
+		System.out.println("│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                                    │");
+		System.out.println("│                    Bet: 40 │♠J││♠J││♠J││♠J││♠J│                                                    │");
+		System.out.println("│                            └──┘└──┘└──┘└──┘└──┘                                                    │");
+		System.out.println("│                             Player: 100,000                                                        │");
+		System.out.println(boardBottom);
+		System.out.println(boardTop.length());
+		System.out.println(boardBottom.length());
+//		System.out.println("┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐");
+//		System.out.println("│♠J││♠J││♠J││♠J││♠J││♠J││딜││러│");
+//		System.out.println("└──┘└──┘└──┘└──┘└──┘└──┘└──┘└──┘");
+		
+//		System.out.println("시스템 메시지");
+//		System.out.println("{오류 메시지}");
+//		System.out.println("입력 : ");
 	}
 	
 	@Override
@@ -80,4 +162,25 @@ public class ViewServiceImplV1 implements ViewService{
 	public void repaint() {
 		
 	}
+	private int strSpace(String str) {
+		int count = str.length();
+		for (char c : str.toCharArray()) {
+            if (Character.UnicodeScript.of(c) == Character.UnicodeScript.HANGUL) {
+                count++;
+            }
+        }
+		return count;
+	}
+	private int countKoreanCharacters(String str) {
+		int count = 0;
+
+        for (char c : str.toCharArray()) {
+            if (Character.UnicodeScript.of(c) == Character.UnicodeScript.HANGUL) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+	
 }
