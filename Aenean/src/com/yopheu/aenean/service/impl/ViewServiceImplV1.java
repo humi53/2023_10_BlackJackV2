@@ -119,40 +119,95 @@ public class ViewServiceImplV1 implements ViewService{
 		simpleBoard[16] = 	"│                             Player: 100,000                                              │";
 		simpleBoard[17] = 	"└-────────--────────--────────--────────--────────--────────--────────--────────--────────-┘";
 		simpleBoard[0] = simpleFrame.getRoof();		// 게임보드 상단
-		simpleBoard[1] = getDealerPan();
-		simpleBoard[2] = getDealerCardPan();
+		simpleBoard[1] = getDealerPan();		// 딜러 이름
+		int position1 = 2;						// 딜러 카드
+		for(String line : getDealerCardPan()) {
+			simpleBoard[position1++] = line;
+		}
+		// 공백
+		simpleBoard[5] = getVoidPan();
+		simpleBoard[6] = getVoidPan();
+		simpleBoard[7] = getVoidPan();
+		simpleBoard[8] = getVoidPan();
+		simpleBoard[9] = getVoidPan();
+
+		// 조건부 카드
+		simpleBoard[10] = getVoidPan();
+		simpleBoard[11] = getVoidPan();
+		simpleBoard[12] = getVoidPan();
+		
 		simpleBoard[17] = simpleFrame.getFloor();	// 게임보드 하단
 	}
 	
-	private String getDealerCardPan() {
-		int remaining = totalSpace;
-		int leftSpace = 28;
+	private String getVoidPan() {
 		String result = "";
+		result += String.format("%s%s%s", simpleFrame.getEdge(), " ".repeat(totalSpace), simpleFrame.getEdge());
+		return result;
+	}
+	
+	private String[] getDealerCardPan() {
+		String [] result = new String[] {"","",""};
+		int space0 = 28;		// 공백0
+		int space2 = 7;		// 공백2 (우측정렬)
+		int space1 = totalSpace - space0 - space2;	// 공백1
+		int remaining1 = space1;
+		int remaining2 = space2;
+		ViewCard[] arrViewCard = new ViewCard[]{
+				new ViewCard("♠A", StrColor.GREEN),
+				new ViewCard("♦A", StrColor.RED),
+				new ViewCard("♥A", StrColor.RED),
+				new ViewCard("♣A", StrColor.GREEN),
+				new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW)
+		};// 카드뭉치 [배열]
+		ViewCard backViewCard = new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW); // 카드 뒷면
+
+		// 앞 빈공간 작성.
+		for(int i = 0; i < result.length; i++) {
+			result[i] += simpleFrame.getEdge();
+			result[i] += " ".repeat(space0);
+		}
 		
-		result = simpleFrame.getEdge();
-		remaining -= leftSpace;
-		result += " ".repeat(leftSpace);
+		// 카드 작성.
+		for(ViewCard element : arrViewCard) {
+			String[] viewCard = element.getCard();
+			remaining1 -= element.space();
+			for(int i = 0; i < viewCard.length; i++) {
+				result[i] += viewCard[i];
+			}
+		}
+		for(int i = 0; i < result.length; i++) {
+			result[i] += " ".repeat(remaining1);
+		}
 		
-		result += " ".repeat(remaining);
-		result += simpleFrame.getEdge();
+		// 덱 뒷면 작성.
+		String[] backView = backViewCard.getCard();
+		remaining2 -= backViewCard.space();
+		for(int i = 0; i < backView.length; i++) {
+			result[i] += backView[i];
+		}
+		for(int i = 0; i < result.length; i++) {
+			result[i] += " ".repeat(remaining2);
+			result[i] += simpleFrame.getEdge();
+		}
+		
 		return result;
 	}
 	
 	private String getDealerPan() {
-		int remaining = totalSpace;
-		int leftSpace = 28;
+		int space0 = 28;
+		int space1 = totalSpace - space0;
+		int remaining1 = space1;
 		ViewStr dealerName = new ViewStr("Dealer", StrColor.YELLOW);
 		String result = "";
 		
 		result = simpleFrame.getEdge();
-		remaining -= leftSpace;
-		result += " ".repeat(leftSpace);
+		result += " ".repeat(space0);
 		
-		remaining -= dealerName.space();
+		remaining1 -= dealerName.space();
 		result += dealerName.getColorStr();
-		
-		result += " ".repeat(remaining);
+		result += " ".repeat(remaining1);
 		result += simpleFrame.getEdge();
+		
 		return result;
 	}
 	
