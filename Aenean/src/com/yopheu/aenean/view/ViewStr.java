@@ -2,13 +2,13 @@ package com.yopheu.aenean.view;
 
 import com.yopheu.aenean.config.StrColor;
 
-public class ViewStar {
+public class ViewStr {
 	private String data;
 	private StrColor color = null;
-	public ViewStar(String str) {
+	public ViewStr(String str) {
 		this.data = str;
 	}
-	public ViewStar(String str, StrColor color) {
+	public ViewStr(String str, StrColor color) {
 		this.data =str;
 		this.color = color;
 	}

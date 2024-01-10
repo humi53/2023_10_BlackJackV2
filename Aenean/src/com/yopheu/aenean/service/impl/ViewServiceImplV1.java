@@ -14,8 +14,9 @@ import com.yopheu.aenean.models.entry.Dealer;
 import com.yopheu.aenean.models.entry.Player;
 import com.yopheu.aenean.service.ViewService;
 import com.yopheu.aenean.service.modules.CommDataModule;
+import com.yopheu.aenean.view.ViewBoardFrame;
 import com.yopheu.aenean.view.ViewCard;
-import com.yopheu.aenean.view.ViewStar;
+import com.yopheu.aenean.view.ViewStr;
 
 public class ViewServiceImplV1 implements ViewService{
 	
@@ -85,10 +86,6 @@ public class ViewServiceImplV1 implements ViewService{
 //		System.out.print(singleMessage);
 	}
 	private int boardTWidht = 9;
-	private String TWidht = "-────────-";
-	private String boardTop = "";
-	private String boardBottom = "";
-	
 	private int totalSpace = boardTWidht * 10;
 	private int dealerChipLeftSpace = 29;  
 	
@@ -99,53 +96,71 @@ public class ViewServiceImplV1 implements ViewService{
 	private String[] sampleDealerCard = new String[] {"┌──┐","│♠J│","└──┘"};
 	private String[] sampleDeck = new String[] {"┌──┐","│  │","└──┘"};
 	
-	private String[] simpleBoard = new String[10];
+	private String[] simpleBoard = new String[18];
+	private ViewBoardFrame simpleFrame = new ViewBoardFrame(boardTWidht, StrColor.GREEN);
 	private void prepareBaord() {
-		boardTop = String.format("┌%s┐", TWidht.repeat(boardTWidht));	// 게임보드 상단
-		simpleBoard[0] = "┌-────────--────────--────────--────────--────────--────────--────────--────────--────────-┐";
-		simpleBoard[1] = "│                              Dealer: 100,000                                             │";
-		simpleBoard[0] = "│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                   ┌──┐   │";
-		simpleBoard[0] = "│                            │♠J││♠J││♠J││♠J││♠J│                                   │BJ│   │";
-		simpleBoard[0] = "│                            └──┘└──┘└──┘└──┘└──┘                                   └──┘   │";
-		simpleBoard[0] = "│                                                                                          │";
-		simpleBoard[0] = "│                                                                                          │";
-		simpleBoard[0] = "│                                                                                          │";
-		simpleBoard[0] = "│                                                                                          │";
-		simpleBoard[0] = "│                                                                                          │";
-		simpleBoard[0] = "│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                          │";
-		simpleBoard[0] = "│                            │♠J││♠J││♠J││♠J││♠J│                                          │";
-		simpleBoard[0] = "│                            └──┘└──┘└──┘└──┘└──┘                                          │";
-		simpleBoard[0] = "│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                          │";
-		simpleBoard[0] = "│                    Bet: 40 │♠J││♠J││♠J││♠J││♠J│                                          │";
-		simpleBoard[0] = "│                            └──┘└──┘└──┘└──┘└──┘                                          │";
-		simpleBoard[0] = "│                             Player: 100,000                                              │";
-		simpleBoard[9] = "└-────────--────────--────────--────────--────────--────────--────────--────────--────────-┘";
-		boardBottom = String.format("└%s┘", TWidht.repeat(boardTWidht));	// 게임보드 하단
+		
+		simpleBoard[0] = 	"┌-────────--────────--────────--────────--────────--────────--────────--────────--────────-┐";
+		simpleBoard[1] = 	"│                              Dealer: 100,000                                             │";
+		simpleBoard[2] = 	"│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                   ┌──┐   │";
+		simpleBoard[3] = 	"│                            │♠J││♠J││♠J││♠J││♠J│                                   │BJ│   │";
+		simpleBoard[4] = 	"│                            └──┘└──┘└──┘└──┘└──┘                                   └──┘   │";
+		simpleBoard[5] = 	"│                                                                                          │";
+		simpleBoard[6] = 	"│                                                                                          │";
+		simpleBoard[7] = 	"│                                                                                          │";
+		simpleBoard[8] = 	"│                                                                                          │";
+		simpleBoard[9] = 	"│                                                                                          │";
+		simpleBoard[10] = 	"│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                          │";
+		simpleBoard[11] = 	"│                            │♠J││♠J││♠J││♠J││♠J│                                          │";
+		simpleBoard[12] = 	"│                            └──┘└──┘└──┘└──┘└──┘                                          │";
+		simpleBoard[13] = 	"│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                          │";
+		simpleBoard[14] = 	"│                    Bet: 40 │♠J││♠J││♠J││♠J││♠J│                                          │";
+		simpleBoard[15] = 	"│                            └──┘└──┘└──┘└──┘└──┘                                          │";
+		simpleBoard[16] = 	"│                             Player: 100,000                                              │";
+		simpleBoard[17] = 	"└-────────--────────--────────--────────--────────--────────--────────--────────--────────-┘";
+		simpleBoard[0] = simpleFrame.getRoof();		// 게임보드 상단
+		simpleBoard[1] = getDealerPan();
+		simpleBoard[2] = getDealerCardPan();
+		simpleBoard[17] = simpleFrame.getFloor();	// 게임보드 하단
+	}
+	
+	private String getDealerCardPan() {
+		int remaining = totalSpace;
+		int leftSpace = 28;
+		String result = "";
+		
+		result = simpleFrame.getEdge();
+		remaining -= leftSpace;
+		result += " ".repeat(leftSpace);
+		
+		result += " ".repeat(remaining);
+		result += simpleFrame.getEdge();
+		return result;
+	}
+	
+	private String getDealerPan() {
+		int remaining = totalSpace;
+		int leftSpace = 28;
+		ViewStr dealerName = new ViewStr("Dealer", StrColor.YELLOW);
+		String result = "";
+		
+		result = simpleFrame.getEdge();
+		remaining -= leftSpace;
+		result += " ".repeat(leftSpace);
+		
+		remaining -= dealerName.space();
+		result += dealerName.getColorStr();
+		
+		result += " ".repeat(remaining);
+		result += simpleFrame.getEdge();
+		return result;
 	}
 	
 	public void sample() {
-		ViewStar text = new ViewStar("text한글", StrColor.YELLOW);
-		System.out.println(text.getColorStr());
-		System.out.println(text.space());
-		ViewCard card = new ViewCard("♠J", StrColor.GREEN, StrColor.YELLOW);
-		for(String str : card.getCard()) {
+		prepareBaord();
+		for(String str : simpleBoard) {
 			System.out.println(str);
 		}
-		System.out.println(card.space());
-		System.out.println("┌-────────--────────--────────--────────--────────--────────--────────--────────--────────-┐");
-		System.out.println("│                              Dealer: 100,000                                             │");
-		System.out.println("└-────────--────────--────────--────────--────────--────────--────────--────────--────────-┘");
-		prepareBaord();
-		System.out.println(boardTop);
-		System.out.println(dealerChipPan);
-		for(String str : dealerCardPan) {
-			System.out.println(str);			
-		}
-		
-		
-		System.out.println(boardBottom);
-		System.out.println(boardTop.length());
-		System.out.println(boardBottom.length());
 //		System.out.println("┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐");
 //		System.out.println("│♠J││♠J││♠J││♠J││♠J││♠J││딜││러│");
 //		System.out.println("└──┘└──┘└──┘└──┘└──┘└──┘└──┘└──┘");
