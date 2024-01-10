@@ -14,6 +14,7 @@ import com.yopheu.aenean.models.entry.Dealer;
 import com.yopheu.aenean.models.entry.Player;
 import com.yopheu.aenean.service.ViewService;
 import com.yopheu.aenean.service.modules.CommDataModule;
+import com.yopheu.aenean.view.ViewCard;
 import com.yopheu.aenean.view.ViewStar;
 
 public class ViewServiceImplV1 implements ViewService{
@@ -84,7 +85,7 @@ public class ViewServiceImplV1 implements ViewService{
 //		System.out.print(singleMessage);
 	}
 	private int boardTWidht = 9;
-	private String TWidht = "──────────";
+	private String TWidht = "-────────-";
 	private String boardTop = "";
 	private String boardBottom = "";
 	
@@ -97,30 +98,40 @@ public class ViewServiceImplV1 implements ViewService{
 	private String[] dealerCardPan = new String[] {"1","2","3"};
 	private String[] sampleDealerCard = new String[] {"┌──┐","│♠J│","└──┘"};
 	private String[] sampleDeck = new String[] {"┌──┐","│  │","└──┘"};
+	
+	private String[] simpleBoard = new String[10];
 	private void prepareBaord() {
 		boardTop = String.format("┌%s┐", TWidht.repeat(boardTWidht));	// 게임보드 상단
-		
-		// 딜러 점수판.
-		dealerChipPan = setLineStr(dealerChipLeftSpace, String.format("\u001B[33m Dealer:\u001B[0m %,d", sampleDealerChip), totalSpace);
-		// 딜러 카드.
-		
-		
+		simpleBoard[0] = "┌-────────--────────--────────--────────--────────--────────--────────--────────--────────-┐";
+		simpleBoard[1] = "│                              Dealer: 100,000                                             │";
+		simpleBoard[0] = "│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                   ┌──┐   │";
+		simpleBoard[0] = "│                            │♠J││♠J││♠J││♠J││♠J│                                   │BJ│   │";
+		simpleBoard[0] = "│                            └──┘└──┘└──┘└──┘└──┘                                   └──┘   │";
+		simpleBoard[0] = "│                                                                                          │";
+		simpleBoard[0] = "│                                                                                          │";
+		simpleBoard[0] = "│                                                                                          │";
+		simpleBoard[0] = "│                                                                                          │";
+		simpleBoard[0] = "│                                                                                          │";
+		simpleBoard[0] = "│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                          │";
+		simpleBoard[0] = "│                            │♠J││♠J││♠J││♠J││♠J│                                          │";
+		simpleBoard[0] = "│                            └──┘└──┘└──┘└──┘└──┘                                          │";
+		simpleBoard[0] = "│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                          │";
+		simpleBoard[0] = "│                    Bet: 40 │♠J││♠J││♠J││♠J││♠J│                                          │";
+		simpleBoard[0] = "│                            └──┘└──┘└──┘└──┘└──┘                                          │";
+		simpleBoard[0] = "│                             Player: 100,000                                              │";
+		simpleBoard[9] = "└-────────--────────--────────--────────--────────--────────--────────--────────--────────-┘";
 		boardBottom = String.format("└%s┘", TWidht.repeat(boardTWidht));	// 게임보드 하단
-	}
-	private String[] setCardPan1(String[] CardPan, int leftSpace, String[] data, String[] deck, int totalSpace, int rightSpace) {
-		return null;
-	}
-	private String setLineStr(int leftSpace, String data, int totalSpace) {
-		String result = "";
-		result = String.format("│%s%s%s│", " ".repeat(leftSpace), data, 
-				" ".repeat((totalSpace-leftSpace) - strSpace(data)));
-		return result;
 	}
 	
 	public void sample() {
 		ViewStar text = new ViewStar("text한글", StrColor.YELLOW);
 		System.out.println(text.getColorStr());
 		System.out.println(text.space());
+		ViewCard card = new ViewCard("♠J", StrColor.GREEN, StrColor.YELLOW);
+		for(String str : card.getCard()) {
+			System.out.println(str);
+		}
+		System.out.println(card.space());
 		System.out.println("┌-────────--────────--────────--────────--────────--────────--────────--────────--────────-┐");
 		System.out.println("│                              Dealer: 100,000                                             │");
 		System.out.println("└-────────--────────--────────--────────--────────--────────--────────--────────--────────-┘");
@@ -131,22 +142,7 @@ public class ViewServiceImplV1 implements ViewService{
 			System.out.println(str);			
 		}
 		
-		System.out.println("│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                             ┌──┐   │");
-		System.out.println("│                            │♠J││♠J││♠J││♠J││♠J│                                             │BJ│   │");
-		System.out.println("│                            └──┘└──┘└──┘└──┘└──┘                                             └──┘   │");
-		System.out.println("│                                                                                                    │");
-		System.out.println("│                                                                                                    │");
-		System.out.println("│                                                                                                    │");
-		System.out.println("│                                                                                                    │");
-		System.out.println("│                                                                                                    │");
-		System.out.println("│                                                                                                    │");
-		System.out.println("│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                                    │");
-		System.out.println("│                            │♠J││♠J││♠J││♠J││♠J│                                                    │");
-		System.out.println("│                            └──┘└──┘└──┘└──┘└──┘                                                    │");
-		System.out.println("│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                                    │");
-		System.out.println("│                    Bet: 40 │♠J││♠J││♠J││♠J││♠J│                                                    │");
-		System.out.println("│                            └──┘└──┘└──┘└──┘└──┘                                                    │");
-		System.out.println("│                             Player: 100,000                                                        │");
+		
 		System.out.println(boardBottom);
 		System.out.println(boardTop.length());
 		System.out.println(boardBottom.length());
@@ -167,25 +163,5 @@ public class ViewServiceImplV1 implements ViewService{
 	public void repaint() {
 		
 	}
-	private int strSpace(String str) {
-		int count = str.length();
-		for (char c : str.toCharArray()) {
-            if (Character.UnicodeScript.of(c) == Character.UnicodeScript.HANGUL) {
-                count++;
-            }
-        }
-		return count;
-	}
-	private int countKoreanCharacters(String str) {
-		int count = 0;
-
-        for (char c : str.toCharArray()) {
-            if (Character.UnicodeScript.of(c) == Character.UnicodeScript.HANGUL) {
-                count++;
-            }
-        }
-
-        return count;
-    }
 	
 }
