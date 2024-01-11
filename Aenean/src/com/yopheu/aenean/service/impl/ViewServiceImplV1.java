@@ -91,25 +91,7 @@ public class ViewServiceImplV1 implements ViewService{
 	private String[] simpleBoard = new String[18];
 	private ViewBoardFrame simpleFrame = new ViewBoardFrame(boardTWidht, StrColor.GREEN);
 	private void prepareBaord() {
-		
-		simpleBoard[0] = 	"┌-────────--────────--────────--────────--────────--────────--────────--────────--────────-┐";
-		simpleBoard[1] = 	"│                              Dealer: 100,000                                             │";
-		simpleBoard[2] = 	"│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                   ┌──┐   │";
-		simpleBoard[3] = 	"│                            │♠J││♠J││♠J││♠J││♠J│                                   │BJ│   │";
-		simpleBoard[4] = 	"│                            └──┘└──┘└──┘└──┘└──┘                                   └──┘   │";
-		simpleBoard[5] = 	"│                                                                                          │";
-		simpleBoard[6] = 	"│                                                                                          │";
-		simpleBoard[7] = 	"│                                                                                          │";
-		simpleBoard[8] = 	"│                                                                                          │";
-		simpleBoard[9] = 	"│                                                                                          │";
-		simpleBoard[10] = 	"│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                          │";
-		simpleBoard[11] = 	"│                       {40} │♠J││♠J││♠J││♠J││♠J│                                          │";
-		simpleBoard[12] = 	"│                            └──┘└──┘└──┘└──┘└──┘                                          │";
-		simpleBoard[13] = 	"│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                          │";
-		simpleBoard[14] = 	"│                       {40} │♠J││♠J││♠J││♠J││♠J│                                          │";
-		simpleBoard[15] = 	"│                            └──┘└──┘└──┘└──┘└──┘                                          │";
-		simpleBoard[16] = 	"│                             Player: 100,000                                              │";
-		simpleBoard[17] = 	"└-────────--────────--────────--────────--────────--────────--────────--────────--────────-┘";
+		for(int i = 0; i < simpleBoard.length; i++) simpleBoard[i] = getVoidPan();
 		int boardLine = 0;
 		simpleBoard[boardLine++] = simpleFrame.getRoof();		// 게임보드 상단
 		simpleBoard[boardLine++] = getDealerPan();			// 딜러 이름					
@@ -327,7 +309,6 @@ public class ViewServiceImplV1 implements ViewService{
 		
 		return result;
 	}
-	
 	private String getDealerPan() {
 		int space0 = 28;
 		int space1 = totalSpace - space0;
