@@ -1,6 +1,7 @@
 package com.yopheu.aenean.service.impl;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.regex.Matcher;
@@ -16,6 +17,7 @@ import com.yopheu.aenean.service.ViewService;
 import com.yopheu.aenean.service.modules.CommDataModule;
 import com.yopheu.aenean.view.ViewBoardFrame;
 import com.yopheu.aenean.view.ViewCard;
+import com.yopheu.aenean.view.ViewDatas;
 import com.yopheu.aenean.view.ViewStr;
 
 public class ViewServiceImplV1 implements ViewService{
@@ -90,8 +92,16 @@ public class ViewServiceImplV1 implements ViewService{
 	
 	private String[] simpleBoard = new String[18];
 	private ViewBoardFrame simpleFrame = new ViewBoardFrame(boardTWidht, StrColor.GREEN);
+	
+	private ViewDatas viewData = new ViewDatas(); 
 	private void prepareBaord() {
 		for(int i = 0; i < simpleBoard.length; i++) simpleBoard[i] = getVoidPan();
+		// 딜러 이름
+		// 딜러 카드	// 덱뒷면
+		// 플레이어 이름	// 플레이어 점수
+		// 플레이어 카드		// 베팅1
+		// 플레이어 스플릿 카드	// 베팅2		
+		
 		int boardLine = 0;
 		simpleBoard[boardLine++] = simpleFrame.getRoof();		// 게임보드 상단
 		simpleBoard[boardLine++] = getDealerPan();			// 딜러 이름					
@@ -133,18 +143,8 @@ public class ViewServiceImplV1 implements ViewService{
 		int remaining0 = space0;
 		int space1 = totalSpace - space0;
 		int remaining1 = space1;
-		ViewCard[] arrViewCard = new ViewCard[]{
-				new ViewCard("♠A", StrColor.GREEN),
-				new ViewCard("♦A", StrColor.RED),
-				new ViewCard("♥A", StrColor.RED),
-				new ViewCard("♣A", StrColor.GREEN),
-				new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW)
-		};
-		ViewStr[] arrViewBet = new ViewStr[] {
-				new ViewStr("{", StrColor.YELLOW),
-				new ViewStr("30"),
-				new ViewStr("} ", StrColor.YELLOW),
-		};
+		ArrayList<ViewCard> arrViewCard = viewData.getPlayerSplitCard();
+		ArrayList<ViewStr> arrViewBet = viewData.getPlayerSplitBet();
 		String[] betStr = new String [] {"","",""};
 		
 		// 배팅 패널 준비
@@ -187,18 +187,9 @@ public class ViewServiceImplV1 implements ViewService{
 		int space1 = totalSpace - space0;
 		int remaining0 = space0;
 		int remaining1 = space1;
-		ViewCard[] arrViewCard = new ViewCard[]{
-				new ViewCard("♠A", StrColor.GREEN),
-				new ViewCard("♦A", StrColor.RED),
-				new ViewCard("♥A", StrColor.RED),
-				new ViewCard("♣A", StrColor.GREEN),
-				new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW)};
+		ArrayList<ViewCard> arrViewCard = viewData.getPlayerCard();
 
-		ViewStr[] arrViewBet = new ViewStr[] {
-				new ViewStr("{", StrColor.YELLOW),
-				new ViewStr("30"),
-				new ViewStr("} ", StrColor.YELLOW),
-		};
+		ArrayList<ViewStr> arrViewBet = viewData.getPlayerBet();
 		String[] betStr = new String [] {"","",""};
 		
 		// 배팅 패널 준비
@@ -240,10 +231,7 @@ public class ViewServiceImplV1 implements ViewService{
 		int space1 = totalSpace - space0;
 		int remaining1 = space1;
 		String result = "";
-		ViewStr[] playerStr = new ViewStr[] {
-			new ViewStr("Player: ", StrColor.YELLOW),
-			new ViewStr("100,000")
-		};
+		ArrayList<ViewStr> playerStr = viewData.getPlayerStr();
 		
 		// 왼쪽 공백.
 		result = simpleFrame.getEdge();
@@ -269,14 +257,8 @@ public class ViewServiceImplV1 implements ViewService{
 		int space1 = totalSpace - space0 - space2;	// 공백1
 		int remaining1 = space1;
 		int remaining2 = space2;
-		ViewCard[] arrViewCard = new ViewCard[]{
-				new ViewCard("♠A", StrColor.GREEN),
-				new ViewCard("♦A", StrColor.RED),
-				new ViewCard("♥A", StrColor.RED),
-				new ViewCard("♣A", StrColor.GREEN),
-				new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW)
-		};// 카드뭉치 [배열]
-		ViewCard backViewCard = new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW); // 카드 뒷면
+		ArrayList<ViewCard> arrViewCard = viewData.getDealerCard();// 카드뭉치
+		ViewCard backViewCard = viewData.getCardBack(); // 카드 뒷면
 
 		// 앞 빈공간 작성.
 		for(int i = 0; i < result.length; i++) {
@@ -313,14 +295,20 @@ public class ViewServiceImplV1 implements ViewService{
 		int space0 = 28;
 		int space1 = totalSpace - space0;
 		int remaining1 = space1;
-		ViewStr dealerName = new ViewStr("Dealer", StrColor.YELLOW);
+		ArrayList<ViewStr> dealerStr = viewData.getDealerStr();
 		String result = "";
 		
+		// 왼쪽 공백.
 		result = simpleFrame.getEdge();
 		result += " ".repeat(space0);
 		
-		remaining1 -= dealerName.space();
-		result += dealerName.getColorStr();
+		// 딜러 이름.
+		for(ViewStr viewStr : dealerStr) {
+			remaining1 -= viewStr.space();
+			result += viewStr.getColorStr();
+		}
+		
+		// 남은 공백.
 		result += " ".repeat(remaining1);
 		result += simpleFrame.getEdge();
 		
