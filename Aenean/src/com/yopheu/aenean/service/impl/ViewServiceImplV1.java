@@ -87,14 +87,6 @@ public class ViewServiceImplV1 implements ViewService{
 	}
 	private int boardTWidht = 9;
 	private int totalSpace = boardTWidht * 10;
-	private int dealerChipLeftSpace = 29;  
-	
-	private String dealerChipPan = "";
-	private int sampleDealerChip = 10000;
-	
-	private String[] dealerCardPan = new String[] {"1","2","3"};
-	private String[] sampleDealerCard = new String[] {"┌──┐","│♠J│","└──┘"};
-	private String[] sampleDeck = new String[] {"┌──┐","│  │","└──┘"};
 	
 	private String[] simpleBoard = new String[18];
 	private ViewBoardFrame simpleFrame = new ViewBoardFrame(boardTWidht, StrColor.GREEN);
@@ -111,37 +103,180 @@ public class ViewServiceImplV1 implements ViewService{
 		simpleBoard[8] = 	"│                                                                                          │";
 		simpleBoard[9] = 	"│                                                                                          │";
 		simpleBoard[10] = 	"│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                          │";
-		simpleBoard[11] = 	"│                            │♠J││♠J││♠J││♠J││♠J│                                          │";
+		simpleBoard[11] = 	"│                       {40} │♠J││♠J││♠J││♠J││♠J│                                          │";
 		simpleBoard[12] = 	"│                            └──┘└──┘└──┘└──┘└──┘                                          │";
 		simpleBoard[13] = 	"│                            ┌──┐┌──┐┌──┐┌──┐┌──┐                                          │";
-		simpleBoard[14] = 	"│                    Bet: 40 │♠J││♠J││♠J││♠J││♠J│                                          │";
+		simpleBoard[14] = 	"│                       {40} │♠J││♠J││♠J││♠J││♠J│                                          │";
 		simpleBoard[15] = 	"│                            └──┘└──┘└──┘└──┘└──┘                                          │";
 		simpleBoard[16] = 	"│                             Player: 100,000                                              │";
 		simpleBoard[17] = 	"└-────────--────────--────────--────────--────────--────────--────────--────────--────────-┘";
-		simpleBoard[0] = simpleFrame.getRoof();		// 게임보드 상단
-		simpleBoard[1] = getDealerPan();		// 딜러 이름
-		int position1 = 2;						// 딜러 카드
-		for(String line : getDealerCardPan()) {
-			simpleBoard[position1++] = line;
+		int boardLine = 0;
+		simpleBoard[boardLine++] = simpleFrame.getRoof();		// 게임보드 상단
+		simpleBoard[boardLine++] = getDealerPan();			// 딜러 이름					
+		for(String line : getDealerCardPan()) {				// 딜러 카드
+			simpleBoard[boardLine++] = line;
 		}
 		// 공백
-		simpleBoard[5] = getVoidPan();
-		simpleBoard[6] = getVoidPan();
-		simpleBoard[7] = getVoidPan();
-		simpleBoard[8] = getVoidPan();
-		simpleBoard[9] = getVoidPan();
+		simpleBoard[boardLine++] = getVoidPan();
+		simpleBoard[boardLine++] = getVoidPan();
+		simpleBoard[boardLine++] = getVoidPan();
+		simpleBoard[boardLine++] = getVoidPan();
+		simpleBoard[boardLine++] = getVoidPan();
 
-		// 조건부 카드
-		simpleBoard[10] = getVoidPan();
-		simpleBoard[11] = getVoidPan();
-		simpleBoard[12] = getVoidPan();
+		// 플레이어 스플릿 카드
+		for(String line : getPlayerSplitCardPan()) {
+			simpleBoard[boardLine++] = line;
+		}
 		
-		simpleBoard[17] = simpleFrame.getFloor();	// 게임보드 하단
+		// 플레이어 카드
+		for(String line : getPlayerCardPan()) {
+			simpleBoard[boardLine++] = line;
+		}
+		
+		simpleBoard[boardLine++] = getPlayerPan();			// 플레이어 이름	
+		
+		boardLine = simpleBoard.length - 1;
+		simpleBoard[boardLine] = simpleFrame.getFloor();	// 게임보드 하단
 	}
 	
 	private String getVoidPan() {
 		String result = "";
 		result += String.format("%s%s%s", simpleFrame.getEdge(), " ".repeat(totalSpace), simpleFrame.getEdge());
+		return result;
+	}
+	
+	private String[] getPlayerSplitCardPan() {
+		String[] result = new String[] {"","",""};
+		int space0 = 28;
+		int remaining0 = space0;
+		int space1 = totalSpace - space0;
+		int remaining1 = space1;
+		ViewCard[] arrViewCard = new ViewCard[]{
+				new ViewCard("♠A", StrColor.GREEN),
+				new ViewCard("♦A", StrColor.RED),
+				new ViewCard("♥A", StrColor.RED),
+				new ViewCard("♣A", StrColor.GREEN),
+				new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW)
+		};
+		ViewStr[] arrViewBet = new ViewStr[] {
+				new ViewStr("{", StrColor.YELLOW),
+				new ViewStr("30"),
+				new ViewStr("} ", StrColor.YELLOW),
+		};
+		String[] betStr = new String [] {"","",""};
+		
+		// 배팅 패널 준비
+		for(ViewStr str : arrViewBet) {
+			int strSpace = str.space();
+			remaining0 -= strSpace;
+			betStr[0] += " ".repeat(strSpace);
+			betStr[1] += str.getColorStr();
+			betStr[2] += " ".repeat(strSpace);
+		}
+		
+		// 앞 빈공간 작성.
+		for(int i = 0; i < result.length; i++) {
+			result[i] += simpleFrame.getEdge();
+			result[i] += " ".repeat(remaining0);
+		}
+		
+		// 배팅 패널 작성.
+		for(int i = 0; i < betStr.length; i++) {
+			result[i] += betStr[i];
+		}
+		
+		// 카드 작성.
+		for(ViewCard element : arrViewCard) {
+			String[] viewCard = element.getCard();
+			remaining1 -= element.space();
+			for(int i = 0; i < viewCard.length; i++) {
+				result[i] += viewCard[i];
+			}
+		}
+		for(int i = 0; i < result.length; i++) {
+			result[i] += " ".repeat(remaining1);
+			result[i] += simpleFrame.getEdge();
+		}
+		return result;
+	}
+	private String[] getPlayerCardPan() {
+		String[] result = new String[] {"","",""};
+		int space0 = 28;
+		int space1 = totalSpace - space0;
+		int remaining0 = space0;
+		int remaining1 = space1;
+		ViewCard[] arrViewCard = new ViewCard[]{
+				new ViewCard("♠A", StrColor.GREEN),
+				new ViewCard("♦A", StrColor.RED),
+				new ViewCard("♥A", StrColor.RED),
+				new ViewCard("♣A", StrColor.GREEN),
+				new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW)};
+
+		ViewStr[] arrViewBet = new ViewStr[] {
+				new ViewStr("{", StrColor.YELLOW),
+				new ViewStr("30"),
+				new ViewStr("} ", StrColor.YELLOW),
+		};
+		String[] betStr = new String [] {"","",""};
+		
+		// 배팅 패널 준비
+		for(ViewStr str : arrViewBet) {
+			int strSpace = str.space();
+			remaining0 -= strSpace;
+			betStr[0] += " ".repeat(strSpace);
+			betStr[1] += str.getColorStr();
+			betStr[2] += " ".repeat(strSpace);
+		}
+		
+		// 앞 빈공간 작성.
+		for(int i = 0; i < result.length; i++) {
+			result[i] += simpleFrame.getEdge();
+			result[i] += " ".repeat(remaining0);
+		}
+		
+		// 배팅 패널 작성.
+		for(int i = 0; i < betStr.length; i++) {
+			result[i] += betStr[i];
+		}
+		
+		// 카드 작성.
+		for(ViewCard element : arrViewCard) {
+			String[] viewCard = element.getCard();
+			remaining1 -= element.space();
+			for(int i = 0; i < viewCard.length; i++) {
+				result[i] += viewCard[i];
+			}
+		}
+		for(int i = 0; i < result.length; i++) {
+			result[i] += " ".repeat(remaining1);
+			result[i] += simpleFrame.getEdge();
+		}
+		return result;
+	}
+	private String getPlayerPan() {
+		int space0 = 28;
+		int space1 = totalSpace - space0;
+		int remaining1 = space1;
+		String result = "";
+		ViewStr[] playerStr = new ViewStr[] {
+			new ViewStr("Player: ", StrColor.YELLOW),
+			new ViewStr("100,000")
+		};
+		
+		// 왼쪽 공백.
+		result = simpleFrame.getEdge();
+		result += " ".repeat(space0);
+		
+		// 플레이어이름 : 잔고.
+		for(ViewStr viewStr : playerStr) {
+			remaining1 -= viewStr.space();
+			result += viewStr.getColorStr();
+		}
+		
+		// 남은 공백.
+		result += " ".repeat(remaining1);
+		result += simpleFrame.getEdge();
+		
 		return result;
 	}
 	
@@ -216,9 +351,6 @@ public class ViewServiceImplV1 implements ViewService{
 		for(String str : simpleBoard) {
 			System.out.println(str);
 		}
-//		System.out.println("┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐");
-//		System.out.println("│♠J││♠J││♠J││♠J││♠J││♠J││딜││러│");
-//		System.out.println("└──┘└──┘└──┘└──┘└──┘└──┘└──┘└──┘");
 		
 //		System.out.println("시스템 메시지");
 //		System.out.println("{오류 메시지}");
