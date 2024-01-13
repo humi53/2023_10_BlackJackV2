@@ -1,6 +1,7 @@
 package com.yopheu.aenean.exec;
 
 import com.yopheu.aenean.game.AeneanGame;
+import com.yopheu.aenean.models.Suit;
 import com.yopheu.aenean.service.ViewService;
 import com.yopheu.aenean.service.impl.ViewServiceImplV1;
 import com.yopheu.aenean.service.modules.impl.CommDataModuleImplV1;
@@ -13,5 +14,7 @@ public class ExecV1 {
 		ViewServiceImplV1 viewService = new ViewServiceImplV1(new CommDataModuleImplV1());
 		System.out.println("출력 테스트");
 		viewService.sample();
+		
+		
 	}
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.yopheu.aenean.config.StrColor;
 import com.yopheu.aenean.models.Card;
+import com.yopheu.aenean.models.Denomination;
+import com.yopheu.aenean.models.Suit;
 
 public class ViewDatas {
 	// 모든 출력데이터는 set메소드에서 게임 데이터 기반으로 만들어져야됨. 
@@ -63,6 +65,8 @@ public class ViewDatas {
 	}
 	public void setPlayerSplitCard() {
 		playerSplitCard.clear();
+		playerSplitCard.add(convertCardToViewCard(new Card(Suit.S, Denomination.NA)));
+		playerSplitCard.add(convertCardToViewCard(new Card(Suit.D, Denomination.N10)));
 		playerSplitCard.add(new ViewCard("♠A", StrColor.GREEN));
 		playerSplitCard.add(new ViewCard("♦A", StrColor.RED));
 		playerSplitCard.add(new ViewCard("♥A", StrColor.RED));
@@ -104,6 +108,26 @@ public class ViewDatas {
 	
 	private ViewCard convertCardToViewCard(Card card) {
 		ViewCard result = null;
+		String denomi = "";
+		String cardStr = "";	// 문자열
+		StrColor strColor = null;	// 문자열 컬러.
+		
+		// 10 -> T 처리 : View의 card 스타일에 맞춰 변경.
+		if(card.getDenomination() == Denomination.N10) {
+			denomi = "T";
+		}else {
+			denomi = card.getDenomination().getStr();
+		}
+		
+		// Suit에 따라 컬러 설정.
+		if(card.getSuit() == Suit.S || card.getSuit() == Suit.C) {
+			strColor = StrColor.GREEN;
+		}else if(card.getSuit() == Suit.D || card.getSuit() == Suit.H) {
+			strColor = StrColor.RED;
+		}
+		
+		cardStr = String.format("%s%s", card.getSuit().getStr(), denomi);
+		result = new ViewCard(cardStr, strColor);
 		return result;
 	}
 	

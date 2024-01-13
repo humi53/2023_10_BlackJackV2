@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Queue;
 
 import com.yopheu.aenean.models.Card;
+import com.yopheu.aenean.models.Denomination;
+import com.yopheu.aenean.models.Suit;
 import com.yopheu.aenean.service.modules.CardDeckModule;
 
 public class CardDeckModuleImplV1 implements CardDeckModule{
@@ -21,9 +23,11 @@ public class CardDeckModuleImplV1 implements CardDeckModule{
 	// 섞인 카드덱을 추가한다.
 	@Override
 	public void addCardDeck() {
-		for(int suit=0; suit < 4; suit++) {
-			for(int denomination=1; denomination < 14; denomination++) {
-				arrCardDeck.add(new Card(suit, denomination));
+		Suit[] allSuit = Suit.values();
+		Denomination[] allDenomi = Denomination.values();
+		for(int i=0; i < allSuit.length; i++) {
+			for(int j=0; j < allDenomi.length; j++) {
+				arrCardDeck.add(new Card(allSuit[i], allDenomi[j]));
 			}
 		}
 		mixCard(arrCardDeck);

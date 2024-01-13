@@ -185,14 +185,14 @@ public class GameServiceImplV1 implements GameService {
 		
 	}
 	private void doCheckDealerAce() {
-		if(dealer.getCard().get(0).getDenomination() == 1) {
-			cData.setGameState(GameState.WILLINSURANCE);
-		}else if(dealer.getCard().get(0).getDenomination() >= 10) {
-			cData.setGameState(GameState.CHECKDEALERBLACKJACK);
-		}else {
-			playWattingQueue.addAll(players);
-			cData.setGameState(GameState.WILLPLAY);
-		}
+//		if(dealer.getCard().get(0).getDenomination() == 1) {
+//			cData.setGameState(GameState.WILLINSURANCE);
+//		}else if(dealer.getCard().get(0).getDenomination() >= 10) {
+//			cData.setGameState(GameState.CHECKDEALERBLACKJACK);
+//		}else {
+//			playWattingQueue.addAll(players);
+//			cData.setGameState(GameState.WILLPLAY);
+//		}
 	}
 	private void do2Dealing() {
 		for(int i=0; i < 2; i++) {
