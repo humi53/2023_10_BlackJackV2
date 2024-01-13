@@ -90,7 +90,7 @@ public class ViewServiceImplV1 implements ViewService{
 	private int boardTWidht = 9;
 	private int totalSpace = boardTWidht * 10;
 	
-	private String[] simpleBoard = new String[18];
+	private String[] simpleBoard = new String[15];
 	private ViewBoardFrame simpleFrame = new ViewBoardFrame(boardTWidht, StrColor.GREEN);
 	
 	private ViewDatas viewData = new ViewDatas(); 
@@ -109,9 +109,6 @@ public class ViewServiceImplV1 implements ViewService{
 			simpleBoard[boardLine++] = line;
 		}
 		// 공백
-		simpleBoard[boardLine++] = getVoidPan();
-		simpleBoard[boardLine++] = getVoidPan();
-		simpleBoard[boardLine++] = getVoidPan();
 		simpleBoard[boardLine++] = getVoidPan();
 		simpleBoard[boardLine++] = getVoidPan();
 

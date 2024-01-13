@@ -2,11 +2,11 @@ package com.yopheu.aenean.models;
 
 public enum Suit {
 	S("♠"),D("♦"),H("♥"),C("♣");
-	private final String str;
-	Suit(String str) {
-		this.str = str;
+	private final String symbol;
+	Suit(String symbol) {
+		this.symbol = symbol;
 	}
-	public String getStr() {
-		return this.str;
+	public String getSymbol() {
+		return this.symbol;
 	}
 }

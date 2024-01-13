@@ -108,16 +108,8 @@ public class ViewDatas {
 	
 	private ViewCard convertCardToViewCard(Card card) {
 		ViewCard result = null;
-		String denomi = "";
 		String cardStr = "";	// 문자열
 		StrColor strColor = null;	// 문자열 컬러.
-		
-		// 10 -> T 처리 : View의 card 스타일에 맞춰 변경.
-		if(card.getDenomination() == Denomination.N10) {
-			denomi = "T";
-		}else {
-			denomi = card.getDenomination().getStr();
-		}
 		
 		// Suit에 따라 컬러 설정.
 		if(card.getSuit() == Suit.S || card.getSuit() == Suit.C) {
@@ -126,7 +118,9 @@ public class ViewDatas {
 			strColor = StrColor.RED;
 		}
 		
-		cardStr = String.format("%s%s", card.getSuit().getStr(), denomi);
+		cardStr = String.format("%s%s", 
+				card.getSuit().getSymbol(), 
+				card.getDenomination().getSymbol());
 		result = new ViewCard(cardStr, strColor);
 		return result;
 	}
