@@ -3,6 +3,7 @@ package com.yopheu.aenean.view;
 import java.util.ArrayList;
 
 import com.yopheu.aenean.config.StrColor;
+import com.yopheu.aenean.models.Card;
 
 public class ViewDatas {
 	// 모든 출력데이터는 set메소드에서 게임 데이터 기반으로 만들어져야됨. 
@@ -99,6 +100,11 @@ public class ViewDatas {
 	}
 	public ArrayList<ViewStr> getPlayerSplitBet() {
 		return playerSplitBet;
+	}
+	
+	private ViewCard convertCardToViewCard(Card card) {
+		ViewCard result = null;
+		return result;
 	}
 	
 }
