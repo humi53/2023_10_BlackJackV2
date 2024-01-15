@@ -1,4 +1,4 @@
-package com.yopheu.aenean.models;
+package com.yopheu.aenean.models.card;
 
 public class Card {
 	private Suit suit;

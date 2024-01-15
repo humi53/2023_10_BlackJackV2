@@ -3,10 +3,10 @@ package com.yopheu.aenean.view;
 import java.util.ArrayList;
 
 import com.yopheu.aenean.config.StrColor;
-import com.yopheu.aenean.models.Card;
-import com.yopheu.aenean.models.Denomination;
-import com.yopheu.aenean.models.Suit;
-
+import com.yopheu.aenean.models.card.Card;
+import com.yopheu.aenean.models.card.Denomination;
+import com.yopheu.aenean.models.card.Suit;
+ 
 public class ViewDatas {
 	// 모든 출력데이터는 set메소드에서 게임 데이터 기반으로 만들어져야됨. 
 	private ViewCard cardBack = new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW); // 덱 뒷면

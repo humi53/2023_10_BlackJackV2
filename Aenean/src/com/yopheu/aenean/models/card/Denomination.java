@@ -1,4 +1,4 @@
-package com.yopheu.aenean.models;
+package com.yopheu.aenean.models.card;
 
 public enum Denomination {
 	NA("A", 11),	N2("2", 2),	N3("3", 3),	N4("4", 4),	N5("5", 5),

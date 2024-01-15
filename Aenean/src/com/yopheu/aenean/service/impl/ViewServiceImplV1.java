@@ -10,11 +10,8 @@ import java.util.regex.Pattern;
 import com.yopheu.aenean.config.BetConfig;
 import com.yopheu.aenean.config.GameState;
 import com.yopheu.aenean.config.StrColor;
-import com.yopheu.aenean.models.Card;
-import com.yopheu.aenean.models.entry.Dealer;
-import com.yopheu.aenean.models.entry.Player;
+import com.yopheu.aenean.models.card.Card;
 import com.yopheu.aenean.service.ViewService;
-import com.yopheu.aenean.service.modules.CommDataModule;
 import com.yopheu.aenean.view.ViewBoardFrame;
 import com.yopheu.aenean.view.ViewCard;
 import com.yopheu.aenean.view.ViewDatas;
@@ -22,24 +19,11 @@ import com.yopheu.aenean.view.ViewStr;
 
 public class ViewServiceImplV1 implements ViewService{
 	
-	private Queue<Card> cardDeck;		// 카드덱
-	private Dealer dealer;		// 딜러
-	private List<Player> players;	// 플레이어들
 	
-	private CommDataModule cData;
-	
-	private String singleMessage;
-	private Player currentPlayer;
-	
-	
-	public ViewServiceImplV1(CommDataModule commDataModule){
-		this.cData = commDataModule;
+	public ViewServiceImplV1(){
 	}
 	
 	private void linkData() {
-		dealer = cData.getDealer();
-		players = cData.getPlayers();
-		cardDeck = cData.getCardDeck();
 	}
 	
 	@Override
@@ -60,27 +44,6 @@ public class ViewServiceImplV1 implements ViewService{
 	
 	// 하단 메시지 선택기
 	private void selectMessage() {
-		singleMessage = "";
-		switch (cData.getGameState()) {
-		case READY:
-			singleMessage = "게임이 준비중인 것이에요.";
-			break;
-		case WILLBET:
-			singleMessage = "배팅 [ ";
-			for(int i=1; i<BetConfig.BET.length; i++) {
-				singleMessage += BetConfig.BET[i];
-				singleMessage += "(" + i + ") "; 
-			}
-			singleMessage += "] 확인(Enter) 취소(0)";
-			
-			singleMessage = String.format("%s\n%s[%s] : ", singleMessage, 
-					cData.getCurrentPlayer().getName(),
-					cData.getCurrentPlayer().getNowBet());
-			break;
-		
-		default:
-			break;
-		}
 	}
 	
 	private void printView() {
