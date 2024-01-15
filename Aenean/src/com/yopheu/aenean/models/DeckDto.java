@@ -1,6 +1,7 @@
 package com.yopheu.aenean.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.yopheu.aenean.models.card.Card;
 import com.yopheu.aenean.models.card.Denomination;
@@ -12,7 +13,6 @@ public class DeckDto {
 	public DeckDto() {
 		arrCard = new ArrayList<>();
 		arrCard.addAll(create1Deck());
-		printDeck();
 	}
 	
 	public int deckSize() {
@@ -20,7 +20,7 @@ public class DeckDto {
 	}
 	
 	public void addDeck() {
-		
+		arrCard.addAll(create1Deck());
 	}
 	
 	private ArrayList<Card> create1Deck(){
@@ -37,8 +37,9 @@ public class DeckDto {
 		
 		// 섞기
 		for(int i = 0; i < 10000; i++) {
-			Card temp1;
-			Card temp2;
+			int index1 = (int)(Math.random() * result.size());
+			int index2 = (int)(Math.random() * result.size());
+			Collections.swap(result, index1, index2);
 		}
 		
 		return result;
@@ -49,10 +50,4 @@ public class DeckDto {
 			System.out.println("" + arrCard.get(i).getSuit() + arrCard.get(i).getDenomination());
 		}
 	}
-	
-	// 덱 1뭉치 생성기.
-		// 만든다
-		// 섞는다
-		// 옮긴다
-	// 덱 추가.
 }
