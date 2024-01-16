@@ -11,12 +11,17 @@ public class PlayerDataDto {
 	int betChip; // 배팅 칩
 	int splitChip;	// 스플릿 칩.
 	int insuranceChip;  // 인슈어런스 칩
+	boolean isInsurance;
+	
+	int comState = 0; // 플레이어 상태.	//0.미정, 1.블랙잭, 2.버스트, 3.게임완료(점수계산완료)
+	int actionState = 0; // 액션 상태. //0.미정, 1.힛, 2.스탠드, 3.
 	public PlayerDataDto() {
 		this.arrCard = new ArrayList<>();
 		this.totalChip = 2000;
 		this.betChip = 0;
 		this.splitChip = 0;
 		this.insuranceChip = 0;
+		this.isInsurance = false;
 	}
 	
 	// 카드 추가

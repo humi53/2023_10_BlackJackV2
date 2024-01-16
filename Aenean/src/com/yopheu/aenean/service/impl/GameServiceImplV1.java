@@ -14,6 +14,9 @@ import com.yopheu.aenean.service.ViewService;
 
 public class GameServiceImplV1 implements GameService {
 
+	// DataWrapper
+	// 
+	
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
@@ -25,6 +28,16 @@ public class GameServiceImplV1 implements GameService {
 		// TODO Auto-generated method stub
 		
 	}
+	// 플레이어 배팅
+	// 2장드로우
+	
+	// 플레이어 bj 확인
+	// 딜러 A 확인
+		// 플레이어 인슈어런스 입력
+	// 딜러 10 확인
+	
+	// 딜러 bj 확인.
+	
 //	private Queue<Card> cardDeck;		// 카드덱
 //	private Dealer dealer;		// 딜러
 //	private List<Player> players;	// 플레이어들

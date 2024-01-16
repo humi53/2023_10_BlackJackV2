@@ -12,7 +12,5 @@ public class ExecV1 {
 		System.out.println("출력 테스트");
 		viewService.sample();
 		
-		DeckDto deckDto = new DeckDto();
-		
 	}
 }

@@ -7,7 +7,7 @@ import com.yopheu.aenean.models.card.Card;
 import com.yopheu.aenean.models.card.Denomination;
 import com.yopheu.aenean.models.card.Suit;
  
-public class ViewDatas {
+public class ViewDataWrapper {
 	// 모든 출력데이터는 set메소드에서 게임 데이터 기반으로 만들어져야됨. 
 	private ViewCard cardBack = new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW); // 덱 뒷면
 	private ArrayList<ViewStr> dealerStr = new ArrayList<>(); // 딜러 표시줄
@@ -18,7 +18,7 @@ public class ViewDatas {
 	private ArrayList<ViewCard> playerSplitCard = new ArrayList<>(); // 플레이어 스플릿 카드	
 	private ArrayList<ViewStr> playerSplitBet = new ArrayList<>(); // 스플릿 베팅
 	
-	public ViewDatas() {
+	public ViewDataWrapper() {
 		setDealerStr();
 		setDealerCard();
 		setPlayerStr();

@@ -14,7 +14,7 @@ import com.yopheu.aenean.models.card.Card;
 import com.yopheu.aenean.service.ViewService;
 import com.yopheu.aenean.view.ViewBoardFrame;
 import com.yopheu.aenean.view.ViewCard;
-import com.yopheu.aenean.view.ViewDatas;
+import com.yopheu.aenean.view.ViewDataWrapper;
 import com.yopheu.aenean.view.ViewStr;
 
 public class ViewServiceImplV1 implements ViewService{
@@ -56,7 +56,7 @@ public class ViewServiceImplV1 implements ViewService{
 	private String[] simpleBoard = new String[15];
 	private ViewBoardFrame simpleFrame = new ViewBoardFrame(boardTWidht, StrColor.GREEN);
 	
-	private ViewDatas viewData = new ViewDatas(); 
+	private ViewDataWrapper viewData = new ViewDataWrapper(); 
 	private void prepareBaord() {
 		for(int i = 0; i < simpleBoard.length; i++) simpleBoard[i] = getVoidPan();
 		// 딜러 이름
