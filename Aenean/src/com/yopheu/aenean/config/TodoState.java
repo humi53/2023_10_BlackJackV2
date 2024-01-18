@@ -1,0 +1,14 @@
+package com.yopheu.aenean.config;
+
+public enum TodoState {
+	BET,
+	CARD2DEALING,
+	PLAYERBJCHECK,
+	DEALERA10CHECK,
+	INSURANCE,
+	DEALERBJCHECK,
+	PROCDEALER,
+	PLAY,
+	ENDING,
+	RESET;
+}
