@@ -7,10 +7,25 @@ import com.yopheu.aenean.models.card.Denomination;
 
 public class DealerDataDto {
 	ArrayList<Card> arrCard; // 현재 카드
-	// 현재 칩.	
+	String name;	// 딜러이름
+	boolean isOpen;		// 뒷장 오픈여부.
 	
 	public DealerDataDto() {
 		this.arrCard = new ArrayList<>();
+		name = "Dealer";
+		isOpen = false;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setOpen(boolean open) {
+		isOpen = open;
+	}
+	
+	public boolean isOpen() {
+		return isOpen;
 	}
 	
 	// 카드 추가
@@ -19,6 +34,7 @@ public class DealerDataDto {
 	}
 	// 손패 리셋 (비우기)
 	public void resetCards() {
+		isOpen = false;
 		this.arrCard.clear();
 	}
 	

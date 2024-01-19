@@ -10,7 +10,7 @@ public class CommDataWrapper {
 	public CommDataWrapper() {
 		dealerDataDto = new DealerDataDto();
 		arrPlayerDataDto = new ArrayList<>();
-		arrPlayerDataDto.add(new PlayerDataDto("Player1"));
+		arrPlayerDataDto.add(new PlayerDataDto("Player0"));
 		deckDto = new DeckDto();
 	}
 	

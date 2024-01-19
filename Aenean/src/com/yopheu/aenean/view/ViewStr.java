@@ -5,6 +5,13 @@ import com.yopheu.aenean.config.StrColor;
 public class ViewStr {
 	private String data;
 	private StrColor color = null;
+	public ViewStr(int num) {
+		data = String.format("%,d", num);
+	}
+	public ViewStr(int num, StrColor color) {
+		data = String.format("%,d", num);
+		this.color = color;
+	}
 	public ViewStr(String str) {
 		this.data = str;
 	}

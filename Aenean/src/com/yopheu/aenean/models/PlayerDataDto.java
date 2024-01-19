@@ -19,11 +19,16 @@ public class PlayerDataDto {
 	public PlayerDataDto(String name) {
 		this.name = name;
 		this.arrCard = new ArrayList<>();
+		this.arrSplitCard = new ArrayList<>();
 		this.totalChip = 2000;
 		this.betChip = 0;
 		this.splitChip = 0;
 		this.insuranceChip = 0;
 		this.isInsurance = false;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	// 카드 추가
@@ -53,6 +58,27 @@ public class PlayerDataDto {
 		splitChip = betChip;
 	}
 	
+	// 스플릿 확인.
+	public boolean isSplit() {
+		boolean result = false;
+		if(splitChip > 0 && arrSplitCard.size() > 0) {
+			result = true;
+		}else {
+			result =false;
+		}
+		return result;
+	}
+	
+	// 스플릿 초기화
+	public void resetSplit() {
+		splitChip = 0;
+		arrSplitCard.clear();
+	}
+	
+	public int getSplitBet() {
+		return splitChip;
+	}
+	
 	// 인슈어런스 세팅  // 인슈어런스 걸기.
 	public void setInsurance() {
 		if(totalChip - betChip/2 < 0)
@@ -72,7 +98,7 @@ public class PlayerDataDto {
 	}
 	
 	// 스플릿 손패 가져오기 (뭐잇는지 확인)
-	public ArrayList<Card> getSplitCars(){
+	public ArrayList<Card> getSplitCards(){
 		return this.arrSplitCard;
 	}
 	
@@ -87,6 +113,9 @@ public class PlayerDataDto {
 	
 	public void subChip(int chip) {
 		this.totalChip -= chip;
+	}
+	public int getChip() {
+		return totalChip;
 	}
 	
 	// 배팅 걸기.

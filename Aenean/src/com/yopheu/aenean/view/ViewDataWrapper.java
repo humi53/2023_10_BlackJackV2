@@ -3,81 +3,129 @@ package com.yopheu.aenean.view;
 import java.util.ArrayList;
 
 import com.yopheu.aenean.config.StrColor;
+import com.yopheu.aenean.models.CommDataWrapper;
+import com.yopheu.aenean.models.DealerDataDto;
+import com.yopheu.aenean.models.PlayerDataDto;
 import com.yopheu.aenean.models.card.Card;
 import com.yopheu.aenean.models.card.Denomination;
 import com.yopheu.aenean.models.card.Suit;
  
 public class ViewDataWrapper {
-	// 모든 출력데이터는 set메소드에서 게임 데이터 기반으로 만들어져야됨. 
-	private ViewCard cardBack = new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW); // 덱 뒷면
-	private ArrayList<ViewStr> dealerStr = new ArrayList<>(); // 딜러 표시줄
-	private ArrayList<ViewCard> dealerCard = new ArrayList<>(); // 딜러 카드
-	private ArrayList<ViewStr> playerStr = new ArrayList<>(); // 플레이어 표시줄
-	private ArrayList<ViewCard> playerCard = new ArrayList<>(); // 플레이어 카드
-	private ArrayList<ViewStr> playerBet = new ArrayList<>(); // 베팅
-	private ArrayList<ViewCard> playerSplitCard = new ArrayList<>(); // 플레이어 스플릿 카드	
-	private ArrayList<ViewStr> playerSplitBet = new ArrayList<>(); // 스플릿 베팅
+	// 모든 출력데이터는 set메소드에서 게임 데이터 기반으로 만들어져야됨.
+	private CommDataWrapper cData;	// 게임 실 데이터.
+	private ViewCard cardBack; // 덱 뒷면
+	private ArrayList<ViewStr> dealerStr; // 딜러 표시줄
+	private ArrayList<ViewCard> dealerCard; // 딜러 카드
+	private ArrayList<ViewStr> player0Str; // 플레이어 표시줄
+	private ArrayList<ViewCard> player0Card; // 플레이어 카드
+	private ArrayList<ViewStr> player0Bet; // 베팅
+	private ArrayList<ViewCard> player0SplitCard; // 플레이어 스플릿 카드	
+	private ArrayList<ViewStr> player0SplitBet; // 스플릿 베팅
 	
-	public ViewDataWrapper() {
+	public ViewDataWrapper(CommDataWrapper commDataWrapper) {
+		cData = commDataWrapper;
+		cardBack = new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW); // 덱 뒷면(상단 우측)
+		dealerStr = new ArrayList<>(); // 딜러 표시줄
+		dealerCard = new ArrayList<>(); // 딜러 카드
+		player0Str = new ArrayList<>(); // 플레이어 표시줄
+		player0Card = new ArrayList<>(); // 플레이어 카드
+		player0Bet = new ArrayList<>(); // 베팅
+		player0SplitCard = new ArrayList<>(); // 플레이어 스플릿 카드	
+		player0SplitBet = new ArrayList<>(); // 스플릿 베팅
+		init();
+	}
+	
+	private void init() {
 		setDealerStr();
 		setDealerCard();
-		setPlayerStr();
-		setPlayerCard();
-		setPlayerBet();
-		setPlayerSplitCard();
-		setPlayerSplitBet();
+		if(cData.getPlayers().size() > 0 ) {
+			setPlayer0Str();
+			setPlayer0Card();
+			if(cData.getPlayers().get(0).getBetting() > 0) {
+				setPlayer0Bet();
+			}
+			if(cData.getPlayers().get(0).isSplit()) {
+				setPlayer0SplitCard();
+				setPlayer0SplitBet();
+			}
+		}else {
+			System.out.println("err: player0가 없습니다.");
+		}
 	}
 	
 	public void setDealerStr() {
-		// 샘플데이터
+		String dealerName = cData.getDealer().getName();
+		ViewStr str = new ViewStr(String.format("%s ", dealerName), StrColor.RED);
 		dealerStr.clear();
-		dealerStr.add(new ViewStr("Dealer ", StrColor.RED));
+		dealerStr.add(str);
 	} 
 	public void setDealerCard() {
+		boolean isOpen = cData.getDealer().isOpen();
+		ArrayList<Card> arrCard = cData.getDealer().getCards();
 		// sample
+//		arrCard.add(new Card(Suit.S, Denomination.NA));
+//		arrCard.add(new Card(Suit.D, Denomination.N10));
 		dealerCard.clear();
-		dealerCard.add(new ViewCard("♠A", StrColor.GREEN));
-		dealerCard.add(new ViewCard("♦A", StrColor.RED));
-		dealerCard.add(new ViewCard("♥A", StrColor.RED));
-		dealerCard.add(new ViewCard("♣A", StrColor.GREEN));
-		dealerCard.add(new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW));
+		if(!isOpen && arrCard.size() == 2) {
+			dealerCard.add(convertCardToViewCard(arrCard.get(0)));
+			dealerCard.add(cardBack);	// 뒷장
+		}else {
+			for(Card card : arrCard) {
+				dealerCard.add(convertCardToViewCard(card));
+			}
+		}
 	}
-	public void setPlayerStr() {
+	
+	public void setPlayer0Str() {
+		PlayerDataDto player0 = cData.getPlayers().get(0);	
+
+		String playerName = player0.getName();
+		int totalChip = player0.getChip();
+		ViewStr viewName = new ViewStr(String.format("%s: ", playerName), StrColor.YELLOW);
+		player0Str.clear();
+		player0Str.add(viewName);
+		player0Str.add(new ViewStr(totalChip));
+	}
+	
+	public void setPlayer0Card() {
+		PlayerDataDto player0 = cData.getPlayers().get(0);	
+		ArrayList<Card> arrCard = player0.getCards();
 		// sample
-		playerStr.clear();
-		playerStr.add(new ViewStr("Player: ", StrColor.YELLOW));
-		playerStr.add(new ViewStr("100,000"));
+//		arrCard.add(new Card(Suit.S, Denomination.NA));
+//		arrCard.add(new Card(Suit.D, Denomination.N10));
+		player0Card.clear();
+		for(Card card : arrCard) {
+			player0Card.add(convertCardToViewCard(card));
+		}
 	}
-	public void setPlayerCard() {
+	
+	public void setPlayer0Bet() {
+		PlayerDataDto player0 = cData.getPlayers().get(0);	
+		int bet = player0.getBetting();
+		player0Bet.clear();
+		player0Bet.add(new ViewStr("{", StrColor.YELLOW));
+		player0Bet.add(new ViewStr(bet));
+		player0Bet.add(new ViewStr("} ", StrColor.YELLOW));
+		
+	}
+	public void setPlayer0SplitCard() {
+		PlayerDataDto player0 = cData.getPlayers().get(0);	
+		ArrayList<Card> arrCard = player0.getSplitCards();
 		// sample
-		playerCard.clear();
-		playerCard.add(new ViewCard("♠A", StrColor.GREEN));
-		playerCard.add(new ViewCard("♦A", StrColor.RED));
-		playerCard.add(new ViewCard("♥A", StrColor.RED));
-		playerCard.add(new ViewCard("♣A", StrColor.GREEN));
-		playerCard.add(new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW));
+//		arrCard.add(new Card(Suit.D, Denomination.NA));
+		player0SplitCard.clear();
+		for(Card card : arrCard) {
+			player0SplitCard.add(convertCardToViewCard(card));
+		}
 	}
-	public void setPlayerBet() {
-		playerBet.clear();
-		playerBet.add(new ViewStr("{", StrColor.YELLOW));
-		playerBet.add(new ViewStr("30"));
-		playerBet.add(new ViewStr("} ", StrColor.YELLOW));
-	}
-	public void setPlayerSplitCard() {
-		playerSplitCard.clear();
-		playerSplitCard.add(convertCardToViewCard(new Card(Suit.S, Denomination.NA)));
-		playerSplitCard.add(convertCardToViewCard(new Card(Suit.D, Denomination.N10)));
-		playerSplitCard.add(new ViewCard("♠A", StrColor.GREEN));
-		playerSplitCard.add(new ViewCard("♦A", StrColor.RED));
-		playerSplitCard.add(new ViewCard("♥A", StrColor.RED));
-		playerSplitCard.add(new ViewCard("♣A", StrColor.GREEN));
-		playerSplitCard.add(new ViewCard("BJ", StrColor.YELLOW, StrColor.YELLOW));
-	}
-	public void setPlayerSplitBet() {
-		playerSplitBet.clear();
-		playerSplitBet.add(new ViewStr("{", StrColor.YELLOW));
-		playerSplitBet.add(new ViewStr("30"));
-		playerSplitBet.add(new ViewStr("} ", StrColor.YELLOW));
+	
+	public void setPlayer0SplitBet() {
+		PlayerDataDto player0 = cData.getPlayers().get(0);	
+		int bet = player0.getSplitBet();
+		player0SplitBet.clear();
+		player0SplitBet.add(new ViewStr("{", StrColor.YELLOW));
+		player0SplitBet.add(new ViewStr(bet));
+		player0SplitBet.add(new ViewStr("} ", StrColor.YELLOW));
 	}
 	
 
@@ -91,19 +139,19 @@ public class ViewDataWrapper {
 		return dealerCard;
 	}
 	public ArrayList<ViewStr> getPlayerStr(){
-		return playerStr;
+		return player0Str;
 	}
 	public ArrayList<ViewCard> getPlayerCard() {
-		return playerCard;
+		return player0Card;
 	}
 	public ArrayList<ViewStr> getPlayerBet() {
-		return playerBet;
+		return player0Bet;
 	}
 	public ArrayList<ViewCard> getPlayerSplitCard() {
-		return playerSplitCard;
+		return player0SplitCard;
 	}
 	public ArrayList<ViewStr> getPlayerSplitBet() {
-		return playerSplitBet;
+		return player0SplitBet;
 	}
 	
 	private ViewCard convertCardToViewCard(Card card) {

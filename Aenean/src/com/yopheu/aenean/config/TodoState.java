@@ -1,14 +1,15 @@
 package com.yopheu.aenean.config;
 
 public enum TodoState {
-	BET,
-	CARD2DEALING,
-	PLAYERBJCHECK,
-	DEALERA10CHECK,
-	INSURANCE,
-	DEALERBJCHECK,
+	PromBET,
+	ProcCARD2DEALING,
+	CheckDEALERA10,
+	PromINSURANCE,
+	CheckDEALERBJ,
+	
+	CheckPLAYERBJ,
 	PROCDEALER,
 	PLAY,
 	ENDING,
-	RESET;
+	ProcSET;
 }

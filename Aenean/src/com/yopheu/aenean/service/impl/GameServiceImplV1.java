@@ -20,24 +20,43 @@ import com.yopheu.aenean.service.ViewService;
 public class GameServiceImplV1 implements GameService {
 
 	CommDataWrapper cData; // DataWrapper
+	ViewService viewService;
 	TodoState state; // 
 	
 
 
-	public GameServiceImplV1(CommDataWrapper commDataWrapper) {
-		this.cData = commDataWrapper;
-		state = TodoState.RESET;
+	public GameServiceImplV1() {
+		cData = new CommDataWrapper();
+		viewService = new ViewServiceImplV1(cData);
+		state = TodoState.ProcSET;
 	}
 	
+	private void paint() {
+		viewService.paint();
+	}
 	
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
 		// 배팅 전처리.
-		// 배팅
+		// 배팅	
+		boolean isLoop = true;
+		while(isLoop) {
+			if(state == TodoState.ProcSET) {
+				processSet();
+			}else if(state == TodoState.PromBET) {
+				promptBet();
+			}			
+		}
+//		switch (state) {
+//		case ProcSET: 
+//			processSet();
+//		default:
+//			System.out.println("공용");
+//		}
 	}
 
-	private void resetSet() {
+	private void processSet() {
 		// TODO Auto-generated method stub
 		DeckDto deck = cData.getDeck();
 		DealerDataDto dealer = cData.getDealer();
@@ -47,10 +66,10 @@ public class GameServiceImplV1 implements GameService {
 		if(deck.deckSize() <= 20) {
 			deck.addDeck();
 		}
-		// 딜러
+		// 딜러 준비
 		dealer.resetCards(); // 카드비우기
 		
-		// 플레이어
+		// 플레이어 준비
 		for(PlayerDataDto player : players) {	
 			player.resetCards();	// 카드비우기
 			player.resetSplitCards();	// 스플릿카드비우기
@@ -58,50 +77,48 @@ public class GameServiceImplV1 implements GameService {
 			player.resetInsurance();	// 인슈어런스칩
 			player.resetSplitChip();	// 스플릿칩
 		}
-		// todo : betting
-		state = TodoState.BET;
-		
+		state = TodoState.PromBET;	// =>> 배팅으로
 	}
-	private void processBetting() {
+	private void promptBet() {
+		// 출력
+		paint();
 		// 배팅받기
-		// todo : 카드2장씩 딜링.
-		state = TodoState.CARD2DEALING;
+		state = TodoState.ProcCARD2DEALING;	// =>> 2장 딜링으로
 	}
 	private void processCard2Dealing() {
-		state = TodoState.PLAYERBJCHECK;
-	}
-	private void processInsurance() {
-		// 인슈어런스 확인.
-		// 인슈어런스 입력.
-		// 인슈어런스 처리.
-		// 딜러 블랙잭 확인.
-		state = TodoState.DEALERBJCHECK;
-	}
-	private void checkPlayerBJ() {
-		// 플레이어 블랙잭 확인.
-		state = TodoState.DEALERA10CHECK;
+		// 카드 2장씩 나눠주기
+		state = TodoState.CheckDEALERA10;	// =>> 플레이어들 블랙잭 확인으로
 	}
 	private void checkDealerA10() {
 		// 딜러 A 와 10 확인
-		// A : 인슈어런스 입력부.
-		state = TodoState.INSURANCE;
-		// 10 : 딜러 블랙잭 확인.
-		state = TodoState.DEALERBJCHECK;
+		
+		state = TodoState.PromINSURANCE;	// =>> A : 인슈어런스 입력부.
+		
+		state = TodoState.CheckDEALERBJ;	// =>> 10 : 딜러 블랙잭 확인.
 	}
-	
+	private void promptInsurance() {
+		// 인슈어런스 유무 [입력]
+		
+		state = TodoState.CheckDEALERBJ;	// =>> 딜러 블랙잭 확인.
+	}
 	private void checkDealerBJ() {
 		// 딜러가 블랙잭이면
+			// 인슈어런스 성공으로 부분 정산.
+		// 플레이어 블랙잭이 아니면 전부 패배.
 		state = TodoState.PROCDEALER;
 		// 딜러가 블랙잭이 아니면
+			// 인슈어런스 실패로 부분 정산. 
 		state = TodoState.PLAY;
 	}
+	
+	
 	
 	private void processDealer() {
 		
 	}
 	
 	private void processEnding() {
-		// 1. 딜러가 블랙잭
+		// 1. 딜러가 블랙잭		선처리.
 		// 2. 딜러가 블랙잭 x
 		// 3. 점수계산
 		// 4. 승패계산

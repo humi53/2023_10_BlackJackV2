@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 import com.yopheu.aenean.config.BetConfig;
 import com.yopheu.aenean.config.GameState;
 import com.yopheu.aenean.config.StrColor;
+import com.yopheu.aenean.config.TodoState;
+import com.yopheu.aenean.models.CommDataWrapper;
 import com.yopheu.aenean.models.card.Card;
 import com.yopheu.aenean.service.ViewService;
 import com.yopheu.aenean.view.ViewBoardFrame;
@@ -19,8 +21,12 @@ import com.yopheu.aenean.view.ViewStr;
 
 public class ViewServiceImplV1 implements ViewService{
 	
+	private CommDataWrapper cData;
+	private ViewDataWrapper viewData;
 	
-	public ViewServiceImplV1(){
+	public ViewServiceImplV1(CommDataWrapper commDataWrapper){
+		cData = commDataWrapper;
+		viewData = new ViewDataWrapper(cData);
 	}
 	
 	private void linkData() {
@@ -47,16 +53,23 @@ public class ViewServiceImplV1 implements ViewService{
 	}
 	
 	private void printView() {
-//		selectMessage();
-//		System.out.print(singleMessage);
+		prepareBaord();		// 보드준비
+		for(String str : simpleBoard) {	// 보드출력.
+			System.out.println(str);
+		}
+		// 안내 메시지
+		System.out.println("배팅을 하세요. 최대[1K]");
+		// 오류 메시지
+		System.out.println("{20} {40} {100} {200} {400} {1000}");
+		// 프롬프트.
+		System.out.println("배팅: ");
 	}
+	
+	// 보드 정보
 	private int boardTWidht = 9;
 	private int totalSpace = boardTWidht * 10;
-	
 	private String[] simpleBoard = new String[15];
 	private ViewBoardFrame simpleFrame = new ViewBoardFrame(boardTWidht, StrColor.GREEN);
-	
-	private ViewDataWrapper viewData = new ViewDataWrapper(); 
 	private void prepareBaord() {
 		for(int i = 0; i < simpleBoard.length; i++) simpleBoard[i] = getVoidPan();
 		// 딜러 이름
@@ -273,17 +286,6 @@ public class ViewServiceImplV1 implements ViewService{
 		result += simpleFrame.getEdge();
 		
 		return result;
-	}
-	
-	public void sample() {
-		prepareBaord();
-		for(String str : simpleBoard) {
-			System.out.println(str);
-		}
-		
-//		System.out.println("시스템 메시지");
-//		System.out.println("{오류 메시지}");
-//		System.out.println("입력 : ");
 	}
 	
 	@Override
