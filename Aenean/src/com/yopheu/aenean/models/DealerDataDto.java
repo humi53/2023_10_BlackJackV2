@@ -32,6 +32,9 @@ public class DealerDataDto {
 	public void addCard(Card card) {
 		this.arrCard.add(card);
 	}
+	public int size() {
+		return arrCard.size();
+	}
 	// 손패 리셋 (비우기)
 	public void resetCards() {
 		isOpen = false;

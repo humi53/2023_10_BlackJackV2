@@ -143,22 +143,23 @@ public class GameServiceImplV1 implements GameService {
 	private void processCard2Dealing() {
 		DeckDto deck = cData.getDeck();
 		int delay = 1000;
-		paint();
 		try {
-			for(int i = 0; i < 2; i++) {
-				for(PlayerDataDto player : cData.getPlayers()) {
-					player.addCard(deck.getCard());
+			if(cData.getDealer().size() < 2) {
+				paint();
+				for(int i = 0; i < 2; i++) {
+					for(PlayerDataDto player : cData.getPlayers()) {
+						player.addCard(deck.getCard());
+						Thread.sleep(delay);
+						paint();
+					}
+					cData.getDealer().addCard(deck.getCard());
 					Thread.sleep(delay);
 					paint();
-				}
-				cData.getDealer().addCard(deck.getCard());
-				Thread.sleep(delay);
-				paint();
+				}				
+			}else {
+				// 2장 있다고 생각하고 다른 상태로 바꿔야됨.
 			}
 		} catch (Exception e) {	}
-		// 플레이어 딜러 카드 2장씩.
-		// 한장 나눠줄때마다 화면 출력.
-		// 카드 2장씩 나눠주기
 //		cData.state = TodoState.CheckDEALERA10;	// =>> 플레이어들 블랙잭 확인으로
 	}
 	private void checkDealerA10() {
