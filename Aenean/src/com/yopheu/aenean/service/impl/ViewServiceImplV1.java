@@ -53,16 +53,56 @@ public class ViewServiceImplV1 implements ViewService{
 	}
 	
 	private void printView() {
+		viewData.init();	// 보드의 출력데이터 준비
 		prepareBaord();		// 보드준비
 		for(String str : simpleBoard) {	// 보드출력.
 			System.out.println(str);
 		}
-		// 안내 메시지
-		System.out.println("배팅을 하세요. 최대[1K]");
-		// 오류 메시지
-		System.out.println("{20} {40} {100} {200} {400} {1000}");
-		// 프롬프트.
-		System.out.println("배팅: ");
+		bottomMessage();	// 하단 메시지 출력.
+		
+	}
+	private void bottomMessage() {
+		if(cData.state == TodoState.PromBET) {
+			betMessage();
+		}else {
+			defaultMessage(); 	// 공통 (빈) 메시지 3줄.
+		}
+	}
+	
+	private void defaultMessage() {
+		System.out.println();
+		System.out.println();
+		System.out.println();
+	}
+	
+	private void betMessage() {
+		String playerName = cData.getBetPlayer().getName();
+		
+		int[] chips = cData.getTypeChips();
+		String chipMessage = "";
+		for(int i = 0; i < chips.length; i++) {
+			ViewStr num = new ViewStr(i+1,StrColor.CYAN);
+			chipMessage += String.format("%s{%d} ", num.getColorStr(), chips[i]);
+		}
+		ViewStr yesm = new ViewStr("Y",StrColor.YELLOW);
+		ViewStr nom = new ViewStr("N",StrColor.RED);
+		chipMessage += String.format("%s{%s} %s{%s}",yesm.getColorStr() , "완료", nom.getColorStr(), "취소");
+
+		String totalChip = "";
+		totalChip += (new ViewStr("[",StrColor.CYAN)).getColorStr();
+		totalChip += (new ViewStr(cData.getBetPlayer().getChip())).getColorStr();
+		totalChip += (new ViewStr("]",StrColor.CYAN)).getColorStr();
+		String betChip = "";
+		betChip += (new ViewStr("{",StrColor.YELLOW)).getColorStr();
+		betChip += (new ViewStr(cData.getBetPlayer().getBetting())).getColorStr();
+		betChip += (new ViewStr("}",StrColor.YELLOW)).getColorStr();
+		int maxBet = cData.getMaxBet();
+		String errMsg = (new ViewStr(cData.betErrMsg,StrColor.RED)).getColorStr();
+		
+		System.out.printf(" 최대[%,d] 배팅을 하세요. Chip:%s Bet:%s %s\n", maxBet, totalChip, betChip, errMsg);
+		System.out.println(chipMessage);
+		System.out.printf("%s: ", playerName);
+		cData.betErrMsg = "";	// 에러메시지는 한번 출력후 초기화.
 	}
 	
 	// 보드 정보
@@ -72,11 +112,6 @@ public class ViewServiceImplV1 implements ViewService{
 	private ViewBoardFrame simpleFrame = new ViewBoardFrame(boardTWidht, StrColor.GREEN);
 	private void prepareBaord() {
 		for(int i = 0; i < simpleBoard.length; i++) simpleBoard[i] = getVoidPan();
-		// 딜러 이름
-		// 딜러 카드	// 덱뒷면
-		// 플레이어 이름	// 플레이어 점수
-		// 플레이어 카드		// 베팅1
-		// 플레이어 스플릿 카드	// 베팅2		
 		
 		int boardLine = 0;
 		simpleBoard[boardLine++] = simpleFrame.getRoof();		// 게임보드 상단

@@ -13,6 +13,7 @@ public class PlayerDataDto {
 	int splitChip;	// 스플릿 칩.
 	int insuranceChip;  // 인슈어런스 칩
 	boolean isInsurance;	// 인슈어런스 여부.
+	int preBetChip;
 	
 	int comState = 0; // 플레이어 상태.	//0.미정, 1.블랙잭, 2.버스트, 3.게임완료(점수계산완료)
 	int actionState = 0; // 액션 상태. //0.미정, 1.힛, 2.스탠드, 3.
@@ -25,6 +26,7 @@ public class PlayerDataDto {
 		this.splitChip = 0;
 		this.insuranceChip = 0;
 		this.isInsurance = false;
+		preBetChip = 0;
 	}
 	
 	public String getName() {
@@ -120,8 +122,25 @@ public class PlayerDataDto {
 	
 	// 배팅 걸기.
 	public void betting(int chip) {
-		this.betChip = chip;
+		totalChip -= chip;
+		this.betChip += chip;
 	}
+	
+	// 이전 배팅값으로 배팅
+	public boolean reBetting() {
+		if(preBetChip > totalChip) {
+			return false;
+		}else {
+			totalChip -= preBetChip;
+			betChip = preBetChip;
+			return true;
+		}		
+	}
+	// 이전 배팅값 셋
+	public void setPreBet() {
+		preBetChip = betChip;
+	}
+	
 	public int getBetting() {
 		return this.betChip;
 	}

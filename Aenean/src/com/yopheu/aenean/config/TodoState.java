@@ -1,6 +1,7 @@
 package com.yopheu.aenean.config;
 
 public enum TodoState {
+	ProcSET,
 	PromBET,
 	ProcCARD2DEALING,
 	CheckDEALERA10,
@@ -11,5 +12,5 @@ public enum TodoState {
 	PROCDEALER,
 	PLAY,
 	ENDING,
-	ProcSET;
+	NoN;
 }

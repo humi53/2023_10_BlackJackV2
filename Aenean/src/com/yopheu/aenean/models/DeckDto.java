@@ -23,6 +23,10 @@ public class DeckDto {
 		arrCard.addAll(create1Deck());
 	}
 	
+	public Card getCard() {
+		return arrCard.remove(0);
+	}
+	
 	private ArrayList<Card> create1Deck(){
 		ArrayList<Card> result = new ArrayList<>();
 		Suit[] arrSuit = Suit.values();

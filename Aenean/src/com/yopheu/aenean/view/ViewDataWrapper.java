@@ -35,7 +35,7 @@ public class ViewDataWrapper {
 		init();
 	}
 	
-	private void init() {
+	public void init() {
 		setDealerStr();
 		setDealerCard();
 		if(cData.getPlayers().size() > 0 ) {
