@@ -13,7 +13,12 @@ public class PlayerDataDto {
 	int splitChip;	// 스플릿 칩.
 	int insuranceChip;  // 인슈어런스 칩
 	boolean isInsurance;	// 인슈어런스 여부.
-	int preBetChip;
+	int preBetChip;	// 이전 대칭 칩. (편한 배팅을 위해)
+	// 스플릿 여부
+	// 더블 (스플릿해도)
+	// 힛
+	// 스탠드
+	// 블랙잭 확인.
 	
 	int comState = 0; // 플레이어 상태.	//0.미정, 1.블랙잭, 2.버스트, 3.게임완료(점수계산완료)
 	int actionState = 0; // 액션 상태. //0.미정, 1.힛, 2.스탠드, 3.
@@ -67,6 +72,30 @@ public class PlayerDataDto {
 			result = true;
 		}else {
 			result =false;
+		}
+		return result;
+	}
+	
+	// 블랙잭 확인.
+	public boolean isBlackJack() {
+		boolean result = false;
+		// 스플릿이 아니면서, 2장이면서, 21일때
+		if(!isSplit() && arrCard.size() == 2 
+				&& calcCardSum(arrCard) == 21) {
+			result = true;
+		}else {
+			result = false;
+		}
+		return result;
+	}
+	
+	// 카드 합산
+	// 
+	
+	private int calcCardSum(ArrayList<Card> cards) {
+		int result = 0;
+		for(Card card : cards) {
+			result += card.getDenomination().getValue();
 		}
 		return result;
 	}

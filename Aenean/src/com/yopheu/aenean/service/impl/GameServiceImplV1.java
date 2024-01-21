@@ -47,6 +47,12 @@ public class GameServiceImplV1 implements GameService {
 				promptBet();
 			}else if(cData.state == TodoState.ProcCARD2DEALING) { // 카드 2장씩 딜링.
 				processCard2Dealing();
+				// A10 확인
+				checkDealerA10();
+				// 인슈어런스
+				promptInsurance();
+				// Dealer 블랙잭 확인
+				checkDealerBJ();
 			}else {
 				System.out.println("전체루프 한바퀴");
 			}
