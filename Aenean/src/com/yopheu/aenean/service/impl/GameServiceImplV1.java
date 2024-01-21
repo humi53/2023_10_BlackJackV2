@@ -14,6 +14,8 @@ import com.yopheu.aenean.models.DealerDataDto;
 import com.yopheu.aenean.models.DeckDto;
 import com.yopheu.aenean.models.PlayerDataDto;
 import com.yopheu.aenean.models.card.Card;
+import com.yopheu.aenean.models.card.Denomination;
+import com.yopheu.aenean.models.card.Suit;
 import com.yopheu.aenean.service.GameService;
 import com.yopheu.aenean.service.ViewService;
 
@@ -47,12 +49,13 @@ public class GameServiceImplV1 implements GameService {
 				promptBet();
 			}else if(cData.state == TodoState.ProcCARD2DEALING) { // 카드 2장씩 딜링.
 				processCard2Dealing();
+			}else if(cData.state == TodoState.CheckDEALERA10) {
 				// A10 확인
 				checkDealerA10();
-				// 인슈어런스
-				promptInsurance();
-				// Dealer 블랙잭 확인
-				checkDealerBJ();
+//				// 인슈어런스
+//				promptInsurance();
+//				// Dealer 블랙잭 확인
+//				checkDealerBJ();
 			}else {
 				System.out.println("전체루프 한바퀴");
 			}
@@ -166,7 +169,7 @@ public class GameServiceImplV1 implements GameService {
 				// 2장 있다고 생각하고 다른 상태로 바꿔야됨.
 			}
 		} catch (Exception e) {	}
-//		cData.state = TodoState.CheckDEALERA10;	// =>> 플레이어들 블랙잭 확인으로
+		cData.state = TodoState.CheckDEALERA10;	// =>> 플레이어들 블랙잭 확인으로
 	}
 	private void checkDealerA10() {
 		// 딜러 A 와 10 확인

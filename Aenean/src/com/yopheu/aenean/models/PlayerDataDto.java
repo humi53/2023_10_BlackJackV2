@@ -3,6 +3,7 @@ package com.yopheu.aenean.models;
 import java.util.ArrayList;
 
 import com.yopheu.aenean.models.card.Card;
+import com.yopheu.aenean.models.card.Denomination;
 
 public class PlayerDataDto {
 	String name;
@@ -89,13 +90,44 @@ public class PlayerDataDto {
 		return result;
 	}
 	
-	// 카드 합산
-	// 
+	// 일반카드 합산
+	public int getCardSum() {
+		return calcCardSum(arrCard);
+	}
+	
+	// 스플릿카드 합산
+	public int getSplitCardSum() {
+		return calcCardSum(arrSplitCard);
+	}
 	
 	private int calcCardSum(ArrayList<Card> cards) {
 		int result = 0;
+		boolean ace = false;
+		// A 카드가 1장 이상 있을때 일반적인 처리
+		// 첫A는 11 다음장 A는 1로 처리.
 		for(Card card : cards) {
-			result += card.getDenomination().getValue();
+			Denomination card_denomi = card.getDenomination();			
+			if(ace && card_denomi == Denomination.NA) {
+				result += 1;
+			}else {
+				if(card_denomi == Denomination.NA) {
+					ace = true;
+				}
+				result += card.getDenomination().getValue();				
+			}
+		}
+		// A 카드가 1장이상 있으며 21을 넘어갈때 처리
+		// 모든 A 카드를 1로 처리.
+		if(ace && result > 21) {
+			result = 0;
+			for(Card card : cards) {
+				Denomination card_denomi = card.getDenomination();
+				if(card_denomi == Denomination.NA) {
+					result += 1;
+				}else {
+					result += card.getDenomination().getValue();
+				}
+			}
 		}
 		return result;
 	}
