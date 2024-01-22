@@ -15,11 +15,11 @@ public class PlayerDataDto {
 	int insuranceChip;  // 인슈어런스 칩
 	boolean isInsurance;	// 인슈어런스 여부.
 	int preBetChip;	// 이전 대칭 칩. (편한 배팅을 위해)
+	// 스플릿 가능 여부
 	// 스플릿 여부
 	// 더블 (스플릿해도)
 	// 힛
 	// 스탠드
-	// 블랙잭 확인.
 	
 	int comState = 0; // 플레이어 상태.	//0.미정, 1.블랙잭, 2.버스트, 3.게임완료(점수계산완료)
 	int actionState = 0; // 액션 상태. //0.미정, 1.힛, 2.스탠드, 3.
@@ -52,6 +52,16 @@ public class PlayerDataDto {
 	// 손패 가져오기 (뭐있는지 확인)
 	public ArrayList<Card> getCards(){
 		return this.arrCard;
+	}
+	
+	// 스플릿 가능 여부
+	public void checkSplit() {
+		boolean result = false;
+		if(totalChip - betChip < 0)
+			result = false;
+		if(arrCard.size() != 2)
+			result = false;
+		
 	}
 	
 	// 스플릿 세팅 // 스플릿 걸기.

@@ -15,6 +15,7 @@ public class CommDataWrapper {
 	public String betErrMsg;
 	private PlayerDataDto nowInsurancePlayer;
 	public String insuranceErrMsg;
+	private PlayerDataDto nowPlayer;
 	
 	// 게임 상태?
 	public CommDataWrapper() {

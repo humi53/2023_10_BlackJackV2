@@ -38,9 +38,6 @@ public class GameServiceImplV1 implements GameService {
 	
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
-		// 배팅 전처리.
-		// 배팅	
 		boolean isLoop = true;
 		while(isLoop) {
 			if(cData.state == TodoState.ProcSET) {	// 카드, 배팅 초기화
@@ -65,16 +62,18 @@ public class GameServiceImplV1 implements GameService {
 				System.out.println("전체루프 한바퀴");
 			}
 		}
-//		switch (state) {
-//		case ProcSET: 
-//			processSet();
-//		default:
-//			System.out.println("공용");
-//		}
 	}
 
 	private void promptPlay() {
+		// TODO : 작성.
+		// 출력준비.
 		
+		for(PlayerDataDto player : cData.getPlayers()) {
+			
+		}
+		// 스플릿이 되는지 확인.
+		// 더블이 되는지 확인.
+		// 스플릿 더블 힛 스탠드
 	}
 
 	private void checkPlayerAllBJ() {
