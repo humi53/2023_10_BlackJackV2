@@ -115,26 +115,4 @@ public class DealerDataDto {
 	public ArrayList<Card> getCards(){
 		return this.arrCard;
 	}
-	
-	// 앞장 A 확인
-	public boolean isAceFCard() {
-		Card card = arrCard.get(0);
-		boolean isAce = false;
-		if(card.getDenomination() == Denomination.NA)
-			isAce = true;
-		else
-			isAce = false;
-		return isAce;
-	}
-	
-	// 뒷장 값이 10인지 확인.
-	public boolean is10BCard() {
-		Card card = arrCard.get(1);
-		boolean is10 = false;
-		if(card.getDenomination().getValue() == 10)
-			is10 = true;
-		else
-			is10 = false;
-		return is10;
-	}
 }

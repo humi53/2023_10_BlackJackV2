@@ -4,11 +4,12 @@ public enum TodoState {
 	ProcSET,
 	PromBET,
 	ProcCARD2DEALING,
+	CheckALLPLAYERBJ,
 	CheckDEALERA10,
 	PromINSURANCE,
 	CheckDEALERBJ,
+	PromPlay,
 	
-	CheckPLAYERBJ,
 	PROCDEALER,
 	PLAY,
 	ENDING,

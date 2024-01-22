@@ -64,9 +64,24 @@ public class ViewServiceImplV1 implements ViewService{
 	private void bottomMessage() {
 		if(cData.state == TodoState.PromBET) {
 			betMessage();
+		}if(cData.state == TodoState.PromINSURANCE) {
+			insuranceMessage();
 		}else {
 			defaultMessage(); 	// 공통 (빈) 메시지 3줄.
 		}
+	}
+	
+	private void insuranceMessage() {
+		String playerName = cData.getInsurancePlayer().getName();
+		String choiceMessage = "";
+		ViewStr yesm = new ViewStr("Y",StrColor.YELLOW);
+		ViewStr nom = new ViewStr("N",StrColor.RED);
+		String errMsg = (new ViewStr(cData.insuranceErrMsg,StrColor.RED)).getColorStr();
+		choiceMessage += String.format("%s{%s} %s{%s}",yesm.getColorStr() , "확인", nom.getColorStr(), "아니요");
+		System.out.printf(" 인슈어런스를 하실까요? %s", errMsg);
+		System.out.println(choiceMessage);
+		System.out.printf("%s: ", playerName);
+		cData.insuranceErrMsg = "";
 	}
 	
 	private void defaultMessage() {

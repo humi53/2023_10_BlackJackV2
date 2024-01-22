@@ -143,11 +143,16 @@ public class PlayerDataDto {
 	}
 	
 	// 인슈어런스 세팅  // 인슈어런스 걸기.
-	public void setInsurance() {
-		if(totalChip - betChip/2 < 0)
-			System.out.println("err : 인슈어런스 할 칩이 부족.");
-		totalChip -= betChip/2;
-		insuranceChip = betChip/2;
+	public boolean setInsurance() {
+		boolean result = false;
+		if(totalChip - betChip/2 < 0) {
+			result = false;
+		}else {
+			totalChip -= betChip/2;
+			insuranceChip = betChip/2;
+			result = true;
+		}
+		return result;
 	}
 	
 	// 스플릿 카드 추가

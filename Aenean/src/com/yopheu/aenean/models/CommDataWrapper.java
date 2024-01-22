@@ -13,6 +13,8 @@ public class CommDataWrapper {
 	private int maxBet;
 	private int[] typeChips; 
 	public String betErrMsg;
+	private PlayerDataDto nowInsurancePlayer;
+	public String insuranceErrMsg;
 	
 	// 게임 상태?
 	public CommDataWrapper() {
@@ -25,6 +27,7 @@ public class CommDataWrapper {
 		maxBet = 1000;
 		typeChips = new int[] {20,40,100,200,400,1000};
 		betErrMsg = "";
+		insuranceErrMsg = "";
 	}
 	
 	public int getMaxBet() {
@@ -40,6 +43,12 @@ public class CommDataWrapper {
 	}
 	public PlayerDataDto getBetPlayer() {
 		return nowBetPlayer;
+	}
+	public void setInsurancePlayer(PlayerDataDto player) {
+		this.nowInsurancePlayer = player;
+	}
+	public PlayerDataDto getInsurancePlayer() {
+		return nowInsurancePlayer;
 	}
 	
 	public void resetState() {
@@ -59,5 +68,15 @@ public class CommDataWrapper {
 		return deckDto;
 	}
 	
-	// 
+	// 플레이어 전체가 블랙잭인지 확인.
+	public boolean isPlayerAllBJ() {
+		boolean result = true;
+		for(PlayerDataDto player : arrPlayerDataDto) {
+			if(!player.isBlackJack()) {
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
 }

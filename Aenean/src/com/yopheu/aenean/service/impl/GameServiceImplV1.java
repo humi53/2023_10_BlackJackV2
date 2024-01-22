@@ -49,13 +49,14 @@ public class GameServiceImplV1 implements GameService {
 				promptBet();
 			}else if(cData.state == TodoState.ProcCARD2DEALING) { // 카드 2장씩 딜링.
 				processCard2Dealing();
-			}else if(cData.state == TodoState.CheckDEALERA10) {
-				// A10 확인
+			}else if(cData.state == TodoState.CheckALLPLAYERBJ) {
+				checkPlayerAllBJ();
+			}else if(cData.state == TodoState.CheckDEALERA10) {		// 딜러 A, 10 카드확인.
 				checkDealerA10();
-//				// 인슈어런스
-//				promptInsurance();
-//				// Dealer 블랙잭 확인
-//				checkDealerBJ();
+			}else if(cData.state == TodoState.PromINSURANCE) {		// A 카드일때 인슈어런스 입력받기.
+				promptInsurance();
+			}else if(cData.state == TodoState.CheckDEALERBJ) {		// 딜러가 블랙잭인지 확인.
+				checkDealerBJ();
 			}else {
 				System.out.println("전체루프 한바퀴");
 			}
@@ -66,6 +67,17 @@ public class GameServiceImplV1 implements GameService {
 //		default:
 //			System.out.println("공용");
 //		}
+	}
+
+	private void checkPlayerAllBJ() {
+		// TODO Auto-generated method stub
+		if(cData.isPlayerAllBJ()) {
+			// 마무리
+		}else {
+			// A10 확인.
+			cData.state = TodoState.CheckDEALERA10;
+		}
+		
 	}
 
 	private void processSet() {
@@ -105,7 +117,7 @@ public class GameServiceImplV1 implements GameService {
 					if(scanBet.equalsIgnoreCase("")
 							&& player.getBetting() == 0) {
 						if(!player.reBetting()) {
-							cData.betErrMsg = "잔고부족";
+							cData.betErrMsg = "칩 부족";
 						}
 					}else if(scanBet.equalsIgnoreCase("") 
 							|| scanBet.equalsIgnoreCase("y")
@@ -130,7 +142,7 @@ public class GameServiceImplV1 implements GameService {
 							if(intBetNum == i+1) {
 								int bet =cData.getTypeChips()[i];
 								if(bet > player.getChip()) {
-									cData.betErrMsg = "잔고부족";
+									cData.betErrMsg = "칩 부족";
 									// 잔고부족
 								}else if(bet + player.getBetting() > cData.getMaxBet()) {
 									cData.betErrMsg = "최대배팅넘음1000";
@@ -149,6 +161,7 @@ public class GameServiceImplV1 implements GameService {
 //		System.out.println("종료.");
 		cData.state = TodoState.ProcCARD2DEALING;	// =>> 2장 딜링으로
 	}
+	
 	private void processCard2Dealing() {
 		DeckDto deck = cData.getDeck();
 		int delay = 1000;
@@ -166,25 +179,88 @@ public class GameServiceImplV1 implements GameService {
 					paint();
 				}				
 			}else {
-				// 2장 있다고 생각하고 다른 상태로 바꿔야됨.
+				// TODO : 2장 있다고 생각하고 다른 상태로 바꿔야됨.
 			}
 		} catch (Exception e) {	}
-		cData.state = TodoState.CheckDEALERA10;	// =>> 플레이어들 블랙잭 확인으로
+		cData.state = TodoState.CheckALLPLAYERBJ;	// =>> 플레이어들 블랙잭 확인으로
 	}
+	
 	private void checkDealerA10() {
 		// 딜러 A 와 10 확인
-		
-		cData.state = TodoState.PromINSURANCE;	// =>> A : 인슈어런스 입력부.
-		
-		cData.state = TodoState.CheckDEALERBJ;	// =>> 10 : 딜러 블랙잭 확인.
+		if(cData.getDealer().isAce()) {
+			// 인슈어런스로
+			cData.state = TodoState.PromINSURANCE;	// =>> A : 인슈어런스 입력부.
+		}else if(cData.getDealer().is10()) {
+			// 딜러 블랙잭 확인
+			cData.state = TodoState.CheckDEALERBJ;	// =>> 10 : 딜러 블랙잭 확인.
+		}else {
+			// 일반 게임플레이로.
+			cData.state = TodoState.PromPlay;
+		}
 	}
+	
 	private void promptInsurance() {
-		// 인슈어런스 유무 [입력]
+		// 해당플레이어가 블랙잭인지 확인. (인슈어런스 필요없음)
+		paint();
+		for(PlayerDataDto player : cData.getPlayers()) {
+			if(!player.isBlackJack()) {
+				cData.setInsurancePlayer(player);
+				paint();
+				// 입력 받는다.
+				while(true) {
+					try {
+						paint();
+						String scanLine = scan.nextLine();
+						if(scanLine.equalsIgnoreCase("") 
+								|| scanLine.equalsIgnoreCase("y")
+								|| scanLine.equalsIgnoreCase("Y")
+								|| scanLine.equalsIgnoreCase("ㅛ")) {
+							if(player.setInsurance()) {
+								// 인슈어런스 시도 완료.
+								break;
+							}else {
+								// 인슈어런스 실패 ( 칩이 부족함)
+								cData.insuranceErrMsg = "칩 부족";
+							}						
+						}else if(scanLine.equalsIgnoreCase("n")
+								|| scanLine.equalsIgnoreCase("N")
+								|| scanLine.equalsIgnoreCase("ㅜ")) {
+							// 인슈어런스 시도 안함.
+							break;
+						}else {
+							cData.insuranceErrMsg = "Y/N 중 입력";
+						}
+					}catch (Exception e) {}
+				}
+			}else {
+				// 플레이어가 블랙잭이면 패스
+			}
+		}
 		
 		cData.state = TodoState.CheckDEALERBJ;	// =>> 딜러 블랙잭 확인.
 	}
 	private void checkDealerBJ() {
-		// 딜러가 블랙잭이면
+		boolean isAllBJ = true;
+		for(PlayerDataDto player : cData.getPlayers()) {
+			if(!player.isBlackJack()) {
+				isAllBJ = false;
+				break;
+			}
+		}
+		if(cData.getDealer().isBlackJack()) {
+			// 딜러가 블랙잭이면
+			for(PlayerDataDto player : cData.getPlayers()) {
+				if(player.isInsurance()) {
+					// 인슈어런스면 성공 처리
+				}else {
+					// 인슈어런스 아니면 패배처리.
+				}
+				// 화면 출력.
+			}
+		}else {
+			// 블랙잭이 아니면 게임 진행.
+			cData.state = TodoState.PromPlay;
+		}
 			// 인슈어런스 성공으로 부분 정산.
 		// 플레이어 블랙잭이 아니면 전부 패배.
 		cData.state = TodoState.PROCDEALER;
