@@ -57,6 +57,10 @@ public class GameServiceImplV1 implements GameService {
 				promptInsurance();
 			}else if(cData.state == TodoState.CheckDEALERBJ) {		// 딜러가 블랙잭인지 확인.
 				checkDealerBJ();
+			}else if(cData.state == TodoState.PromPlay) {
+				promptPlay();
+			}else if(cData.state == TodoState.ProcENDING) {
+				processEnding();
 			}else {
 				System.out.println("전체루프 한바퀴");
 			}
@@ -69,8 +73,11 @@ public class GameServiceImplV1 implements GameService {
 //		}
 	}
 
+	private void promptPlay() {
+		
+	}
+
 	private void checkPlayerAllBJ() {
-		// TODO Auto-generated method stub
 		if(cData.isPlayerAllBJ()) {
 			// 마무리
 		}else {
@@ -81,7 +88,6 @@ public class GameServiceImplV1 implements GameService {
 	}
 
 	private void processSet() {
-		// TODO Auto-generated method stub
 		DeckDto deck = cData.getDeck();
 		DealerDataDto dealer = cData.getDealer();
 		ArrayList<PlayerDataDto> players = cData.getPlayers();
@@ -240,23 +246,17 @@ public class GameServiceImplV1 implements GameService {
 		cData.state = TodoState.CheckDEALERBJ;	// =>> 딜러 블랙잭 확인.
 	}
 	private void checkDealerBJ() {
-		boolean isAllBJ = true;
-		for(PlayerDataDto player : cData.getPlayers()) {
-			if(!player.isBlackJack()) {
-				isAllBJ = false;
-				break;
-			}
-		}
+		// 딜러가 블랙잭이면
 		if(cData.getDealer().isBlackJack()) {
-			// 딜러가 블랙잭이면
 			for(PlayerDataDto player : cData.getPlayers()) {
 				if(player.isInsurance()) {
-					// 인슈어런스면 성공 처리
+					// 인슈어런스면 인슈어런스 칩 계산.
 				}else {
-					// 인슈어런스 아니면 패배처리.
+					// 인슈어런스 아니면 넘어가기.
 				}
 				// 화면 출력.
 			}
+			// 게임 마무리.
 		}else {
 			// 블랙잭이 아니면 게임 진행.
 			cData.state = TodoState.PromPlay;
@@ -276,12 +276,53 @@ public class GameServiceImplV1 implements GameService {
 	}
 	
 	private void processEnding() {
+		DealerDataDto dealer = cData.getDealer();
+		ArrayList<PlayerDataDto> players = cData.getPlayers();
 		// 1. 딜러가 블랙잭		선처리.
-		// 2. 딜러가 블랙잭 x
-		// 3. 점수계산
-		// 4. 승패계산
-		
-		// 다계산하고...
+		if(dealer.isBlackJack()) {
+			for(PlayerDataDto player : players) {
+				if(player.isBlackJack()) {
+					// 무승부
+				}else {
+					// 딜러승리. (패배)
+				}
+			}
+		}else {
+			for(PlayerDataDto player : players) {
+				if(player.isBlackJack()) {
+					// 무조건 승리 (점수 배율)
+				}else if(player.getCardSum() > 21) {
+					// 버스트
+					// 무조건 패배
+				}else {
+					if(player.getCardSum() > dealer.getCardSum()) {
+						// 플레이어승리. (승리)
+					}else if(player.getCardSum() < dealer.getCardSum()) {
+						// 딜러승리. (패배)
+					}else if(player.getCardSum() == dealer.getCardSum()) {
+						// 무승부 (무승부)
+					}
+				}
+				
+				// 스플릿이 잇으면.
+				if(player.isSplit()) {
+					if(player.getSplitCardSum() > 21) {
+						// 버스트
+						// 무조건 패배
+					}else {
+						if(player.getSplitCardSum() > dealer.getCardSum()) {
+							// 플레이어승리. (승리)
+						}else if(player.getSplitCardSum() < dealer.getCardSum()) {
+							// 딜러승리. (패배)
+						}else if(player.getSplitCardSum() == dealer.getCardSum()) {
+							// 무승부 (무승부)
+						}
+					}
+				}
+			}
+		}
+		// 화면출력하고
+		// 다음게임 입력대기.
 	}
 	
 	private void processPlay() {

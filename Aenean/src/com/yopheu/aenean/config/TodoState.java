@@ -9,6 +9,8 @@ public enum TodoState {
 	PromINSURANCE,
 	CheckDEALERBJ,
 	PromPlay,
+	ProcENDING,
+	
 	
 	PROCDEALER,
 	PLAY,
