@@ -91,6 +91,8 @@ public class GameServiceImplV1 implements GameService {
 		DealerDataDto dealer = cData.getDealer();
 		ArrayList<PlayerDataDto> players = cData.getPlayers();
 		
+		// TODO : 새로운 설정 초기화는 항상 여기에 추가.
+		
 		// 덱 20장 이하면 추가.
 		if(deck.deckSize() <= 20) {
 			deck.addDeck();
