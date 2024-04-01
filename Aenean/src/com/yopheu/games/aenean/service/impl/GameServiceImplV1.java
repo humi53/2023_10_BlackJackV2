@@ -8,10 +8,12 @@ public class GameServiceImplV1 implements GameService {
 
 	private CommDataWrapper cData; // 공용데이터 뭉치
 	private UIService ui; // UIService
+	private ScanService sc;	// 입력안내메시지 + scanner
 	
 	public GameServiceImplV1() {
 		cData = new CommDataWrapper();
 		ui = new CUIServiceImplV1(cData);
+		sc = new ScanService();
 	}
 	
 	@Override
@@ -19,5 +21,4 @@ public class GameServiceImplV1 implements GameService {
 		// TODO Auto-generated method stub
 
 	}
-
 }

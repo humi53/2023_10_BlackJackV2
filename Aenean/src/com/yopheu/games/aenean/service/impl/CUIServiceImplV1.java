@@ -11,6 +11,8 @@ public class CUIServiceImplV1 implements UIService {
 		this.cData = cData;
 	}
 	
+//	private 
+	
 	@Override
 	public void paint() {
 		// TODO Auto-generated method stub
