@@ -37,7 +37,7 @@ public class UICardFactory {
 		ANSIColor strColor = ANSIColor.GREEN;
 		if(suit == Suit.C || suit == Suit.S) {
 			strColor = ANSIColor.GREEN;
-		}else if(suit == Suit.D || suit == suit.H) {
+		}else if(suit == Suit.D || suit == Suit.H) {
 			strColor = ANSIColor.RED;
 		}
 		return strColor;
