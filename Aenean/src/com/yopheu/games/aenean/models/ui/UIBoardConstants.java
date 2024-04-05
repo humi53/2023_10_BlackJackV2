@@ -13,13 +13,13 @@ public class UIBoardConstants {
 	private final String LEFT_BOTTOM = "└";
 	private final String RIGHT_BOTTOM = "┘";
 	private final String SIDE = "│";
-	private final String ROOF = "-────────-";
+	private final String ROOF = "-────────-";	// 10
 	private int width;
 	private ANSIColor color;
 	
 	public UIBoardConstants(int width, ANSIColor color) {
 		this.width = width;
-		this.width = 9; 	// 임시 9로 제한.
+//		this.width = 9; 	// 임시 9로 제한.
 		this.color = color;
 	}
 	
@@ -44,6 +44,16 @@ public class UIBoardConstants {
 	// └-────────-┘  (-────────- * width)
 	public String getFLOOR() {
 		return String.format("%s%s%s%s%s", colorANSI(),LEFT_BOTTOM,tempRoof(),RIGHT_BOTTOM,endANSI());
+	}
+	
+	public String[] wrapBoardData(String[] boardData) {
+		String[] result = new String[boardData.length+2];
+		result[0] = getROOF();
+		result[result.length-1] = getFLOOR();
+		for(int i = 1; i < result.length-1; i++) {
+			result[i] = getSIDE() + boardData[i-1] + getSIDE();
+		}
+		return result;
 	}
 	
 	private String colorANSI() {

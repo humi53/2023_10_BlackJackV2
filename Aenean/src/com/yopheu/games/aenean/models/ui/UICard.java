@@ -21,7 +21,7 @@ public class UICard {
 	 * @param data 2글자 초과시 공백처리.
 	 */
 	public void setData(String data) {
-		if(dataSpace(data) > 2) {
+		if(getStrSpace(data) > 2) {
 			this.data = "  ";
 			System.out.println("ViewCard : 2글자가 초과되어 공백처리");
 		}else {
@@ -45,7 +45,7 @@ public class UICard {
 		}
 	}
 	
-	private int dataSpace(String str) {
+	private int getStrSpace(String str) {
 		int count = str.length();
 		for (char c : str.toCharArray()) {
             if (Character.UnicodeScript.of(c) == Character.UnicodeScript.HANGUL) {
