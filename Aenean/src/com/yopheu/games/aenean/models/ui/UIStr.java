@@ -1,7 +1,12 @@
 package com.yopheu.games.aenean.models.ui;
 
 import com.yopheu.games.aenean.config.ANSIColor;
-
+/**
+ * 
+ * @author HumiDK
+ *	문자열 자체는 IUIStr로만 구현하고
+ *	IUIMargin은 문자열을 상하 Margin을 표현하는 출력을 위해 구현한다.
+ */
 public class UIStr implements IUIStr, IUIMargin{
 	private final String SPACE = "c";
 	private String str;

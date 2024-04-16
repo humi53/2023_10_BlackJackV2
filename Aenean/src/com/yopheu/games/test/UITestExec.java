@@ -27,6 +27,7 @@ public class UITestExec {
 		
 		UIBorderStr borderStr = new UIBorderStr("하이", ANSIColor.CYAN);
 		borderStr.print();
+		borderStr.setStrColor(ANSIColor.BLUE);
 		borderStr.setBorderColor(ANSIColor.YELLOW);
 		System.out.println(borderStr.toString());
 	}
