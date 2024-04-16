@@ -9,4 +9,5 @@ public interface IUIStr {
 	public String getStr();
 	public void StrPrint();
 	public String StrToString();
+	public int width();
 }
