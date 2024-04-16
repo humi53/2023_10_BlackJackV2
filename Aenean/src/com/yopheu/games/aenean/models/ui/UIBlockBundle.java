@@ -3,6 +3,7 @@ package com.yopheu.games.aenean.models.ui;
 /**
  * 문자열에 이미 ANSI 코드가 섞여있기 때문에 입력은 Block형태로만 받는다.
  * Block에서 width를 추출해서 totalWidth를 유지한다.
+ * : board에 배치하기위해 합쳐서 나오는 객체.
  * @author HumiDK
  *
  */

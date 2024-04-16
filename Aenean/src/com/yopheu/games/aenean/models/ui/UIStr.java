@@ -8,7 +8,7 @@ import com.yopheu.games.aenean.config.ANSIColor;
  *	IUIMargin은 문자열을 상하 Margin을 표현하는 출력을 위해 구현한다.
  */
 public class UIStr implements IUIStr, IUIBlock{
-	private final String SPACE = "c";
+	private final String SPACE = " ";
 	private String str;
 	private ANSIColor strColor;
 	

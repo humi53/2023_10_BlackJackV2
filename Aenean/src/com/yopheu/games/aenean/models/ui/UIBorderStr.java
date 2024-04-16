@@ -79,6 +79,7 @@ public class UIBorderStr implements IUIBorderBlock{
                 count++;
             }
         }
+		count += 2; // 사이드 문자열2개. 직접더함. 문제생길수 있음?
 		return count;
 	}
 	
