@@ -9,6 +9,4 @@ public interface IUIBorder extends IUIMargin{
 	public void setStrColor(ANSIColor strColor);
 	// 테두리 컬러 설정
 	public void setBorderColor(ANSIColor borderColor);
-	// 출력 Data가 차지하는 공간 갯수을 리턴.
-	public int width();
 }

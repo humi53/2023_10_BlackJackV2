@@ -7,7 +7,6 @@ public interface IUIStr {
 	public void setStr(String data);
 	public void setStrColor(ANSIColor strColor);
 	public String getStr();
-	public int width();
 	public void StrPrint();
 	public String StrToString();
 }
