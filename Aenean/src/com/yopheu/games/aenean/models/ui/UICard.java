@@ -2,7 +2,7 @@ package com.yopheu.games.aenean.models.ui;
 
 import com.yopheu.games.aenean.config.ANSIColor;
 
-public class UICard implements IUIBorder{
+public class UICard implements IUIBorderBlock{
 	private String str;
 	private ANSIColor strColor;
 	private ANSIColor borderColor;

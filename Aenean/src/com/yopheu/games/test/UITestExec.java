@@ -4,10 +4,12 @@ import com.yopheu.games.aenean.config.ANSIColor;
 import com.yopheu.games.aenean.models.card.Card;
 import com.yopheu.games.aenean.models.card.Denomination;
 import com.yopheu.games.aenean.models.card.Suit;
+import com.yopheu.games.aenean.models.ui.UIBlockBundle;
 import com.yopheu.games.aenean.models.ui.UIBoardConstants;
 import com.yopheu.games.aenean.models.ui.UICard;
 import com.yopheu.games.aenean.models.ui.UICardFactory;
 import com.yopheu.games.aenean.models.ui.UIStr;
+import com.yopheu.games.aenean.models.ui.UIStrFactory;
 import com.yopheu.games.aenean.models.ui.UIBorderStr;
 
 public class UITestExec {
@@ -21,14 +23,18 @@ public class UITestExec {
 		UICard uiCard = uiCardFactory.getUICard(new Card(Suit.S, Denomination.NA));
 		System.out.println(uiCard.toString());
 		
-		UIStr uiStr = new UIStr("안녕하세요", ANSIColor.YELLOW);
+		UIStrFactory uiStrFactory = new UIStrFactory(ANSIColor.YELLOW);
+		UIBorderStr uiBorderStr = uiStrFactory.getUIBorderStr("안녕", ANSIColor.CYAN);
+		uiBorderStr.print();
+		UIStr uiStr = uiStrFactory.getUIStr("뭐임 ", ANSIColor.YELLOW, 3);
+		uiStr.print();
 		uiStr.StrPrint();
-		System.out.println(uiStr.width());
 		
-		UIBorderStr borderStr = new UIBorderStr("하이", ANSIColor.CYAN);
-		borderStr.print();
-		borderStr.setStrColor(ANSIColor.BLUE);
-		borderStr.setBorderColor(ANSIColor.YELLOW);
-		System.out.println(borderStr.toString());
+		UIBlockBundle block = new UIBlockBundle(uiCard);
+		block.addBlock(uiBorderStr);
+		block.addLeftBlock(uiStr);
+		block.print();
+		System.out.println(block.width());
+		System.out.println(uiCard.width() + uiBorderStr.width() + uiStr.width());
 	}
 }

@@ -2,7 +2,7 @@ package com.yopheu.games.aenean.models.ui;
 
 import com.yopheu.games.aenean.config.ANSIColor;
 
-public class UIBorderStr implements IUIBorder{
+public class UIBorderStr implements IUIBorderBlock{
 	private final String LEFT_TOP = "┌";
 	private final String RIGHT_TOP = "┐";
 	private final String LEFT_BOTTOM = "└";

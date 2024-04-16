@@ -17,11 +17,17 @@ public class UIBoardRenderer {
 	// UI카드 변환기.
 	private String[] arrStrBoard; // 보드의 출력용 데이터.
 	
+	private UICardFactory uiCardFactory;
+	private UIStrFactory uiStrFactory;
+	
 	public UIBoardRenderer(CommDataWrapper cData) {
 		boardConstants = new UIBoardConstants(BOARD_WIDTH, null);
 		this.cData = cData;
 		arrStrBoard = new String[BOARD_HEIGHT];
 		Arrays.fill(arrStrBoard, " ".repeat(BOARD_WIDTH*10));
+		
+		uiCardFactory = new UICardFactory(null);
+		uiStrFactory = new UIStrFactory(null);
 	}
 	
 	public void printBoard() {
@@ -39,22 +45,35 @@ public class UIBoardRenderer {
 	}
 	
 	private void setDealerBoard(int index) {
-		int leftPadding = 10;
+		int boardWidth = BOARD_WIDTH * 10; // 고정 전체 공간
+		int remainingWidth = boardWidth; // 남은 공간
+		
+		int leftTextSpace = 28;
+		remainingWidth -= leftTextSpace;
 		
 		// 왼쪽 패딩
-		String[] strLeftPadding = new String[3];
-		for(int i = index; i < index+3; i++) {
-			strLeftPadding[i] = " ".repeat(leftPadding);
-		}
+//		String[] strLeftPadding = new String[3];
+//		for(int i = index; i < index+3; i++) {
+//			strLeftPadding[i] = "-".repeat(leftPadding);
+//		}
 		// 배팅금 
-		String message = "[Test Message]";
+//		String message = "[Test Message]";
 //		String[] strMessage
 		// 카드 공간
 		// 우측 패딩
 		
-		add3Line(0, 
-				strLeftPadding);
+//		add3Line(0, 
+//				strLeftPadding);
 	}
+	
+	// 공간을 할당 후 우측 정렬 block
+	private void setBlockLeftSort() {
+		
+	}
+	// 공간을 할당 후 좌측 정렬 block
+	// 공간을 할당 후 우측 정렬 str
+	// 공간을 할당 후 좌측 정렬 str
+	
 	private void init3Line(int index) {
 		for(int i = index; i < index+3; i++) {
 			arrStrBoard[i] = "";
