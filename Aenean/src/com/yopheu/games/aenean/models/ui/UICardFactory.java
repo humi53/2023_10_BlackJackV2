@@ -5,32 +5,32 @@ import com.yopheu.games.aenean.models.card.Card;
 import com.yopheu.games.aenean.models.card.Suit;
 
 public class UICardFactory {
-	private ANSIColor frameColor;	// 기본 프레임 컬러
+	private ANSIColor borderColor;	// 기본 테두리 컬러
 	
-	public UICardFactory(ANSIColor defaultFrameColor) {
-		this.frameColor = defaultFrameColor;
+	public UICardFactory(ANSIColor defaultBorderColor) {
+		this.borderColor = defaultBorderColor;
 	}
 
-	public void setDefaultFrameColor(ANSIColor defFrameColor) {
-		this.frameColor = defFrameColor;
+	public void setDefaultBorderColor(ANSIColor defBorderColor) {
+		this.borderColor = defBorderColor;
 	} // 기본 프레임 컬러 설정.
 	
-	public UICard getUICard(String str, ANSIColor strColor, ANSIColor frameColor) {
-		return new UICard(str, strColor, frameColor);
+	public UICard getUICard(String str, ANSIColor strColor, ANSIColor borderColor) {
+		return new UICard(str, strColor, borderColor);
 	}
 	
-	public UICard getUICard(Card card, ANSIColor strColor, ANSIColor frameColor) {
+	public UICard getUICard(Card card, ANSIColor strColor, ANSIColor borderColor) {
 		String str = card.getStrSuit() + card.getStrDenomination();
-		return getUICard(str, strColor, frameColor);
+		return getUICard(str, strColor, borderColor);
 	}
 	
-	public UICard getUICard(Card card, ANSIColor frameColor) {
+	public UICard getUICard(Card card, ANSIColor borderColor) {
 		ANSIColor strColor = getSuitColor(card.getSuit());
-		return getUICard(card, strColor, frameColor);
+		return getUICard(card, strColor, borderColor);
 	}
 	
 	public UICard getUICard(Card card) {
-		return getUICard(card, frameColor);
+		return getUICard(card, borderColor);
 	}
 
 	private ANSIColor getSuitColor(Suit suit) {

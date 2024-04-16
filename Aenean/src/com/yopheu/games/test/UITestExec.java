@@ -8,6 +8,7 @@ import com.yopheu.games.aenean.models.ui.UIBoardConstants;
 import com.yopheu.games.aenean.models.ui.UICard;
 import com.yopheu.games.aenean.models.ui.UICardFactory;
 import com.yopheu.games.aenean.models.ui.UIStr;
+import com.yopheu.games.aenean.models.ui.UIBorderStr;
 
 public class UITestExec {
 	public static void main(String[] args) {
@@ -21,11 +22,12 @@ public class UITestExec {
 		System.out.println(uiCard.toString());
 		
 		UIStr uiStr = new UIStr("안녕하세요", ANSIColor.YELLOW);
-		uiStr.printStr();
-		uiStr.printStr3();
-		uiStr.setBorderColor(ANSIColor.YELLOW);
-		uiStr.setStrColor(ANSIColor.RED);
-		uiStr.printStrBorder();
-		System.out.println(uiStr.length());
+		uiStr.StrPrint();
+		System.out.println(uiStr.width());
+		
+		UIBorderStr borderStr = new UIBorderStr("하이", ANSIColor.CYAN);
+		borderStr.print();
+		borderStr.setBorderColor(ANSIColor.YELLOW);
+		System.out.println(borderStr.toString());
 	}
 }

@@ -2,39 +2,67 @@ package com.yopheu.games.aenean.models.ui;
 
 import com.yopheu.games.aenean.config.ANSIColor;
 
-public class UIStr {
-	private final String LEFT_TOP = "┌";
-	private final String RIGHT_TOP = "┐";
-	private final String LEFT_BOTTOM = "└";
-	private final String RIGHT_BOTTOM = "┘";
-	private final String SIDE = "│";
-	private final String ROOF = "─";
-	private final String SPACE = " ";
+public class UIStr implements IUIStr, IUIMargin{
+	private final String SPACE = "c";
 	private String str;
 	private ANSIColor strColor;
-	private ANSIColor borderColor;
 	
 	public UIStr(String str, ANSIColor strColor) {
 		this.str = str;
 		this.strColor = strColor;
 	}
 	
-	public UIStr(String str, ANSIColor strColor, ANSIColor borderColor) {
+	@Override
+	public void setStr(String str) {
 		this.str = str;
-		this.strColor = strColor;
-		this.borderColor = borderColor;
 	}
 	
+	@Override
 	public void setStrColor(ANSIColor strColor) {
 		this.strColor = strColor;
+		
 	}
 	
-	public void setBorderColor(ANSIColor borderColor) {
-		this.borderColor = borderColor;
+	// 컬러를 곁들인 1라인 문자열
+	private String getColorStr() {
+		return getANSI(strColor) + str + getEndANSI(strColor);
 	}
 	
-	// 차지하는 공간 수를 return
-	public int length() {
+	@Override
+	public String getStr() {
+		return getColorStr();
+	}
+	
+	@Override
+	public String[] getData() {
+		String[] result = new String[3];
+		result[0] = SPACE.repeat(width());
+		result[1] = getStr();
+		result[2] = SPACE.repeat(width());
+		return result;
+	}
+
+	@Override
+	public void print() {
+		System.out.println(toString());	
+	}
+	
+	@Override
+	public String toString() {
+		String result = "";
+		String[] data = getData();
+		for (int i = 0; i < data.length; i++) {
+			result += data[i];
+			if(i < data.length - 1) {
+				result += "\n";
+			}
+		}
+		return result;
+	}
+	
+	// 한글 2칸, 영어 1칸 차지
+	@Override
+	public int width() {
 		int count = str.length();
 		for (char c : str.toCharArray()) {
             if (Character.UnicodeScript.of(c) == Character.UnicodeScript.HANGUL) {
@@ -43,48 +71,7 @@ public class UIStr {
         }
 		return count;
 	}
-	
-	// 컬러를 곁들인 1라인 문자열
-	public String getStr() {
-		return getANSI(strColor) + str + getEndANSI(strColor);
-	}
-	
-	public void printStr() {
-		System.out.println(getStr());
-	}
-	
-	// 위아래 공간을 차지한 문자열
-	public String[] getStr3() {
-		String[] result = new String[3];
-		result[0] = SPACE.repeat(length());
-		result[1] = getStr();
-		result[2] = SPACE.repeat(length());
-		return result;
-	}
-	
-	public void printStr3() {
-		for (String element : getStr3()) {
-			System.out.println(element);
-		}
-	}
-	
-	// border로 둘러싼 문자열
-	public String[] getStrBorder() {
-		String[] result = new String[3];
-		result[0] = getANSI(borderColor) + LEFT_TOP + ROOF.repeat(length()) + RIGHT_TOP + getEndANSI(borderColor);
-		result[1] = getANSI(borderColor) + SIDE  + getEndANSI(borderColor);
-		result[1] += getStr();
-		result[1] += getANSI(borderColor) + SIDE  + getEndANSI(borderColor);
-		result[2] = getANSI(borderColor) + LEFT_BOTTOM + ROOF.repeat(length()) + RIGHT_BOTTOM + getEndANSI(borderColor);
-		return result;
-	}
-	
-	public void printStrBorder() {
-		for (String element : getStrBorder()) {
-			System.out.println(element);
-		}
-	}
-	
+
 	private String getANSI(ANSIColor color) {
 		if(color == null) {
 			return "";
@@ -99,4 +86,15 @@ public class UIStr {
 			return ANSIColor.END.getANSI();
 		}
 	}
+
+	@Override
+	public void StrPrint() {
+		System.out.println(getStr());		
+	}
+
+	@Override
+	public String StrToString() {
+		return getStr();
+	}
+
 }

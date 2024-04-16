@@ -52,7 +52,7 @@ public class UIBoardRenderer {
 		// 카드 공간
 		// 우측 패딩
 		
-		set3Line(0, 
+		add3Line(0, 
 				strLeftPadding);
 	}
 	private void init3Line(int index) {
@@ -61,7 +61,7 @@ public class UIBoardRenderer {
 		}
 	}
 	
-	private void set3Line(int index,String[]...args) {
+	private void add3Line(int index,String[]...args) {
 		init3Line(index);
 		for(String[] element : args) {
 			for(int i = 0; i < 3; i++) {

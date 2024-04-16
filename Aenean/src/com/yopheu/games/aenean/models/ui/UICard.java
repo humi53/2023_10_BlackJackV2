@@ -2,46 +2,93 @@ package com.yopheu.games.aenean.models.ui;
 
 import com.yopheu.games.aenean.config.ANSIColor;
 
-public class UICard {
-	private String data;
+public class UICard implements IUIBorder{
+	private String str;
 	private ANSIColor strColor;
-	private ANSIColor frameColor;
-	private final String FRAME_TOP = "┌──┐";
-	private final String FRAME_SIDE = "│";
-	private final String FRAME_BOTTOM = "└──┘";
+	private ANSIColor borderColor;
+	private final String BORDER_TOP = "┌──┐";
+	private final String BORDER_SIDE = "│";
+	private final String BORDER_BOTTOM = "└──┘";
 	
-	public UICard(String data, ANSIColor strColor, ANSIColor frameColor) {
-		this.data = data;
+	public UICard(String str, ANSIColor strColor, ANSIColor borderColor) {
+		setStr(str);
 		this.strColor = strColor;
-		this.frameColor = frameColor;
-	}
+		this.borderColor = borderColor;
+	}	
 	
 	/**
-	 * 
-	 * @param data 2글자 초과시 공백처리.
+	 * 카드는 2칸 공간밖에 없음
+	 * @param str 2글자 초과시 공백처리.
 	 */
-	public void setData(String data) {
-		if(getStrSpace(data) > 2) {
-			this.data = "  ";
+	@Override
+	public void setStr(String str) {
+		if(getStrSpace(str) > 2) {
+			this.str = "  ";
 			System.out.println("ViewCard : 2글자가 초과되어 공백처리");
 		}else {
-			this.data = data;
+			this.str = str;
 		}
 	}
 	
-	private String strColorANSI() {
-		if(strColor == null) {
+	@Override
+	public void setStrColor(ANSIColor strColor) {
+		this.strColor = strColor;
+	}
+	
+	@Override
+	public void setBorderColor(ANSIColor borderColor) {
+		this.borderColor = borderColor;
+		
+	}
+
+	@Override
+	public String[] getData() {
+		String[] card = new String[3];
+		card[0] = String.format("%s%s%s", getANSI(borderColor), BORDER_TOP, getEndANSI(borderColor));
+		String cSide = String.format("%s%s%s", getANSI(borderColor), BORDER_SIDE, getEndANSI(borderColor));
+		String cStr = String.format("%s%s%s", getANSI(strColor), str, getEndANSI(strColor));
+		card[1] = String.format("%s%s%s", cSide, cStr, cSide);
+		card[2] = String.format("%s%s%s", getANSI(borderColor), BORDER_BOTTOM, getEndANSI(borderColor));
+		return card;
+	}
+
+	@Override
+	public void print() {
+		System.out.println(toString());
+	}
+	
+	@Override
+	public String toString() {
+		String result = "";
+		String[] data = getData();
+		for (int i = 0; i < data.length; i++) {
+			result += data[i];
+			if(i < data.length - 1) {
+				result += "\n";
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public int width() {
+		return BORDER_TOP.length();
+	}
+	
+	// color의 null을 체크후 처리.
+	private String getANSI(ANSIColor color) {
+		if(color == null) {
 			return "";
 		} else {
-			return strColor.getANSI();
+			return color.getANSI();
 		}
 	}
-	
-	private String frameColorANSI() {
-		if(frameColor == null) {
-			return "";			
+	// color의 null을 체크후 처리.
+	private String getEndANSI(ANSIColor color) {
+		if(color == null) {
+			return "";
 		}else {
-			return frameColor.getANSI();
+			return ANSIColor.END.getANSI();
 		}
 	}
 	
@@ -53,43 +100,5 @@ public class UICard {
             }
         }
 		return count;
-	}
-	
-	private String frameEnd() {
-		if(frameColor == null) {
-			return "";
-		}else {
-			return ANSIColor.END.getANSI();
-		}
-	}
-	private String strEnd() {
-		if(strColor == null) {
-			return "";
-		}else {
-			return ANSIColor.END.getANSI();
-		}
-	}
-	
-	public String[] getCard() {
-		String[] card = new String[3];
-		card[0] = String.format("%s%s%s", frameColorANSI(), FRAME_TOP, frameEnd());
-		String side = String.format("%s%s%s", frameColorANSI(), FRAME_SIDE, frameEnd());
-		String str = String.format("%s%s%s", strColorANSI(), data, strEnd());
-		card[1] = String.format("%s%s%s", side, str, side);
-		card[2] = String.format("%s%s%s", frameColorANSI(), FRAME_BOTTOM, frameEnd());
-		return card;
-	}
-	
-	public int width() {
-		return FRAME_TOP.length();
-	}
-	
-	@Override
-	public String toString() {
-		String result = "";
-		for (String element : getCard()) {
-			result += element + "\n";
-		}
-		return result;
 	}
 }
