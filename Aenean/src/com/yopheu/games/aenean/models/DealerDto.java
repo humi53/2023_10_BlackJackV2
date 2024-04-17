@@ -1,0 +1,63 @@
+package com.yopheu.games.aenean.models;
+
+import java.util.ArrayList;
+
+import com.yopheu.games.aenean.models.card.Card;
+
+public class DealerDto implements ICardHand{
+	private ArrayList<Card> handsCard;
+	private CardsCalculator calc;
+	private boolean isOpen; // 2장일때 뒷장 오픈 여부.
+	
+	public DealerDto() {
+		this.handsCard = new ArrayList<>();
+		this.calc = new CardsCalculator();
+		this.isOpen = false;
+	}
+	
+	@Override
+	public void addCard(Card card) {
+		handsCard.add(card);	
+	}
+
+	@Override
+	public ArrayList<Card> getHands() {
+		return handsCard;
+	}
+
+	@Override
+	public int getHandsScore() {
+		return calc.getCardsScore(handsCard);
+	}
+
+	@Override
+	public boolean isBlackJack() {
+		return calc.isBlackJack(handsCard);
+	}
+	
+	@Override
+	public void resetHands() {
+		this.isOpen = false;		
+		this.handsCard.clear();
+	}
+	
+	public void setOpen() {
+		isOpen = true;
+	}
+	
+	public boolean isOpen() {
+		if(handsCard.size() <= 2) {
+			return isOpen;
+		}else {
+			return true;	// 2장을 넘어가면 관계없이 카드 보여주기.
+		}
+	}
+	
+	public boolean isAceOrTenValue() {
+		boolean result = false;
+		if(!handsCard.isEmpty() 
+				&& handsCard.get(0).getDenomination().getValue() >= 10)
+			result = true;
+		return result;
+	}	
+}
