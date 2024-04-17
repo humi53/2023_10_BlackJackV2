@@ -1,8 +1,13 @@
 package com.yopheu.games.aenean.models.ui;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.yopheu.games.aenean.config.ANSIColor;
 import com.yopheu.games.aenean.models.CommDataWrapper;
+import com.yopheu.games.aenean.models.card.Card;
+import com.yopheu.games.aenean.models.card.Denomination;
+import com.yopheu.games.aenean.models.card.Suit;
 
 /**
  * 
@@ -10,7 +15,7 @@ import com.yopheu.games.aenean.models.CommDataWrapper;
  *
  */
 public class UIBoardRenderer {
-	private final int BOARD_HEIGHT = 10;	// 보드 높이
+	private final int BOARD_HEIGHT = 5;	// 보드 높이
 	private final int BOARD_WIDTH = 9;	// 보드 너비 * 10
 	private UIBoardConstants boardConstants;	// Board 기본틀.
 	private CommDataWrapper cData;	// 공용 데이터
@@ -19,6 +24,7 @@ public class UIBoardRenderer {
 	
 	private UICardFactory uiCardFactory;
 	private UIStrFactory uiStrFactory;
+	private BoardComposer boardComposer;
 	
 	public UIBoardRenderer(CommDataWrapper cData) {
 		boardConstants = new UIBoardConstants(BOARD_WIDTH, null);
@@ -28,6 +34,7 @@ public class UIBoardRenderer {
 		
 		uiCardFactory = new UICardFactory(null);
 		uiStrFactory = new UIStrFactory(null);
+		boardComposer = new BoardComposer();
 	}
 	
 	public void printBoard() {
@@ -46,51 +53,52 @@ public class UIBoardRenderer {
 	
 	private void setDealerBoard(int index) {
 		int boardWidth = BOARD_WIDTH * 10; // 고정 전체 공간
-		int remainingWidth = boardWidth; // 남은 공간
 		
-		int leftTextSpace = 28;
-		remainingWidth -= leftTextSpace;
+		// boardComposer로 출력 데이터 정리 (Block : 3줄짜리 문자열)
+		boardComposer.initBlockLine(null, boardWidth);
 		
-		// 왼쪽 패딩
-//		String[] strLeftPadding = new String[3];
-//		for(int i = index; i < index+3; i++) {
-//			strLeftPadding[i] = "-".repeat(leftPadding);
-//		}
-		// 배팅금 
-//		String message = "[Test Message]";
-//		String[] strMessage
-		// 카드 공간
-		// 우측 패딩
+		// 왼쪽 텍스트. 28공간의 우측정렬.
+		int leftTextSpaceWidth = 28;
+		String leftText = "BlackJack";
+		UIBlockBundle leftStr = uiStrFactory.getUIBlockBundle(leftText, null, "[", "]", ANSIColor.CYAN);
+		UIBlockBundle leftStrBlock = boardComposer.rightBlock(leftStr, leftTextSpaceWidth);
+		boardComposer.addBlock(leftStrBlock);
 		
-//		add3Line(0, 
-//				strLeftPadding);
+		// 카드.
+		ArrayList<Card> arrCard = new ArrayList<>();
+		arrCard.add(new Card(Suit.S, Denomination.NA));
+		arrCard.add(new Card(Suit.S, Denomination.NK));
+		arrCard.add(new Card(Suit.S, Denomination.NQ));
+		arrCard.add(new Card(Suit.S, Denomination.NJ));
+		arrCard.add(new Card(Suit.S, Denomination.N10));
+		UIBlockBundle dealerHands = getUICardList(arrCard);
+		boardComposer.addBlock(dealerHands);
+		
+		// 카드덱 뒷면.
+		UICard backOfCard = uiCardFactory.getUIBackOfCard(9, ANSIColor.CYAN, ANSIColor.YELLOW);
+		boardComposer.addLastBlock(backOfCard);
+		
+		// 완성된 blockline을 board에 입력.
+		addBlockLineToBoard(index, boardComposer.getBlockLine());
 	}
 	
-	// 공간을 할당 후 우측 정렬 block
-	private void setBlockLeftSort() {
-		
+	private UIBlockBundle getUICardList(ArrayList<Card> arrCard) {
+		UIBlockBundle result = new UIBlockBundle();
+		for(Card element : arrCard) {
+			result.addBlock(uiCardFactory.getUICard(element)); 
+		}
+		return result;
 	}
-	// 공간을 할당 후 좌측 정렬 block
-	// 공간을 할당 후 우측 정렬 str
-	// 공간을 할당 후 좌측 정렬 str
 	
-	private void init3Line(int index) {
+	private void addBlockLineToBoard(int index, UIBlockBundle blockLine) {
+		String[] blockData = blockLine.getData();
 		for(int i = index; i < index+3; i++) {
-			arrStrBoard[i] = "";
+			arrStrBoard[i] = blockData[i];
 		}
 	}
 	
-	private void add3Line(int index,String[]...args) {
-		init3Line(index);
-		for(String[] element : args) {
-			for(int i = 0; i < 3; i++) {
-				arrStrBoard[index+i] = element[i];
-			}
-		}
-	}
-	
-	private void setLine(int index) {
-		
+	private void addStrLineToBoard(int index, UIStrBundle strLine) {
+		arrStrBoard[index] = strLine.getStr();
 	}
 	
 	

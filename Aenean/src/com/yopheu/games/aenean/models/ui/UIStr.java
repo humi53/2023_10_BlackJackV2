@@ -16,6 +16,10 @@ public class UIStr implements IUIStr, IUIBlock{
 		this.str = str;
 		this.strColor = strColor;
 	}
+	public UIStr(String str, ANSIColor strColor, int repeat) {
+		this.str = str.repeat(repeat);
+		this.strColor = strColor;
+	}
 	
 	@Override
 	public void setStr(String str) {

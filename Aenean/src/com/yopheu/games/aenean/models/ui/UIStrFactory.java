@@ -32,12 +32,26 @@ public class UIStrFactory {
 	}	
 	
 	public UIStr getUIStr(String str, int repeatCount) {
-		String paramStr = str.repeat(repeatCount);
-		return getUIStr(paramStr, null);
+		return getUIStr(str, null, repeatCount);
 	}
 	
 	public UIStr getUIStr(String str, ANSIColor strColor, int repeatCount) {
-		String paramStr = str.repeat(repeatCount);
-		return getUIStr(paramStr, strColor);
+		return getUIStr(str, strColor, repeatCount);
+	}
+	
+	public UIStrBundle getUIStrBundle(String str, ANSIColor strColor, String left, String right, ANSIColor sideColor) {
+		UIStrBundle result = new UIStrBundle();
+		result.addStr(getUIStr(left, sideColor));
+		result.addStr(getUIStr(str, strColor));
+		result.addStr(getUIStr(right, sideColor));
+		return result;
+	}
+	
+	public UIBlockBundle getUIBlockBundle(String str, ANSIColor strColor, String left, String right, ANSIColor sideColor) {
+		UIBlockBundle result = new UIBlockBundle();
+		result.addBlock(getUIStr(left, sideColor));
+		result.addBlock(getUIStr(str, strColor));
+		result.addBlock(getUIStr(right, sideColor));
+		return result;
 	}
 }

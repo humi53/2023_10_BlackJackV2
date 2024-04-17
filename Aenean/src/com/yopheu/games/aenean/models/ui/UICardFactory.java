@@ -18,6 +18,13 @@ public class UICardFactory {
 	public UICard getUICard(String str, ANSIColor strColor, ANSIColor borderColor) {
 		return new UICard(str, strColor, borderColor);
 	}
+	public UICard getUIBackOfCard(int num, ANSIColor strColor, ANSIColor borderColor) {
+		String strNum = String.format("%02d", num);
+		if(num > 99) {
+			strNum = "99";
+		}
+		return new UICard(strNum, strColor, borderColor);
+	}
 	
 	public UICard getUICard(Card card, ANSIColor strColor, ANSIColor borderColor) {
 		String str = card.getStrSuit() + card.getStrDenomination();
