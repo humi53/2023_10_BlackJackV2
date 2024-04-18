@@ -3,6 +3,7 @@ package com.yopheu.games.aenean.models;
 import java.util.ArrayList;
 
 import com.yopheu.games.aenean.models.card.Card;
+import com.yopheu.games.aenean.models.card.Denomination;
 
 public class DealerDto implements ICardHand{
 	private ArrayList<Card> handsCard;
@@ -53,11 +54,19 @@ public class DealerDto implements ICardHand{
 		}
 	}
 	
-	public boolean isAceOrTenValue() {
+	public boolean isAce() {
 		boolean result = false;
 		if(!handsCard.isEmpty() 
-				&& handsCard.get(0).getDenomination().getValue() >= 10)
+				&& handsCard.get(0).getDenomination() == Denomination.NA)
 			result = true;
 		return result;
-	}	
+	}
+	
+	public boolean isTenValue() {
+		boolean result = false;
+		if(!handsCard.isEmpty() 
+				&& handsCard.get(0).getDenomination().getValue() == 10)
+			result = true;
+		return result;
+	}
 }

@@ -22,7 +22,7 @@ public class CardTestExec {
 		DealerDto dealer = new DealerDto();
 		dealer.addCard(new Card(Suit.C, Denomination.N9));
 		dealer.addCard(new Card(Suit.C, Denomination.NA));
-		System.out.println("첫A : " + dealer.isAceOrTenValue());
+		System.out.println("첫A : " + dealer.isAce());
 		System.out.println("오픈 : " + dealer.isOpen());
 	}
 }
