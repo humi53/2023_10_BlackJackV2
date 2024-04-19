@@ -1,7 +1,9 @@
 package com.yopheu.games.test;
 
+import com.yopheu.games.aenean.models.DeckDto;
 import com.yopheu.games.aenean.models.PlayerDto;
 import com.yopheu.games.aenean.models.PlayerSplitDto;
+import com.yopheu.games.aenean.models.card.Card;
 
 public class DtoTestExec {
 	public static void main(String[] args) {
@@ -47,6 +49,14 @@ public class DtoTestExec {
 		System.out.println("total : " + playerDto.totalChip());
 		System.out.println("bet : " + playerDto.getBetChip());
 		System.out.println("split : " + splitDto.getBetChip());
+		
+		DeckDto deckDto = new DeckDto();
+		deckDto.printDeck();
+		Card card = deckDto.takeCard();
+		System.out.println(card);
+		card = deckDto.takeCard();
+		System.out.println(card);
+		deckDto.printDeck();
 		
 	}
 }

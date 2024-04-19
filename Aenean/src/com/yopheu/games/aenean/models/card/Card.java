@@ -26,6 +26,6 @@ public class Card {
 	
 	@Override
 	public String toString() {
-		return "Card [suit=" + suit.getSymbol() + ", denomination=" + denomination.getSymbol() + "]";
+		return "[" + getStrSuit() + getStrDenomination() + "]";
 	}
 }

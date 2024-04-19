@@ -24,7 +24,7 @@ public class PlayerSplitDto implements ICardHand {
 	}
 	
 	private void resetStateChips() {
-		this.playResultState = playResultState.NONE;
+		this.playResultState = PlayResultState.NONE;
 		this.betChip = 0;
 		this.isDoubleDown = false;
 	}

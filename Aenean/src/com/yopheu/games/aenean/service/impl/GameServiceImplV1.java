@@ -21,4 +21,17 @@ public class GameServiceImplV1 implements GameService {
 		// TODO Auto-generated method stub
 
 	}
+	// 초기화상태
+	// 2장딜링
+	// 인슈어런스 상태확인
+	// 인슈어런스 시도확인
+	// 딜러 블랙잭 확인		// 블랙잭이면 결과계산
+	// 플레이어 진행
+		// 스플릿 가능확인
+		// 스플릿 시도확인
+		// 플레이어 남은 진행
+			// 스플릿 진행
+	// 딜러 진행
+	// 결과 계산
+	// 초기화
 }
