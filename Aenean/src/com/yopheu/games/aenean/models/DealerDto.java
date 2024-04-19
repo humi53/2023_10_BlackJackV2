@@ -2,6 +2,7 @@ package com.yopheu.games.aenean.models;
 
 import java.util.ArrayList;
 
+import com.yopheu.games.aenean.config.PlayResultState;
 import com.yopheu.games.aenean.models.card.Card;
 import com.yopheu.games.aenean.models.card.Denomination;
 
@@ -10,6 +11,7 @@ public class DealerDto implements ICardHand{
 	private CardsCalculator calc;
 	private boolean isOpen; // 2장일때 뒷장 오픈 여부.
 	
+
 	public DealerDto() {
 		this.handsCard = new ArrayList<>();
 		this.calc = new CardsCalculator();
@@ -68,5 +70,16 @@ public class DealerDto implements ICardHand{
 				&& handsCard.get(0).getDenomination().getValue() == 10)
 			result = true;
 		return result;
+	}
+	
+	// UI에서 쓰일 State
+	public PlayResultState getResultState(){
+		if(isBlackJack()) {
+			return PlayResultState.BLACKJACK;
+		}else if(getHandsScore() > 21) {
+			return PlayResultState.BUST;
+		}else {
+			return PlayResultState.NONE;
+		}
 	}
 }
