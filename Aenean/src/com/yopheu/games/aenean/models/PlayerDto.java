@@ -20,7 +20,7 @@ public class PlayerDto implements ICardHand{
 	public PlayerDto() {
 		this.handsCard = new ArrayList<>();
 		this.calc = new CardsCalculator();
-		this.totalChip = 10000;	// 임시로 부여된 칩.
+		this.totalChip = 800;	// 임시로 부여된 칩.
 		this.splitDto = new PlayerSplitDto(this);	// 생성하면서 자신을 넣을수 있나?
 		resetStateChips();
 		this.lastBetChip = this.betChip;
@@ -137,6 +137,16 @@ public class PlayerDto implements ICardHand{
 	
 	public void insuranceWon() {
 		totalChip += insuranceChip;
+	}
+	
+	public boolean isSplitAllowed() {
+		boolean result = false;
+		if(handsCard.size() == 2 
+				&& splitDto.getBetChip() == 0
+				&& handsCard.get(0).getDenomination() == handsCard.get(1).getDenomination()) {
+			result = true;
+		}
+		return result;
 	}
 	
 	// 스플릿Dto 가져오기

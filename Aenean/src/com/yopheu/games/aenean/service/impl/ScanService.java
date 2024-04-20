@@ -3,6 +3,7 @@ package com.yopheu.games.aenean.service.impl;
 import java.util.Scanner;
 
 import com.yopheu.games.aenean.config.Chip;
+import com.yopheu.games.exceptions.ScanErrException;
 
 public class ScanService {
 	private Scanner scan;
@@ -57,5 +58,21 @@ public class ScanService {
 	}
 	public void printBetMsg() {
 		System.out.println("배팅이 되지 않았습니다. 배팅해주세요.");
+	}
+	
+	public boolean scanInsurance() throws ScanErrException{
+		boolean result = false;
+		System.out.println("인슈어런스 하시겠습니까? (1[Y] 2[N])");
+		System.out.print("입력: ");
+		String strChoose = scan.nextLine();
+		
+		if(strChoose.equalsIgnoreCase("1")) {
+			result = true;
+		}else if(strChoose.equalsIgnoreCase("2")) {
+			result = false;
+		}else {
+			throw new ScanErrException();
+		}
+		return result;
 	}
 }

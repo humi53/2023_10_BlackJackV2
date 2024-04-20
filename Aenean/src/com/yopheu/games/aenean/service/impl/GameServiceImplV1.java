@@ -1,11 +1,16 @@
 package com.yopheu.games.aenean.service.impl;
 
-import com.yopheu.aenean.config.GameState;
+import com.yopheu.games.aenean.config.GameState;
+import com.yopheu.games.aenean.config.PlayResultState;
 import com.yopheu.games.aenean.config.Chip;
 import com.yopheu.games.aenean.models.CommDataWrapper;
+import com.yopheu.games.aenean.models.DealerDto;
+import com.yopheu.games.aenean.models.DeckDto;
+import com.yopheu.games.aenean.models.ICardHand;
 import com.yopheu.games.aenean.models.PlayerDto;
 import com.yopheu.games.aenean.service.GameService;
 import com.yopheu.games.aenean.service.UIService;
+import com.yopheu.games.exceptions.ScanErrException;
 
 public class GameServiceImplV1 implements GameService {
 
@@ -73,26 +78,80 @@ public class GameServiceImplV1 implements GameService {
 			}
 		}
 		System.out.println("완료");
+		gState = GameState.DEALINITCARD;
 	}
 	private void dealInitialCards() {
-		// 모두에게 2장씩 딜링을 한다.
+		PlayerDto playerDto = cData.getPlayerDto();
+		DealerDto dealerDto = cData.getDealerDto();
+		for(int i = 0; i < 2; i++) {
+			deal(playerDto);
+			deal(dealerDto);
+		}
 		
-		// A카드인지 확인. (인슈어런스 가능 확인.)
-			// y 인슈어런스 입력부로 ->
-		// 10카드인지 확인.
-			// 블랙잭인지 확인부로 ->
-		// n 플레이어 진행으로 -> 
+		if(dealerDto.isAce()) {
+			gState = GameState.INSURANCE;
+		}else if(dealerDto.isTenValue()){
+			if(dealerDto.isBlackJack()) {
+				dealerDto.setOpen();
+				paint();
+				gState = GameState.FINISH;
+			}else {
+				gState = GameState.PLAYERTURN;
+			}
+		}else {
+			gState = GameState.PLAYERTURN;
+		}		
 	}
 	
 	private void getPlayerInsurance() {
-		// 인슈어런스 선택을 받는다.
-		// 딜러가 블랙잭인지 확인한다.
-			// y 게임 종료와 칩 계산 부분으로 ->
-			// 
+		DealerDto dealerDto = cData.getDealerDto();
+		PlayerDto playerDto = cData.getPlayerDto();
+		paint();
+		while(true) {
+			try {
+				
+				if(sc.scanInsurance()) {
+					if(!playerDto.setInsurance()) {
+						paint();
+						sc.printLowChips();
+						continue;
+					}
+				}
+				
+				if(dealerDto.isBlackJack()) {
+					dealerDto.setOpen();
+					paint();
+					gState = GameState.FINISH;
+				}else {
+					gState = GameState.PLAYERTURN;
+				}
+				break;
+			} catch (ScanErrException e) {
+				paint();
+				sc.printScanErr();
+			}			
+		}
 	}
-	// 인슈어런스 상태확인
-	// 인슈어런스 시도확인
-	// 딜러 블랙잭 확인		// 블랙잭이면 결과계산
+	
+	private void playerTurn() {
+		DealerDto dealerDto = cData.getDealerDto();
+		PlayerDto playerDto = cData.getPlayerDto();
+		// 블랙잭 확인
+		if(playerDto.isBlackJack()) {
+			playerDto.setResultState(PlayResultState.BLACKJACK);
+			paint();
+			gState = GameState.FINISH;
+		}else if(playerDto.isSplitAllowed()) {
+			// 스플릿 시도 입력.
+		}
+		
+		// 힛, 스탠드 입력.
+		
+		// 스플릿 확인 (2장의 카드의 값이 같은지)
+		// 스플릿 시도 입력.
+		
+		// 힛, 스탠드 입력.
+	}
 	// 플레이어 진행
 		// 스플릿 가능확인
 		// 스플릿 시도확인
@@ -101,6 +160,11 @@ public class GameServiceImplV1 implements GameService {
 	// 딜러 진행
 	// 결과 계산
 	// 초기화
+	
+	private void deal(ICardHand dto) {
+		dto.addCard(cData.getDeckDto().takeCard());	
+		paint();
+	}
 	
 	private void paint() {
 		try {

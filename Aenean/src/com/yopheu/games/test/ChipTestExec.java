@@ -9,5 +9,6 @@ public class ChipTestExec {
 	public static void main(String[] args) {
 		GameServiceImplV1 gameService = new GameServiceImplV1();
 //		gameService.receivePlayerBets();
+//		gameService.getPlayerInsurance();
 	}
 }
