@@ -98,7 +98,6 @@ public class PlayerDto implements ICardHand{
 	}
 	
 	public boolean repeatPreviousBet() {
-		System.out.println("last --- " + lastBetChip);
 		return betting(lastBetChip);
 	}
 	
