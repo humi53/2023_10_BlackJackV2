@@ -2,6 +2,7 @@ package com.yopheu.games.aenean.service.impl;
 
 import com.yopheu.games.aenean.config.GameState;
 import com.yopheu.games.aenean.config.PlayResultState;
+import com.yopheu.games.aenean.callback.GameServiceCallback;
 import com.yopheu.games.aenean.config.Chip;
 import com.yopheu.games.aenean.models.CommDataWrapper;
 import com.yopheu.games.aenean.models.DealerDto;
@@ -19,10 +20,22 @@ public class GameServiceImplV1 implements GameService {
 	private ScanService sc;	// 입력안내메시지 + scanner
 	private GameState gState;
 	
+	private PlayerDto playerDto;
+	private DealerDto dealerDto;
+	
 	public GameServiceImplV1() {
 		cData = new CommDataWrapper();
 		ui = new CUIServiceImplV1(cData);
-		sc = new ScanService();
+		sc = new ScanService(new GameServiceCallback() {
+			@Override
+			public void performPaint() {
+				paint();
+			}
+		});
+		
+		playerDto = cData.getPlayerDto();
+		dealerDto = cData.getDealerDto();
+		
 		gState = GameState.READY;
 	}
 	
@@ -32,9 +45,52 @@ public class GameServiceImplV1 implements GameService {
 
 	}
 	
+	public void receivePlayerBets() {
+		Chip chip = Chip.NONE;
+		paint();
+		if (playerDto.repeatPreviousBet()) {
+			chip = sc.scanPlayerBets(playerDto.getBetChip());
+		}else {
+			sc.printLowChips();
+			chip = sc.scanPlayerBets(0);
+		}
+		
+		while(true) {
+			if(chip == Chip.CMAX || chip == Chip.ENTER) {				
+				if(playerDto.getBetChip() <= 0) {
+					paint();
+					sc.printBetMsg();
+					chip = Chip.NONE;
+				}else {
+					break;	// 탈출. 배팅완료.
+				}
+			}else if(chip == Chip.CENCEL) {
+				// 배팅을 취소
+				playerDto.cancelBetting();
+				chip = Chip.NONE;
+			}else {
+				// max가 넘었는지 확인.
+				int tempBet = playerDto.getBetChip() + chip.value();
+				if(tempBet > Chip.CMAX.value()) {
+					paint();
+					sc.printBetMaxOver();
+					chip = sc.scanPlayerBets(playerDto.getBetChip());
+				}else {
+					boolean betSucess = playerDto.betting(chip.value());
+					paint();
+					if(!betSucess) {
+						sc.printLowChips();
+					}
+					chip = sc.scanPlayerBets(playerDto.getBetChip());
+				}				
+			}
+		}
+		System.out.println("완료");
+		gState = GameState.DEALINITCARD;
+	}
+	
 	// 초기화상태
-	private void receivePlayerBets() {
-		PlayerDto playerDto = cData.getPlayerDto();
+	private void receivePlayerBets2() {
 		Chip chip = Chip.NONE;
 		if (playerDto.repeatPreviousBet()) {
 			chip = sc.scanPlayerBets(playerDto.getBetChip());
@@ -81,8 +137,6 @@ public class GameServiceImplV1 implements GameService {
 		gState = GameState.DEALINITCARD;
 	}
 	private void dealInitialCards() {
-		PlayerDto playerDto = cData.getPlayerDto();
-		DealerDto dealerDto = cData.getDealerDto();
 		for(int i = 0; i < 2; i++) {
 			deal(playerDto);
 			deal(dealerDto);
@@ -96,16 +150,14 @@ public class GameServiceImplV1 implements GameService {
 				paint();
 				gState = GameState.FINISH;
 			}else {
-				gState = GameState.PLAYERTURN;
+				gState = GameState.PLAYERHASBLACKJACK;
 			}
 		}else {
-			gState = GameState.PLAYERTURN;
+			gState = GameState.PLAYERHASBLACKJACK;
 		}		
 	}
 	
 	private void getPlayerInsurance() {
-		DealerDto dealerDto = cData.getDealerDto();
-		PlayerDto playerDto = cData.getPlayerDto();
 		paint();
 		while(true) {
 			try {
@@ -123,7 +175,7 @@ public class GameServiceImplV1 implements GameService {
 					paint();
 					gState = GameState.FINISH;
 				}else {
-					gState = GameState.PLAYERTURN;
+					gState = GameState.PLAYERHASBLACKJACK;
 				}
 				break;
 			} catch (ScanErrException e) {
@@ -133,16 +185,20 @@ public class GameServiceImplV1 implements GameService {
 		}
 	}
 	
-	private void playerTurn() {
-		DealerDto dealerDto = cData.getDealerDto();
-		PlayerDto playerDto = cData.getPlayerDto();
-		// 블랙잭 확인
+	private void playerHasBlackjack() {
 		if(playerDto.isBlackJack()) {
 			playerDto.setResultState(PlayResultState.BLACKJACK);
 			paint();
 			gState = GameState.FINISH;
-		}else if(playerDto.isSplitAllowed()) {
+		}else {
+			gState = GameState.PLAYERTURN;
+		}
+	}
+	
+	private void playerTurn() {
+		if(playerDto.isSplitAllowed()) {
 			// 스플릿 시도 입력.
+			
 		}
 		
 		// 힛, 스탠드 입력.
@@ -151,6 +207,10 @@ public class GameServiceImplV1 implements GameService {
 		// 스플릿 시도 입력.
 		
 		// 힛, 스탠드 입력.
+	}
+	
+	private void receiveSplitDecision() {
+		
 	}
 	// 플레이어 진행
 		// 스플릿 가능확인
@@ -172,6 +232,9 @@ public class GameServiceImplV1 implements GameService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		ui.paint();
+//		ui.paint();
+		System.out.println("[게임보드]");
+		System.out.println("[게임보드]");
+		System.out.println("[게임보드]");
 	}
 }
