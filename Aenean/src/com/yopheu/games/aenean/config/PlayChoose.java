@@ -5,7 +5,7 @@ public enum PlayChoose {
 	DOUBLEDOWN("더블"),
 	HIT("힛"),
 	STAND("스탠드"),
-	NONE("없음");
+	NONE("");
 	
 	private final String TEXT;
 	private PlayChoose(String TEXT) {

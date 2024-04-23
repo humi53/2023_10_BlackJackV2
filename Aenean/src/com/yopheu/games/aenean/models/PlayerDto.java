@@ -16,6 +16,7 @@ public class PlayerDto implements ICardHand{
 	private int insuranceChip;	// 인슈어런스 칩.
 	private int lastBetChip; // 마지막에 걸었던 칩 크기
 	private boolean isDoubleDown;
+	private boolean isSplit;
 	
 	public PlayerDto() {
 		this.handsCard = new ArrayList<>();
@@ -30,7 +31,7 @@ public class PlayerDto implements ICardHand{
 		this.betChip = 0;
 		this.insuranceChip = 0;
 		this.isDoubleDown = false;
-		
+		this.isSplit = false;
 		this.playResultState = PlayResultState.NONE;
 		
 		this.splitDto.resetHands();
@@ -148,6 +149,16 @@ public class PlayerDto implements ICardHand{
 		}
 		return result;
 	}
+	public boolean isSplit() {
+		return isSplit;
+	}
+	public boolean isDobleDownAllowed() {
+		boolean result = false;
+		if(handsCard.size() == 2) {
+			result = true;
+		}
+		return result;
+	}
 	
 	// 스플릿Dto 가져오기
 	public PlayerSplitDto getSplitDto() {
@@ -155,6 +166,8 @@ public class PlayerDto implements ICardHand{
 	}
 	// 스플릿하기
 	public boolean trySplit() {
-		return splitDto.betting(betChip);
+		this.isSplit = splitDto.betting(betChip); 
+		splitDto.addCard(handsCard.remove(handsCard.size()-1));
+		return this.isSplit;
 	}
 }

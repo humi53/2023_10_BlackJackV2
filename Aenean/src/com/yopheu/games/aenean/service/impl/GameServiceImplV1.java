@@ -1,6 +1,7 @@
 package com.yopheu.games.aenean.service.impl;
 
 import com.yopheu.games.aenean.config.GameState;
+import com.yopheu.games.aenean.config.PlayChoose;
 import com.yopheu.games.aenean.config.PlayResultState;
 import com.yopheu.games.aenean.callback.GameServiceCallback;
 import com.yopheu.games.aenean.config.Chip;
@@ -166,22 +167,69 @@ public class GameServiceImplV1 implements GameService {
 		if(playerDto.getResultState() == PlayResultState.BLACKJACK) {
 			states.gameState = GameState.FINISH;
 		}else {
+			states.playMenu = new PlayChoose[] {PlayChoose.NONE,PlayChoose.HIT,PlayChoose.STAND, PlayChoose.NONE, PlayChoose.NONE};
+			states.exceptionState = ExceptionState.NONE;
+			PlayChoose choose = PlayChoose.NONE;
 			while(true) {
-				// 스플릿 가능 확인.
-				// 더블다운 가능 확인.
+				if(playerDto.isDobleDownAllowed()) {
+					states.playMenu[3] = PlayChoose.DOUBLEDOWN;
+				}
+				if(playerDto.isSplitAllowed()) {
+					states.playMenu[4] = PlayChoose.SPLIT;
+				}
 				
 				// 힛, 스탠드 , (더블), (스플릿) 입력 출력부.
+				paint();
+				states.exceptionState = ExceptionState.NONE;
 				// 힛, 스탠드 , (더블), (스플릿) 입력.
+				choose = sc.scanPlayerTurn();
 				
-				// 힛 = 딜링
-				// 스탠드 = break;
-				// 더블 = 추가배팅, 딜링 후 break;
-				// 스플릿 = 추가배팅,
-					// 스플릿객체 생성	= 1장씩 딜링.
-					// 진행.
+				if(choose == PlayChoose.HIT) {
+					// 힛 = 딜링
+					deal(playerDto);
+					paint();
+				}else if(choose == PlayChoose.STAND) {
+					// 스탠드 = break;
+					playerDto.setResultState(PlayResultState.STAND);
+					states.gameState = GameState.DEALERTURN;
+					paint();
+					break;
+				}else if(choose == PlayChoose.DOUBLEDOWN) {
+					// 더블 = 추가배팅, 딜링 후 break;
+					if(!playerDto.doubleDown()) {
+						states.exceptionState = ExceptionState.LOWCHIPS;
+						continue;
+					}else {
+						deal(playerDto);
+						paint();
+						if(playerDto.getHandsScore() > 21) {
+							playerDto.setResultState(PlayResultState.BUST);
+							paint();
+						}
+						states.gameState = GameState.DEALERTURN;
+						break;
+					}
+				}else if(choose == PlayChoose.SPLIT) {
+					if(!playerDto.trySplit()) {
+						states.exceptionState = ExceptionState.LOWCHIPS;
+						continue;
+					}else {
+						// 스플릿객체 생성	= 1장씩 딜링.
+						paint();
+						deal(playerDto);
+						paint();
+						deal(playerDto.getSplitDto());
+						paint();
+					}
+				}
 				
 				// 버스트 확인.
-				break;
+				if(playerDto.getHandsScore() > 21) {
+					playerDto.setResultState(PlayResultState.BUST);
+					paint();
+					states.gameState = GameState.DEALERTURN;
+					break;
+				}
 			}
 			// 스플릿이 있는지 확인.
 			while(true) {
@@ -210,7 +258,6 @@ public class GameServiceImplV1 implements GameService {
 	
 	private void deal(ICardHand dto) {
 		dto.addCard(cData.getDeckDto().takeCard());	
-		paint();
 	}
 	
 	private void paint() {

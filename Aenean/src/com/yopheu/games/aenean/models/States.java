@@ -13,10 +13,11 @@ public class States {
 	public ExceptionState exceptionState = ExceptionState.NONE;
 	// 출력용 벳메뉴리스트
 	public Chip[] chipMenu = new Chip[0];
-	public Confirm[] confirmMenu = new Confirm[] {Confirm.NONE, Confirm.YES, Confirm.NO};
 	public int chipBet = 0;
+	public Confirm[] confirmMenu = new Confirm[] {Confirm.NONE, Confirm.YES, Confirm.NO};
+	
 	// 출력용 진행메뉴 리스트
-	public PlayChoose[] palyMenu = new PlayChoose[0];
+	public PlayChoose[] playMenu = new PlayChoose[0];
 	
 	public void setBetMenu(Chip[] chipMenu, int chipBet) {
 		this.chipMenu = chipMenu;

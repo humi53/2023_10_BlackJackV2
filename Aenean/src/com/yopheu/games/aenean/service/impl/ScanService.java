@@ -6,6 +6,7 @@ import com.yopheu.games.aenean.callback.GameServiceCallback;
 import com.yopheu.games.aenean.config.Chip;
 import com.yopheu.games.aenean.config.Confirm;
 import com.yopheu.games.aenean.config.ExceptionState;
+import com.yopheu.games.aenean.config.PlayChoose;
 import com.yopheu.games.aenean.models.States;
 import com.yopheu.games.exceptions.ScanErrException;
 
@@ -80,6 +81,31 @@ public class ScanService {
 				int intChoose = Integer.valueOf(strChoose);
 				if(intChoose > 0 && intChoose < states.confirmMenu.length) {
 					result = states.confirmMenu[intChoose];
+					break;
+				}else {
+					states.exceptionState = ExceptionState.SCANERR;
+					callback.performPaint();
+					continue;
+				}
+			} catch (Exception e) {
+				states.exceptionState = ExceptionState.SCANERR;
+				callback.performPaint();
+				continue;
+			}
+		}
+		return result;
+	}
+	
+	public PlayChoose scanPlayerTurn() {
+		PlayChoose result = PlayChoose.NONE;
+		while(true) {
+			states.exceptionState = ExceptionState.NONE;
+			String strChoose = scan.nextLine();
+			try {
+				int intChoose = Integer.valueOf(strChoose);
+				if(intChoose > 0 && intChoose < states.playMenu.length
+						&& states.playMenu[intChoose] != PlayChoose.NONE) {
+					result = states.playMenu[intChoose];
 					break;
 				}else {
 					states.exceptionState = ExceptionState.SCANERR;
