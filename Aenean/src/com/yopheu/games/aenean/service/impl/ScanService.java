@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import com.yopheu.games.aenean.callback.GameServiceCallback;
 import com.yopheu.games.aenean.config.Chip;
+import com.yopheu.games.aenean.config.Confirm;
 import com.yopheu.games.aenean.config.ExceptionState;
 import com.yopheu.games.aenean.models.States;
 import com.yopheu.games.exceptions.ScanErrException;
@@ -57,31 +58,39 @@ public class ScanService {
 		
 		return result;
 	}
-	public void printScanErr() {
-		System.out.println("잘못된 값을 입력했습니다. 안내된 값을 입력해주세요.");
-	}
-	public void printLowChips() {
-		System.out.println("잔액이 부족합니다.");
-	}
-	public void printBetMaxOver() {
-		System.out.println("배팅 최대금액은 1000 입니다.");
-	}
-	public void printBetMsg() {
-		System.out.println("배팅이 되지 않았습니다. 배팅해주세요.");
-	}
+//	public void printScanErr() {
+//		System.out.println("잘못된 값을 입력했습니다. 안내된 값을 입력해주세요.");
+//	}
+//	public void printLowChips() {
+//		System.out.println("잔액이 부족합니다.");
+//	}
+//	public void printBetMaxOver() {
+//		System.out.println("배팅 최대금액은 1000 입니다.");
+//	}
+//	public void printBetMsg() {
+//		System.out.println("배팅이 되지 않았습니다. 배팅해주세요.");
+//	}
 	
-	public boolean scanInsurance() throws ScanErrException{
-		boolean result = false;
-		System.out.println("인슈어런스 하시겠습니까? (1[Y] 2[N])");
-		System.out.print("입력: ");
-		String strChoose = scan.nextLine();
-		
-		if(strChoose.equalsIgnoreCase("1")) {
-			result = true;
-		}else if(strChoose.equalsIgnoreCase("2")) {
-			result = false;
-		}else {
-			throw new ScanErrException();
+	public Confirm scanInsurance() {
+		Confirm result = Confirm.NONE;
+		while(true) {
+			states.exceptionState = ExceptionState.NONE;
+			String strChoose = scan.nextLine();
+			try {
+				int intChoose = Integer.valueOf(strChoose);
+				if(intChoose > 0 && intChoose < states.confirmMenu.length) {
+					result = states.confirmMenu[intChoose];
+					break;
+				}else {
+					states.exceptionState = ExceptionState.SCANERR;
+					callback.performPaint();
+					continue;
+				}
+			} catch (Exception e) {
+				states.exceptionState = ExceptionState.SCANERR;
+				callback.performPaint();
+				continue;
+			}
 		}
 		return result;
 	}

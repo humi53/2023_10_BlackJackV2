@@ -10,12 +10,13 @@ public class DealerDto implements ICardHand{
 	private ArrayList<Card> handsCard;
 	private CardsCalculator calc;
 	private boolean isOpen; // 2장일때 뒷장 오픈 여부.
+	private PlayResultState resultState;
 	
-
 	public DealerDto() {
 		this.handsCard = new ArrayList<>();
 		this.calc = new CardsCalculator();
 		this.isOpen = false;
+		this.resultState = PlayResultState.NONE;
 	}
 	
 	@Override
@@ -40,7 +41,8 @@ public class DealerDto implements ICardHand{
 	
 	@Override
 	public void resetHands() {
-		this.isOpen = false;		
+		this.isOpen = false;	
+		this.resultState = PlayResultState.NONE;
 		this.handsCard.clear();
 	}
 	
@@ -73,13 +75,17 @@ public class DealerDto implements ICardHand{
 	}
 	
 	// UI에서 쓰일 State
-	public PlayResultState getResultState(){
+	public void setResultState(){
 		if(isBlackJack()) {
-			return PlayResultState.BLACKJACK;
+			resultState = PlayResultState.BLACKJACK;
 		}else if(getHandsScore() > 21) {
-			return PlayResultState.BUST;
+			resultState = PlayResultState.BUST;
 		}else {
-			return PlayResultState.NONE;
+			resultState =  PlayResultState.NONE;
 		}
+	}
+	
+	public PlayResultState getResultState() {
+		return resultState;
 	}
 }

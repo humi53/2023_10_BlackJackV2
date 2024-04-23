@@ -4,6 +4,7 @@ import com.yopheu.games.aenean.config.GameState;
 import com.yopheu.games.aenean.config.PlayResultState;
 import com.yopheu.games.aenean.callback.GameServiceCallback;
 import com.yopheu.games.aenean.config.Chip;
+import com.yopheu.games.aenean.config.Confirm;
 import com.yopheu.games.aenean.config.ExceptionState;
 import com.yopheu.games.aenean.models.CommDataWrapper;
 import com.yopheu.games.aenean.models.DealerDto;
@@ -68,6 +69,7 @@ public class GameServiceImplV1 implements GameService {
 		
 		while(true) {
 			paint(); 	// 출력부
+			states.exceptionState = ExceptionState.NONE;
 			chip = sc.scanPlayerBets();	// 입력부
 			
 			// 출력부 설정 & 입력값으로 인한 반복문 종료.
@@ -104,76 +106,94 @@ public class GameServiceImplV1 implements GameService {
 	}
 	
 	private void dealInitialCards() {
+		paint();
 		for(int i = 0; i < 2; i++) {
 			deal(playerDto);
+			paint();
 			deal(dealerDto);
+			paint();
 		}
+		
+		playerHasBlackjack();
 		
 		if(dealerDto.isAce()) {
 			states.gameState = GameState.INSURANCE;
 		}else if(dealerDto.isTenValue()){
-			if(dealerDto.isBlackJack()) {
-				dealerDto.setOpen();
-				paint();
-				states.gameState = GameState.FINISH;
-			}else {
-				states.gameState = GameState.PLAYERHASBLACKJACK;
-			}
+			states.gameState = GameState.DEALERHASBLACKJACK;
 		}else {
-			states.gameState = GameState.PLAYERHASBLACKJACK;
+			states.gameState = GameState.PLAYERTURN;
 		}		
-	}
-	
-	private void getPlayerInsurance() {
-		paint();
-		while(true) {
-			try {
-				
-				if(sc.scanInsurance()) {
-					if(!playerDto.setInsurance()) {
-						paint();
-						sc.printLowChips();
-						continue;
-					}
-				}
-				
-				if(dealerDto.isBlackJack()) {
-					dealerDto.setOpen();
-					paint();
-					states.gameState = GameState.FINISH;
-				}else {
-					states.gameState = GameState.PLAYERHASBLACKJACK;
-				}
-				break;
-			} catch (ScanErrException e) {
-				paint();
-				sc.printScanErr();
-			}			
-		}
 	}
 	
 	private void playerHasBlackjack() {
 		if(playerDto.isBlackJack()) {
 			playerDto.setResultState(PlayResultState.BLACKJACK);
 			paint();
+		}
+	}
+	
+	private void getPlayerInsurance() {
+		states.exceptionState = ExceptionState.NONE;	// 예외메시지.
+		Confirm confirm = Confirm.NONE;
+		
+		while(true) {
+			paint();
+			states.exceptionState = ExceptionState.NONE;
+			confirm = sc.scanInsurance();
+			
+			if(!playerDto.setInsurance()) {
+				states.exceptionState = ExceptionState.LOWCHIPS;
+				continue;
+			}
+			states.gameState = GameState.DEALERHASBLACKJACK;
+		}	
+	}
+	
+	private void dealerHasBlackjack() {
+		if(dealerDto.isBlackJack()) {
+			dealerDto.setOpen();
+			paint();
+			dealerDto.setResultState();
+			paint();
 			states.gameState = GameState.FINISH;
 		}else {
+			paint();
 			states.gameState = GameState.PLAYERTURN;
 		}
 	}
 	
 	private void playerTurn() {
-		if(playerDto.isSplitAllowed()) {
-			// 스플릿 시도 입력.
-			
+		if(playerDto.getResultState() == PlayResultState.BLACKJACK) {
+			states.gameState = GameState.FINISH;
+		}else {
+			while(true) {
+				// 스플릿 가능 확인.
+				// 더블다운 가능 확인.
+				
+				// 힛, 스탠드 , (더블), (스플릿) 입력 출력부.
+				// 힛, 스탠드 , (더블), (스플릿) 입력.
+				
+				// 힛 = 딜링
+				// 스탠드 = break;
+				// 더블 = 추가배팅, 딜링 후 break;
+				// 스플릿 = 추가배팅,
+					// 스플릿객체 생성	= 1장씩 딜링.
+					// 진행.
+				
+				// 버스트 확인.
+				break;
+			}
+			// 스플릿이 있는지 확인.
+			while(true) {
+				// 더블다운 가능 확인.
+				
+				// 힛, 스탠드, (더블) 입력 출력부
+				// 힛, 스탠드, (더블) 입력.
+				
+				// 상태 확인.
+				break;
+			}
 		}
-		
-		// 힛, 스탠드 입력.
-		
-		// 스플릿 확인 (2장의 카드의 값이 같은지)
-		// 스플릿 시도 입력.
-		
-		// 힛, 스탠드 입력.
 	}
 	
 	private void receiveSplitDecision() {

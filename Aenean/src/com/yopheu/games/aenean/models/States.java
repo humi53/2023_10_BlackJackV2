@@ -1,6 +1,7 @@
 package com.yopheu.games.aenean.models;
 
 import com.yopheu.games.aenean.config.Chip;
+import com.yopheu.games.aenean.config.Confirm;
 import com.yopheu.games.aenean.config.ExceptionState;
 import com.yopheu.games.aenean.config.GameState;
 import com.yopheu.games.aenean.config.PlayChoose;
@@ -12,6 +13,7 @@ public class States {
 	public ExceptionState exceptionState = ExceptionState.NONE;
 	// 출력용 벳메뉴리스트
 	public Chip[] chipMenu = new Chip[0];
+	public Confirm[] confirmMenu = new Confirm[] {Confirm.NONE, Confirm.YES, Confirm.NO};
 	public int chipBet = 0;
 	// 출력용 진행메뉴 리스트
 	public PlayChoose[] palyMenu = new PlayChoose[0];
