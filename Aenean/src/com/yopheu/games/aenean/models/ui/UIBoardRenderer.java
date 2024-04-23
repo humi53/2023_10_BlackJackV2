@@ -15,12 +15,13 @@ import com.yopheu.games.aenean.models.card.Suit;
  *
  */
 public class UIBoardRenderer {
-	private final int BOARD_HEIGHT = 5;	// 보드 높이
+	private final int BOARD_HEIGHT = 3;	// 보드 높이
 	private final int BOARD_WIDTH = 9;	// 보드 너비 * 10
 	private UIBoardConstants boardConstants;	// Board 기본틀.
 	private CommDataWrapper cData;	// 공용 데이터
 	// UI카드 변환기.
 	private String[] arrStrBoard; // 보드의 출력용 데이터.
+	private String[] printStrBoard;	// 출력용 보드
 	
 	private UICardFactory uiCardFactory;
 	private UIStrFactory uiStrFactory;
@@ -38,7 +39,7 @@ public class UIBoardRenderer {
 	}
 	
 	public void printBoard() {
-		for (String element : arrStrBoard) {
+		for (String element : printStrBoard) {
 			System.out.println(element);
 		}
 	}
@@ -48,7 +49,7 @@ public class UIBoardRenderer {
 		// 라인을 정한다
 		setDealerBoard(0);
 		
-		arrStrBoard = boardConstants.wrapBoardData(arrStrBoard);	// 보드 테두리 세팅
+		printStrBoard = boardConstants.wrapBoardData(arrStrBoard);	// 보드 테두리 세팅
 	}
 	
 	private void setDealerBoard(int index) {

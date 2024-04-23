@@ -10,7 +10,6 @@ public enum Chip {
 	CMAX(1000),
 	CENCEL(0),
 	ENTER(0),
-	ERR(0),
 	NONE(0);
 	
 	private final int VALUE;

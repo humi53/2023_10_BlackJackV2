@@ -8,7 +8,7 @@ import com.yopheu.games.aenean.service.impl.ScanService;
 public class ChipTestExec {
 	public static void main(String[] args) {
 		GameServiceImplV1 gameService = new GameServiceImplV1();
-		gameService.receivePlayerBets();
+//		gameService.receivePlayerBets();
 //		gameService.getPlayerInsurance();
 	}
 }

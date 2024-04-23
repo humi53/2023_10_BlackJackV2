@@ -4,11 +4,13 @@ import com.yopheu.games.aenean.config.GameState;
 import com.yopheu.games.aenean.config.PlayResultState;
 import com.yopheu.games.aenean.callback.GameServiceCallback;
 import com.yopheu.games.aenean.config.Chip;
+import com.yopheu.games.aenean.config.ExceptionState;
 import com.yopheu.games.aenean.models.CommDataWrapper;
 import com.yopheu.games.aenean.models.DealerDto;
 import com.yopheu.games.aenean.models.DeckDto;
 import com.yopheu.games.aenean.models.ICardHand;
 import com.yopheu.games.aenean.models.PlayerDto;
+import com.yopheu.games.aenean.models.States;
 import com.yopheu.games.aenean.service.GameService;
 import com.yopheu.games.aenean.service.UIService;
 import com.yopheu.games.exceptions.ScanErrException;
@@ -18,7 +20,7 @@ public class GameServiceImplV1 implements GameService {
 	private CommDataWrapper cData; // 공용데이터 뭉치
 	private UIService ui; // UIService
 	private ScanService sc;	// 입력안내메시지 + scanner
-	private GameState gState;
+	private States states;
 	
 	private PlayerDto playerDto;
 	private DealerDto dealerDto;
@@ -26,17 +28,19 @@ public class GameServiceImplV1 implements GameService {
 	public GameServiceImplV1() {
 		cData = new CommDataWrapper();
 		ui = new CUIServiceImplV1(cData);
+		
+		playerDto = cData.getPlayerDto();
+		dealerDto = cData.getDealerDto();
+		
+		states = cData.getStates();
+		states.gameState = GameState.READY;
+		
 		sc = new ScanService(new GameServiceCallback() {
 			@Override
 			public void performPaint() {
 				paint();
 			}
-		});
-		
-		playerDto = cData.getPlayerDto();
-		dealerDto = cData.getDealerDto();
-		
-		gState = GameState.READY;
+		}, states);
 	}
 	
 	@Override
@@ -46,96 +50,59 @@ public class GameServiceImplV1 implements GameService {
 	}
 	
 	public void receivePlayerBets() {
+		//		GameState.PLAYERBETTING; 이미 상태로 들어와 있음.
+		states.gameState = GameState.PLAYERBETTING;	// 임시로 설정.
+		
+		Chip[] type = new Chip[] {Chip.CENCEL, Chip.C20, Chip.C40, Chip.C100, Chip.C200, Chip.C400, Chip.C1000};
+		states.chipMenu = type;
+		states.chipBet = 0;		// 안내메시지 출력의 정보.
+		states.exceptionState = ExceptionState.NONE;	// 예외메시지.
 		Chip chip = Chip.NONE;
-		paint();
-		if (playerDto.repeatPreviousBet()) {
-			chip = sc.scanPlayerBets(playerDto.getBetChip());
-		}else {
-			sc.printLowChips();
-			chip = sc.scanPlayerBets(0);
+
+		if (playerDto.repeatPreviousBet()) {	// 이전값 자동배팅
+			states.chipBet = playerDto.getBetChip();
+		}else {	// 칩이 부족해 배팅값 0으로 설정.
+			states.chipBet = 0;	// 없어도 되는데 명확성 확보.
+			states.exceptionState = ExceptionState.LOWCHIPS;
 		}
 		
 		while(true) {
-			if(chip == Chip.CMAX || chip == Chip.ENTER) {				
-				if(playerDto.getBetChip() <= 0) {
-					paint();
-					sc.printBetMsg();
-					chip = Chip.NONE;
+			paint(); 	// 출력부
+			chip = sc.scanPlayerBets();	// 입력부
+			
+			// 출력부 설정 & 입력값으로 인한 반복문 종료.
+			if(chip == Chip.ENTER) {
+				if(playerDto.getBetChip() == 0) {
+					states.exceptionState = ExceptionState.BETZERO;
 				}else {
-					break;	// 탈출. 배팅완료.
+					break;
 				}
+			}else if(chip == Chip.CMAX || chip == Chip.NONE) {
+				// 의미없는 chip값이라 넘긴다. 
+				continue;
 			}else if(chip == Chip.CENCEL) {
-				// 배팅을 취소
 				playerDto.cancelBetting();
-				chip = Chip.NONE;
+				states.chipBet = 0;
+				states.exceptionState = ExceptionState.BETCANCEL;
 			}else {
 				// max가 넘었는지 확인.
 				int tempBet = playerDto.getBetChip() + chip.value();
 				if(tempBet > Chip.CMAX.value()) {
-					paint();
-					sc.printBetMaxOver();
-					chip = sc.scanPlayerBets(playerDto.getBetChip());
+					states.chipBet = playerDto.getBetChip();
+					states.exceptionState = ExceptionState.BETMAXSOVER;
 				}else {
 					boolean betSucess = playerDto.betting(chip.value());
-					paint();
 					if(!betSucess) {
-						sc.printLowChips();
+						states.exceptionState = ExceptionState.LOWCHIPS;
 					}
-					chip = sc.scanPlayerBets(playerDto.getBetChip());
-				}				
+					states.chipBet = playerDto.getBetChip();
+				}
 			}
 		}
 		System.out.println("완료");
-		gState = GameState.DEALINITCARD;
+		states.gameState = GameState.DEALINITCARD;
 	}
 	
-	// 초기화상태
-	private void receivePlayerBets2() {
-		Chip chip = Chip.NONE;
-		if (playerDto.repeatPreviousBet()) {
-			chip = sc.scanPlayerBets(playerDto.getBetChip());
-		}else {
-			sc.printLowChips();
-			chip = sc.scanPlayerBets(0);
-			System.out.println(chip);
-		}
-		while(true) {
-			if(chip == Chip.CMAX || chip == Chip.ENTER) {				
-				if(playerDto.getBetChip() <= 0) {
-					paint();
-					sc.printBetMsg();
-					chip = Chip.NONE;
-				}else {
-					break;	// 탈출. 배팅완료.
-				}
-			}else if(chip == Chip.ERR) {
-				paint();
-				sc.printScanErr();
-				chip = sc.scanPlayerBets(playerDto.getBetChip());
-			}else if(chip == Chip.CENCEL) {
-				// 배팅을 취소
-				playerDto.cancelBetting();
-				chip = Chip.NONE;
-			}else {
-				// max가 넘었는지 확인.
-				int tempBet = playerDto.getBetChip() + chip.value();
-				if(tempBet > Chip.CMAX.value()) {
-					paint();
-					sc.printBetMaxOver();
-					chip = sc.scanPlayerBets(playerDto.getBetChip());
-				}else {
-					boolean betSucess = playerDto.betting(chip.value());
-					paint();
-					if(!betSucess) {
-						sc.printLowChips();
-					}
-					chip = sc.scanPlayerBets(playerDto.getBetChip());
-				}				
-			}
-		}
-		System.out.println("완료");
-		gState = GameState.DEALINITCARD;
-	}
 	private void dealInitialCards() {
 		for(int i = 0; i < 2; i++) {
 			deal(playerDto);
@@ -143,17 +110,17 @@ public class GameServiceImplV1 implements GameService {
 		}
 		
 		if(dealerDto.isAce()) {
-			gState = GameState.INSURANCE;
+			states.gameState = GameState.INSURANCE;
 		}else if(dealerDto.isTenValue()){
 			if(dealerDto.isBlackJack()) {
 				dealerDto.setOpen();
 				paint();
-				gState = GameState.FINISH;
+				states.gameState = GameState.FINISH;
 			}else {
-				gState = GameState.PLAYERHASBLACKJACK;
+				states.gameState = GameState.PLAYERHASBLACKJACK;
 			}
 		}else {
-			gState = GameState.PLAYERHASBLACKJACK;
+			states.gameState = GameState.PLAYERHASBLACKJACK;
 		}		
 	}
 	
@@ -173,9 +140,9 @@ public class GameServiceImplV1 implements GameService {
 				if(dealerDto.isBlackJack()) {
 					dealerDto.setOpen();
 					paint();
-					gState = GameState.FINISH;
+					states.gameState = GameState.FINISH;
 				}else {
-					gState = GameState.PLAYERHASBLACKJACK;
+					states.gameState = GameState.PLAYERHASBLACKJACK;
 				}
 				break;
 			} catch (ScanErrException e) {
@@ -189,9 +156,9 @@ public class GameServiceImplV1 implements GameService {
 		if(playerDto.isBlackJack()) {
 			playerDto.setResultState(PlayResultState.BLACKJACK);
 			paint();
-			gState = GameState.FINISH;
+			states.gameState = GameState.FINISH;
 		}else {
-			gState = GameState.PLAYERTURN;
+			states.gameState = GameState.PLAYERTURN;
 		}
 	}
 	
@@ -232,9 +199,6 @@ public class GameServiceImplV1 implements GameService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-//		ui.paint();
-		System.out.println("[게임보드]");
-		System.out.println("[게임보드]");
-		System.out.println("[게임보드]");
+		ui.paint();
 	}
 }
