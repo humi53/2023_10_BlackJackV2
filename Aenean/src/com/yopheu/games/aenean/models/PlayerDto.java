@@ -170,4 +170,8 @@ public class PlayerDto implements ICardHand{
 		splitDto.addCard(handsCard.remove(handsCard.size()-1));
 		return this.isSplit;
 	}
+	
+	public int getTotalBet(){
+		return betChip + insuranceChip;
+	}
 }

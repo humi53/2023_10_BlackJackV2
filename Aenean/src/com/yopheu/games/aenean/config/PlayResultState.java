@@ -4,12 +4,12 @@ public enum PlayResultState {
 	ONGOING("진행중..."),
 	HIT("HIT"),
 	STAND("STAND"),
-	BLACKJACK("BLACKJACK"),
+	BLACKJACK("BlackJack"),
 	WIN("우승"),
 	BUST("BUST"),
 	LOSS("손실"),
 	PUSH("PUSH"),
-	NONE("없음");
+	NONE("");
 	private final String TEXT;
 	
 	PlayResultState(String TEXT) {

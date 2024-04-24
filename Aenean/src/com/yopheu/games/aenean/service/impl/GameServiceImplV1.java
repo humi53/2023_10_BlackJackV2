@@ -14,6 +14,9 @@ import com.yopheu.games.aenean.models.ICardHand;
 import com.yopheu.games.aenean.models.PlayerDto;
 import com.yopheu.games.aenean.models.PlayerSplitDto;
 import com.yopheu.games.aenean.models.States;
+import com.yopheu.games.aenean.models.card.Card;
+import com.yopheu.games.aenean.models.card.Denomination;
+import com.yopheu.games.aenean.models.card.Suit;
 import com.yopheu.games.aenean.service.GameService;
 import com.yopheu.games.aenean.service.UIService;
 import com.yopheu.games.exceptions.ScanErrException;
@@ -52,6 +55,18 @@ public class GameServiceImplV1 implements GameService {
 		states.gameState = GameState.PLAYERBETTING;
 		if(states.gameState == GameState.PLAYERBETTING) {
 			receivePlayerBets();
+		}
+		if(states.gameState == GameState.DEALINITCARD) {
+			dealInitialCards();
+		}
+		if(states.gameState == GameState.DEALERHASBLACKJACK) {
+			dealerHasBlackjack();
+		}
+		if(states.gameState == GameState.INSURANCE) {
+			getPlayerInsurance();
+		}
+		if(states.gameState == GameState.PLAYERTURN) {
+			playerTurn();
 		}
 
 	}
@@ -104,35 +119,69 @@ public class GameServiceImplV1 implements GameService {
 				}
 			}
 		}
-		System.out.println("완료");
 		states.gameState = GameState.DEALINITCARD;
 	}
 	
 	private void dealInitialCards() {
 		paint();
-		for(int i = 0; i < 2; i++) {
-			deal(playerDto);
-			paint();
-			deal(dealerDto);
-			paint();
-		}
+//		for(int i = 0; i < 2; i++) {
+//			deal(playerDto);
+//			paint();
+//			deal(dealerDto);
+//			paint();
+//		}
 		
-		playerHasBlackjack();
+		paint();
+		playerDto.addCard(new Card(Suit.S, Denomination.N2));
+		paint();
+		dealerDto.addCard(new Card(Suit.D, Denomination.N2));
+		paint();
+		playerDto.addCard(new Card(Suit.S, Denomination.N2));
+		paint();
+		dealerDto.addCard(new Card(Suit.D, Denomination.N2));
+		paint();
 		
-		if(dealerDto.isAce()) {
-			states.gameState = GameState.INSURANCE;
-		}else if(dealerDto.isTenValue()){
-			states.gameState = GameState.DEALERHASBLACKJACK;
+		// 플레이어가 블랙잭일때 플레이어 결과 상태 메시지 표시 필요.
+		
+		// 플레이어 블랙잭 (둘다 확인 완료)
+			// ace & ten -> 딜러블랙잭 확인	
+			// 그외 - > 피니쉬.
+		// 그외
+			// 인슈어런스 테스트
+			// 딜러 10 & 블랙잭 테스트
+			// 플레이어 턴으로 테스트
+		
+		if(playerHasBlackjack()) {
+			if(dealerDto.isAce() || dealerDto.isTenValue()) {
+				System.out.println("딜러블랙잭으로");
+				states.gameState = GameState.DEALERHASBLACKJACK;
+			}else {
+				System.out.println("마무리로");
+				states.gameState = GameState.FINISH;
+			}
 		}else {
-			states.gameState = GameState.PLAYERTURN;
-		}		
+			if(dealerDto.isAce()) {
+				System.out.println("인슈어런스로");
+				states.gameState = GameState.INSURANCE;
+			}else if(dealerDto.isTenValue()){
+				System.out.println("딜러블랙잭으로");
+				states.gameState = GameState.DEALERHASBLACKJACK;
+			}else {
+				System.out.println("플레이어 턴으로");
+				states.gameState = GameState.PLAYERTURN;
+			}
+		}
 	}
 	
-	private void playerHasBlackjack() {
+	private boolean playerHasBlackjack() {
+		boolean result = true;
 		if(playerDto.isBlackJack()) {
 			playerDto.setResultState(PlayResultState.BLACKJACK);
 			paint();
+		}else {
+			result = false;
 		}
+		return result;
 	}
 	
 	private void getPlayerInsurance() {
@@ -144,11 +193,14 @@ public class GameServiceImplV1 implements GameService {
 			states.exceptionState = ExceptionState.NONE;
 			confirm = sc.scanInsurance();
 			
-			if(!playerDto.setInsurance()) {
-				states.exceptionState = ExceptionState.LOWCHIPS;
-				continue;
+			if(confirm == Confirm.YES) {
+				if(!playerDto.setInsurance()) {
+					states.exceptionState = ExceptionState.LOWCHIPS;
+					continue;
+				}
 			}
 			states.gameState = GameState.DEALERHASBLACKJACK;
+			break;
 		}	
 	}
 	
@@ -158,10 +210,18 @@ public class GameServiceImplV1 implements GameService {
 			paint();
 			dealerDto.setResultState();
 			paint();
+			System.out.println("마무리로");
 			states.gameState = GameState.FINISH;
 		}else {
-			paint();
-			states.gameState = GameState.PLAYERTURN;
+			if(playerDto.getResultState() == PlayResultState.BLACKJACK) {
+				paint();
+				System.out.println("마무리로");
+				states.gameState = GameState.FINISH;
+			}else {
+				paint();
+				System.out.println("플레이어 턴으로");
+				states.gameState = GameState.PLAYERTURN;
+			}
 		}
 	}
 	

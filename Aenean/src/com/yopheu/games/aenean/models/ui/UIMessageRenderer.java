@@ -29,6 +29,9 @@ public class UIMessageRenderer {
 		System.out.println(exceptionMsg);
 		System.out.println(guideMsg);
 		System.out.print(promptMsg);
+		exceptionMsg = "";
+		guideMsg = "";
+		promptMsg = "";
 	}
 	
 	public void setMessages() {
@@ -52,6 +55,15 @@ public class UIMessageRenderer {
 			guideMsg = getBetMenu();
 			promptMsg = getPrompt();
 		}
+		if(states.gameState == GameState.INSURANCE) {
+			guideMsg = "인슈어런스 하시겠습니까? " + getConfirmMenu();
+			promptMsg = getPrompt();
+		}
+		if(states.gameState == GameState.PLAYERTURN) {
+			guideMsg = getPlayChooseMenu();
+			promptMsg = getPrompt();
+		}
+		
 	}
 	// 예외메시지
 	// 안내메시지
@@ -69,6 +81,21 @@ public class UIMessageRenderer {
 		// 1. 매개변수로 받기.
 		// 2. cData로 받기.
 	
+	private String getPlayChooseMenu() {
+		String selectionsMsg = "";
+		for(int i = 1; i < states.playMenu.length; i++) {
+			 selectionsMsg += i + "[" + states.playMenu[i].getText() + "] ";
+		}
+		return selectionsMsg;
+	}
+	
+	private String getConfirmMenu() {
+		String selectionsMsg = "";
+		for(int i = 1; i < states.confirmMenu.length; i++) {
+			 selectionsMsg += i + "[" + states.confirmMenu[i].getStr() + "] ";
+		}
+		return selectionsMsg;
+	}
 	
 	private String getBetMenu() {
 		String selectionsMsg = "";
