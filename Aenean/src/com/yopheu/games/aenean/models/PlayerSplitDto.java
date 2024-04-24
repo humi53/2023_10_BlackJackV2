@@ -70,6 +70,14 @@ public class PlayerSplitDto implements ICardHand {
 		return result;
 	}
 	
+	public boolean isDobleDownAllowed() {
+		boolean result = false;
+		if(handsCard.size() == 2) {
+			result = true;
+		}
+		return result;
+	}
+	
 	public boolean doubleDown() {
 		if(betChip <= 0 || isDoubleDown) return false;
 		boolean result = OriginPlayerDto.abjectChips(-betChip);

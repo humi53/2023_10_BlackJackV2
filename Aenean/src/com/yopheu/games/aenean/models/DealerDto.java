@@ -75,7 +75,7 @@ public class DealerDto implements ICardHand{
 	}
 	
 	// UI에서 쓰일 State
-	public void setResultState(){
+	public PlayResultState setResultState(){
 		if(isBlackJack()) {
 			resultState = PlayResultState.BLACKJACK;
 		}else if(getHandsScore() > 21) {
@@ -83,6 +83,7 @@ public class DealerDto implements ICardHand{
 		}else {
 			resultState =  PlayResultState.NONE;
 		}
+		return resultState;
 	}
 	
 	public PlayResultState getResultState() {
