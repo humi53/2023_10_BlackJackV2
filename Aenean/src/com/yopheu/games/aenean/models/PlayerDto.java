@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.yopheu.games.aenean.config.PlayResultState;
 import com.yopheu.games.aenean.models.card.Card;
 
-public class PlayerDto implements ICardHand{
+public class PlayerDto implements ICardHand, IPlayerChip{
 	private ArrayList<Card> handsCard;
 	private CardsCalculator calc;
 	private PlayResultState playResultState; 
@@ -17,6 +17,7 @@ public class PlayerDto implements ICardHand{
 	private int lastBetChip; // 마지막에 걸었던 칩 크기
 	private boolean isDoubleDown;
 	private boolean isSplit;
+	private int insuranceWin;
 	
 	public PlayerDto() {
 		this.handsCard = new ArrayList<>();
@@ -30,6 +31,7 @@ public class PlayerDto implements ICardHand{
 	private void resetStateChips() {
 		this.betChip = 0;
 		this.insuranceChip = 0;
+		this.insuranceWin = 0;
 		this.isDoubleDown = false;
 		this.isSplit = false;
 		this.playResultState = PlayResultState.NONE;
@@ -37,9 +39,12 @@ public class PlayerDto implements ICardHand{
 		this.splitDto.resetHands();
 	}
 	
+	@Override
 	public void setResultState(PlayResultState playResultState) {
 		this.playResultState = playResultState;
 	}
+	
+	@Override
 	public PlayResultState getResultState() {
 		return playResultState;
 	}
@@ -76,15 +81,6 @@ public class PlayerDto implements ICardHand{
 	}
 	
 	
-	public boolean abjectChips(int chip) {
-		if (totalChip + chip < 0) {
-			return false;
-		}else {
-			totalChip += chip;
-			return true;
-		}
-	}
-	
 	public int totalChip() {
 		return totalChip;
 	}
@@ -112,10 +108,6 @@ public class PlayerDto implements ICardHand{
 		return result;
 	}
 	
-	public int getBetChip() {
-		return betChip;
-	}
-	
 	public void cancelBetting() {
 		abjectChips(betChip);
 		betChip = 0;
@@ -137,7 +129,27 @@ public class PlayerDto implements ICardHand{
 	}
 	
 	public void insuranceWon() {
-		totalChip += insuranceChip;
+		insuranceWin = insuranceChip * 2;
+	}
+	
+	@Override
+	public boolean abjectChips(int chip) {
+		if (totalChip + chip < 0) {
+			return false;
+		}else {
+			totalChip += chip;
+			return true;
+		}
+	}
+	
+	@Override
+	public int getBetChip() {
+		return betChip;
+	}
+	
+	@Override
+	public int getInsuranceWin() {
+		return insuranceWin;
 	}
 	
 	public boolean isSplitAllowed() {

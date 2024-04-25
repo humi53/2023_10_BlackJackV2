@@ -51,6 +51,7 @@ public class BoardComposer {
 			blockLine.addLeftBlock(block);
 		}
 	}
+	
 	public void addLastBlock(IUIBlock lastBlock) {
 		int sumWidth = blockLine.width() + lastBlock.width();
 		if(sumWidth > blockLineWidth) {
@@ -62,6 +63,20 @@ public class BoardComposer {
 			UIStr spaceBlock = new UIStr(" ".repeat(spaceWidth), null);
 			blockLine.addBlock(spaceBlock);
 			blockLine.addBlock(lastBlock);
+		}
+	}
+	
+	public void addLastStr(IUIStr lastStr) {
+		int sumWidth = strLine.width() + lastStr.width();
+		if(sumWidth > strLineWidth) {
+			System.out.println("범위를 넘어서서 추가하지 않음.");
+		}else {
+			// 전체 길이 - (기존블럭 + 마지막블럭) 길이 = 사이의 남은 공간.
+			int spaceWidth = strLineWidth - (strLine.width() + lastStr.width());
+			// 공간 block 생성.
+			UIStr spaceStr = new UIStr(" ".repeat(spaceWidth), null);
+			strLine.addStr(spaceStr);
+			strLine.addStr(lastStr);
 		}
 	}
 	

@@ -2,6 +2,7 @@ package com.yopheu.games.aenean.models.ui;
 
 import com.yopheu.games.aenean.config.ExceptionState;
 import com.yopheu.games.aenean.config.GameState;
+import com.yopheu.games.aenean.config.PlayChoose;
 import com.yopheu.games.aenean.models.States;
 
 public class UIMessageRenderer {
@@ -84,7 +85,9 @@ public class UIMessageRenderer {
 	private String getPlayChooseMenu() {
 		String selectionsMsg = "";
 		for(int i = 1; i < states.playMenu.length; i++) {
-			 selectionsMsg += i + "[" + states.playMenu[i].getText() + "] ";
+			if(states.playMenu[i] != PlayChoose.NONE) {
+				selectionsMsg += i + "[" + states.playMenu[i].getText() + "] ";
+			}
 		}
 		return selectionsMsg;
 	}

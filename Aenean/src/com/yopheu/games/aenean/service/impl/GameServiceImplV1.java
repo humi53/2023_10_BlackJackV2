@@ -11,8 +11,10 @@ import com.yopheu.games.aenean.models.CommDataWrapper;
 import com.yopheu.games.aenean.models.DealerDto;
 import com.yopheu.games.aenean.models.DeckDto;
 import com.yopheu.games.aenean.models.ICardHand;
+import com.yopheu.games.aenean.models.IPlayerChip;
 import com.yopheu.games.aenean.models.PlayerDto;
 import com.yopheu.games.aenean.models.PlayerSplitDto;
+import com.yopheu.games.aenean.models.ResultCalculator;
 import com.yopheu.games.aenean.models.States;
 import com.yopheu.games.aenean.models.card.Card;
 import com.yopheu.games.aenean.models.card.Denomination;
@@ -31,6 +33,8 @@ public class GameServiceImplV1 implements GameService {
 	private PlayerDto playerDto;
 	private DealerDto dealerDto;
 	
+	private ResultCalculator resultCalculator;
+	
 	public GameServiceImplV1() {
 		cData = new CommDataWrapper();
 		ui = new CUIServiceImplV1(cData);
@@ -47,26 +51,33 @@ public class GameServiceImplV1 implements GameService {
 				paint();
 			}
 		}, states);
+		
+		resultCalculator = new ResultCalculator();
 	}
 	
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
 		states.gameState = GameState.PLAYERBETTING;
-		if(states.gameState == GameState.PLAYERBETTING) {
-			receivePlayerBets();
-		}
-		if(states.gameState == GameState.DEALINITCARD) {
-			dealInitialCards();
-		}
-		if(states.gameState == GameState.DEALERHASBLACKJACK) {
-			dealerHasBlackjack();
-		}
-		if(states.gameState == GameState.INSURANCE) {
-			getPlayerInsurance();
-		}
-		if(states.gameState == GameState.PLAYERTURN) {
-			playerTurn();
+		while(true) {
+			if(states.gameState == GameState.PLAYERBETTING) {
+				receivePlayerBets();
+			}else if(states.gameState == GameState.DEALINITCARD) {
+				dealInitialCards();
+			}else if(states.gameState == GameState.DEALERHASBLACKJACK) {
+				dealerHasBlackjack();
+			}else if(states.gameState == GameState.INSURANCE) {
+				getPlayerInsurance();
+			}else if(states.gameState == GameState.PLAYERTURN) {
+				playerTurn();
+			}else if(states.gameState == GameState.DEALERTURN) {
+				dealerTurn();
+			}else if(states.gameState == GameState.FINISH) {
+				finish();
+			}else {
+				System.out.println("종료");
+				break;
+			}
 		}
 
 	}
@@ -86,6 +97,7 @@ public class GameServiceImplV1 implements GameService {
 		}
 		
 		while(true) {
+			playerDto.setResultState(PlayResultState.ONGOING);
 			paint(); 	// 출력부
 			states.exceptionState = ExceptionState.NONE;
 			chip = sc.scanPlayerBets();	// 입력부
@@ -119,6 +131,7 @@ public class GameServiceImplV1 implements GameService {
 				}
 			}
 		}
+		playerDto.setResultState(PlayResultState.NONE);
 		states.gameState = GameState.DEALINITCARD;
 	}
 	
@@ -134,9 +147,9 @@ public class GameServiceImplV1 implements GameService {
 		paint();
 		playerDto.addCard(new Card(Suit.S, Denomination.N2));
 		paint();
-		dealerDto.addCard(new Card(Suit.D, Denomination.N2));
+		dealerDto.addCard(new Card(Suit.D, Denomination.NA));
 		paint();
-		playerDto.addCard(new Card(Suit.S, Denomination.N2));
+		playerDto.addCard(new Card(Suit.H, Denomination.N2));
 		paint();
 		dealerDto.addCard(new Card(Suit.D, Denomination.N2));
 		paint();
@@ -189,6 +202,7 @@ public class GameServiceImplV1 implements GameService {
 		Confirm confirm = Confirm.NONE;
 		
 		while(true) {
+			playerDto.setResultState(PlayResultState.ONGOING);
 			paint();
 			states.exceptionState = ExceptionState.NONE;
 			confirm = sc.scanInsurance();
@@ -199,6 +213,7 @@ public class GameServiceImplV1 implements GameService {
 					continue;
 				}
 			}
+			playerDto.setResultState(PlayResultState.NONE);
 			states.gameState = GameState.DEALERHASBLACKJACK;
 			break;
 		}	
@@ -233,11 +248,16 @@ public class GameServiceImplV1 implements GameService {
 			states.exceptionState = ExceptionState.NONE;
 			PlayChoose choose = PlayChoose.NONE;
 			while(true) {
+				playerDto.setResultState(PlayResultState.ONGOING);
 				if(playerDto.isDobleDownAllowed()) {
 					states.playMenu[3] = PlayChoose.DOUBLEDOWN;
+				}else {
+					states.playMenu[3] = PlayChoose.NONE;
 				}
 				if(playerDto.isSplitAllowed()) {
 					states.playMenu[4] = PlayChoose.SPLIT;
+				}else {
+					states.playMenu[4] = PlayChoose.NONE;
 				}
 				
 				// 힛, 스탠드 , (더블), (스플릿) 입력 출력부.
@@ -266,8 +286,11 @@ public class GameServiceImplV1 implements GameService {
 						paint();
 						if(playerDto.getHandsScore() > 21) {
 							playerDto.setResultState(PlayResultState.BUST);
-							paint();
+						}else {
+							playerDto.setResultState(PlayResultState.STAND);
 						}
+						paint();
+						
 						states.gameState = GameState.DEALERTURN;
 						break;
 					}
@@ -277,12 +300,21 @@ public class GameServiceImplV1 implements GameService {
 						continue;
 					}else {
 						// 스플릿객체 생성	= 1장씩 딜링.
+						playerDto.setResultState(PlayResultState.NONE);
 						paint();
 						deal(playerDto);
 						paint();
 						deal(playerDto.getSplitDto());
 						paint();
 					}
+				}
+				
+				// 21 이면 자동 Stand
+				if(playerDto.getHandsScore() == 21) {
+					playerDto.setResultState(PlayResultState.STAND);
+					paint();
+					states.gameState = GameState.DEALERTURN;
+					break;
 				}
 				
 				// 버스트 확인.
@@ -293,16 +325,22 @@ public class GameServiceImplV1 implements GameService {
 					break;
 				}
 			}
+//			playerDto.setResultState(PlayResultState.NONE);
+			
 			// 스플릿이 있는지 확인.
 			if(playerDto.isSplit()) {
+				states.gameState = GameState.PLAYERTURN;
 				states.playMenu = new PlayChoose[] {PlayChoose.NONE,PlayChoose.HIT,PlayChoose.STAND, PlayChoose.NONE, PlayChoose.NONE};
 				states.exceptionState = ExceptionState.NONE;
 				choose = PlayChoose.NONE;
 				PlayerSplitDto splitDto = playerDto.getSplitDto();
 				while(true) {
+					splitDto.setResultState(PlayResultState.ONGOING);
 					// 더블다운 가능 확인.
-					if(playerDto.isDobleDownAllowed()) {
+					if(splitDto.isDobleDownAllowed()) {
 						states.playMenu[3] = PlayChoose.DOUBLEDOWN;
+					}else {
+						states.playMenu[3] = PlayChoose.NONE;
 					}
 					
 					// 힛, 스탠드, (더블) 입력 출력부
@@ -327,16 +365,25 @@ public class GameServiceImplV1 implements GameService {
 							states.exceptionState = ExceptionState.LOWCHIPS;
 							continue;
 						}else {
-							deal(playerDto);
+							deal(splitDto);
 							paint();
 							if(splitDto.getHandsScore() > 21) {
 								splitDto.setResultState(PlayResultState.BUST);
 								paint();
 							}
+							splitDto.setResultState(PlayResultState.STAND);
 							states.gameState = GameState.DEALERTURN;
 							break;
 						}
 					}
+					
+					// 21이면 자동 스탠드
+					if(splitDto.getHandsScore() == 21) {
+						splitDto.setResultState(PlayResultState.STAND);
+						paint();
+						states.gameState = GameState.DEALERTURN;
+						break;
+					}	
 					
 					// 버스트 확인.
 					if(splitDto.getHandsScore() > 21) {
@@ -344,21 +391,25 @@ public class GameServiceImplV1 implements GameService {
 						paint();
 						states.gameState = GameState.DEALERTURN;
 						break;
-					}
+					}					
 				}
 			}
 		}
 	}
 	
 	private void dealerTurn(){
+		dealerDto.setOpen();
+		paint();
 		while(true) {
 			// 딜
 			deal(dealerDto);
 			paint();
-			if(dealerDto.getHandsScore() >= 17 
-					|| dealerDto.setResultState() == PlayResultState.BUST) {
+			if(dealerDto.setResultState() == PlayResultState.BUST 
+					|| dealerDto.getHandsScore() >= 17) {
+				System.out.println(dealerDto.getResultState());
 				paint();
 				states.gameState = GameState.FINISH;
+				System.out.println(dealerDto.getHandsScore());
 				break;
 			}
 		}
@@ -373,6 +424,34 @@ public class GameServiceImplV1 implements GameService {
 		// 인슈어런스 확인
 		// 점수 확인
 		
+		
+		paint();
+		
+		// 인슈어런스 정산
+		if(playerDto.isInsurance()) {
+			if(dealerDto.getResultState() == PlayResultState.BLACKJACK) {
+				playerDto.insuranceWon();
+			}
+		}
+		
+		calcResult(playerDto);
+		paint();
+		if(playerDto.isSplit()) {
+			calcResult(playerDto.getSplitDto());
+			paint();
+		}
+		
+		// 칩계산
+		resultCalculator.calcResultState(playerDto);
+		if(playerDto.isSplit()) {
+			resultCalculator.calcResultState(playerDto.getSplitDto());
+		}
+		paint();
+		
+		states.gameState = GameState.READY;
+	}
+
+	private void calcResult(IPlayerChip playerDto) {
 		if(playerDto.getResultState() == PlayResultState.BLACKJACK) {
 			// 무조건 이김 (2배)
 		}else if(playerDto.getResultState() == PlayResultState.BUST) {
@@ -403,28 +482,6 @@ public class GameServiceImplV1 implements GameService {
 			}
 		}else {
 			System.out.println("문제 발생.");
-		}
-		paint();
-		
-		// 인슈어런스 정산
-		if(playerDto.isInsurance()) {
-			if(dealerDto.getResultState() == PlayResultState.BLACKJACK) {
-				playerDto.insuranceWon();
-			}
-		}
-		
-		// 칩계산
-		PlayResultState playResultState = playerDto.getResultState();
-		if(playResultState == PlayResultState.BLACKJACK) {
-			playerDto.abjectChips(playerDto.getBetChip() * 3);
-		}else if(playResultState == PlayResultState.BUST) {
-			playerDto.abjectChips(0);
-		}else if(playResultState == PlayResultState.WIN) {
-			playerDto.abjectChips(playerDto.getBetChip() * 2);
-		}else if(playResultState == PlayResultState.LOSS) {
-			playerDto.abjectChips(0);
-		}else if(playResultState == PlayResultState.PUSH) {
-			playerDto.abjectChips(playerDto.getBetChip());
 		}
 	}
 	// 플레이어 진행

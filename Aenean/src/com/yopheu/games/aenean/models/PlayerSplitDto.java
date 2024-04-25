@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.yopheu.games.aenean.config.PlayResultState;
 import com.yopheu.games.aenean.models.card.Card;
 
-public class PlayerSplitDto implements ICardHand {
+public class PlayerSplitDto implements ICardHand, IPlayerChip {
 
 	private ArrayList<Card> handsCard;
 	private CardsCalculator calc;
@@ -29,9 +29,12 @@ public class PlayerSplitDto implements ICardHand {
 		this.isDoubleDown = false;
 	}
 	
+	@Override
 	public void setResultState(PlayResultState playResultState) {
 		 this.playResultState = playResultState;
 	}
+	
+	@Override
 	public PlayResultState getResultState() {
 		return playResultState;
 	}
@@ -88,8 +91,19 @@ public class PlayerSplitDto implements ICardHand {
 		return result;
 	}
 	
+	@Override
 	public int getBetChip() {
 		return betChip;
+	}
+
+	@Override
+	public int getInsuranceWin() {
+		return 0;
+	}
+
+	@Override
+	public boolean abjectChips(int chip) {
+		return OriginPlayerDto.abjectChips(chip);
 	}
 	
 
