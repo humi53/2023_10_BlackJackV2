@@ -24,4 +24,10 @@ public class States {
 		this.chipBet = chipBet;		
 	}
 	
+	public void reset() {
+		gameState = GameState.READY;
+		exceptionState = ExceptionState.NONE;
+		chipBet = 0;
+	}
+	
 }

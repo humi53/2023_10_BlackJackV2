@@ -12,8 +12,6 @@ public class DeckDto {
 	public DeckDto() {
 		deckCards = new ArrayList<>();
 		addDeck();
-		addDeck();
-		addDeck();
 	}
 	
 	public int countInDeck() {

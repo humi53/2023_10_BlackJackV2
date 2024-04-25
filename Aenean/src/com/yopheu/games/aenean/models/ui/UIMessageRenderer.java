@@ -18,15 +18,6 @@ public class UIMessageRenderer {
 	}
 	
 	public void printMessages() {
-//		if(states.gameState == GameState.PLAYERBETTING) {
-//			System.out.println(exceptionMsg);
-//			System.out.println(guideMsg);
-//			System.out.println(promptMsg);
-//		}else {
-//			System.out.println(guideMsg);
-//			System.out.println("");
-//			System.out.println("");
-//		}
 		System.out.println(exceptionMsg);
 		System.out.println(guideMsg);
 		System.out.print(promptMsg);
@@ -64,23 +55,12 @@ public class UIMessageRenderer {
 			guideMsg = getPlayChooseMenu();
 			promptMsg = getPrompt();
 		}
-		
+		if(states.gameState == GameState.READY) {
+			exceptionMsg = getEnterThePass();
+			guideMsg = "";
+			promptMsg = "";
+		}
 	}
-	// 예외메시지
-	// 안내메시지
-	// 프롬프트
-	
-	// 메시지 설정.
-		// 예외메시지 설정
-		// 안내메시지 설정.
-			// 복합 안내 메시지(값을 받아야 구성됨)
-			// 단순 안내 메시지(세부값은 필요없음)
-		// 프롬프트 설정.
-	// 메시지 출력.
-	
-	// 안내메시지 만들기. (무엇으로 할까)
-		// 1. 매개변수로 받기.
-		// 2. cData로 받기.
 	
 	private String getPlayChooseMenu() {
 		String selectionsMsg = "";
@@ -127,7 +107,7 @@ public class UIMessageRenderer {
 		return "배팅이 취소되었습니다. 배팅값이 0이 되었습니다.";
 	}
 	private String getEnterThePass() {
-		return "다음으로 진행하려면 Enter를 누르세요";
+		return "다음으로 진행하려면 Enter를 누르세요.";
 	}
 	private String getPrompt() {
 		return "입력: ";

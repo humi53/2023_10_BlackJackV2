@@ -27,4 +27,15 @@ public class CommDataWrapper {
 	public States getStates() {
 		return states;
 	}
+	
+	public void reset() {
+		if(deckDto.countInDeck() < 30) {
+			deckDto.addDeck();
+			deckDto.addDeck();
+			deckDto.addDeck();
+		}
+		dealerDto.resetHands();
+		playerDto.resetHands();		// split 객체도 여기서 초기화됨.
+		states.reset();
+	}
 }

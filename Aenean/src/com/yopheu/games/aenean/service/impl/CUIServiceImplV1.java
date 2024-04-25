@@ -17,10 +17,17 @@ public class CUIServiceImplV1 implements UIService {
 		messageRenderer = new UIMessageRenderer(cData.getStates());
 	}
 	
-//	private 
+	private void clearDisplay() {
+		for(int i = 0; i < 50; i++) {
+			System.out.println();
+		}
+	}
+	
+	
 	
 	@Override
 	public void paint() {
+		clearDisplay();
 		boardRenderer.setBoard();
 		boardRenderer.printBoard();
 		messageRenderer.setMessages();

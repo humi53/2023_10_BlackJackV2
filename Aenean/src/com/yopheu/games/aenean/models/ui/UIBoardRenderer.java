@@ -9,13 +9,10 @@ import com.yopheu.games.aenean.config.PlayResultState;
 import com.yopheu.games.aenean.models.CommDataWrapper;
 import com.yopheu.games.aenean.models.DealerDto;
 import com.yopheu.games.aenean.models.DeckDto;
-import com.yopheu.games.aenean.models.ICardHand;
 import com.yopheu.games.aenean.models.PlayerDto;
 import com.yopheu.games.aenean.models.PlayerSplitDto;
 import com.yopheu.games.aenean.models.ResultCalculator;
 import com.yopheu.games.aenean.models.card.Card;
-import com.yopheu.games.aenean.models.card.Denomination;
-import com.yopheu.games.aenean.models.card.Suit;
 
 /**
  * 
@@ -57,6 +54,9 @@ public class UIBoardRenderer {
 		resultCalculator = new ResultCalculator();
 	}
 	
+	private void resetBoard() {
+		Arrays.fill(arrStrBoard, " ".repeat(BOARD_WIDTH*10));
+	}
 	public void printBoard() {
 		for (String element : printStrBoard) {
 			System.out.println(element);
@@ -64,6 +64,7 @@ public class UIBoardRenderer {
 	}
 	
 	public void setBoard() {
+		resetBoard();
 		// 보드 데이터 세팅
 		// 라인을 정한다
 		setDealerBoard(0);
@@ -195,7 +196,7 @@ public class UIBoardRenderer {
 		uiBets.addStr(right);
 
 		int intWinChips = 0;
-		if(cData.getStates().gameState == GameState.FINISH) {
+		if(cData.getStates().gameState == GameState.READY) {
 			intWinChips += resultCalculator.getCalcChips(playerDto);
 			if(playerDto.isSplit()) {
 				intWinChips += resultCalculator.getCalcChips(playerDto.getSplitDto());

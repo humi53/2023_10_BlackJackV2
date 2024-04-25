@@ -9,7 +9,6 @@ import com.yopheu.games.aenean.config.Confirm;
 import com.yopheu.games.aenean.config.ExceptionState;
 import com.yopheu.games.aenean.models.CommDataWrapper;
 import com.yopheu.games.aenean.models.DealerDto;
-import com.yopheu.games.aenean.models.DeckDto;
 import com.yopheu.games.aenean.models.ICardHand;
 import com.yopheu.games.aenean.models.IPlayerChip;
 import com.yopheu.games.aenean.models.PlayerDto;
@@ -21,7 +20,6 @@ import com.yopheu.games.aenean.models.card.Denomination;
 import com.yopheu.games.aenean.models.card.Suit;
 import com.yopheu.games.aenean.service.GameService;
 import com.yopheu.games.aenean.service.UIService;
-import com.yopheu.games.exceptions.ScanErrException;
 
 public class GameServiceImplV1 implements GameService {
 
@@ -58,7 +56,7 @@ public class GameServiceImplV1 implements GameService {
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
-		states.gameState = GameState.PLAYERBETTING;
+		states.gameState = GameState.READY;
 		while(true) {
 			if(states.gameState == GameState.PLAYERBETTING) {
 				receivePlayerBets();
@@ -74,6 +72,8 @@ public class GameServiceImplV1 implements GameService {
 				dealerTurn();
 			}else if(states.gameState == GameState.FINISH) {
 				finish();
+			}else if(states.gameState == GameState.READY) {
+				ready();
 			}else {
 				System.out.println("종료");
 				break;
@@ -83,7 +83,7 @@ public class GameServiceImplV1 implements GameService {
 	}
 	
 	public void receivePlayerBets() {
-		Chip[] type = new Chip[] {Chip.CENCEL, Chip.C20, Chip.C40, Chip.C100, Chip.C200, Chip.C400, Chip.C1000};
+		Chip[] type = new Chip[] {Chip.CENCEL, Chip.C20, Chip.C40, Chip.C100, Chip.C200, Chip.C400, Chip.C500, Chip.C1000};
 		states.chipMenu = type;
 		states.chipBet = 0;		// 안내메시지 출력의 정보.
 		states.exceptionState = ExceptionState.NONE;	// 예외메시지.
@@ -136,51 +136,37 @@ public class GameServiceImplV1 implements GameService {
 	}
 	
 	private void dealInitialCards() {
+		states.exceptionState = ExceptionState.NONE;	// 예외메시지.
 		paint();
-//		for(int i = 0; i < 2; i++) {
-//			deal(playerDto);
-//			paint();
-//			deal(dealerDto);
-//			paint();
-//		}
+		for(int i = 0; i < 2; i++) {
+			deal(playerDto);
+			paint();
+			deal(dealerDto);
+			paint();
+		}
 		
-		paint();
-		playerDto.addCard(new Card(Suit.S, Denomination.N2));
-		paint();
-		dealerDto.addCard(new Card(Suit.D, Denomination.NA));
-		paint();
-		playerDto.addCard(new Card(Suit.H, Denomination.N2));
-		paint();
-		dealerDto.addCard(new Card(Suit.D, Denomination.N2));
-		paint();
-		
-		// 플레이어가 블랙잭일때 플레이어 결과 상태 메시지 표시 필요.
-		
-		// 플레이어 블랙잭 (둘다 확인 완료)
-			// ace & ten -> 딜러블랙잭 확인	
-			// 그외 - > 피니쉬.
-		// 그외
-			// 인슈어런스 테스트
-			// 딜러 10 & 블랙잭 테스트
-			// 플레이어 턴으로 테스트
+//		paint();
+//		playerDto.addCard(new Card(Suit.S, Denomination.N2));
+//		paint();
+//		dealerDto.addCard(new Card(Suit.D, Denomination.NA));
+//		paint();
+//		playerDto.addCard(new Card(Suit.H, Denomination.N2));
+//		paint();
+//		dealerDto.addCard(new Card(Suit.D, Denomination.N10));
+//		paint();
 		
 		if(playerHasBlackjack()) {
 			if(dealerDto.isAce() || dealerDto.isTenValue()) {
-				System.out.println("딜러블랙잭으로");
 				states.gameState = GameState.DEALERHASBLACKJACK;
 			}else {
-				System.out.println("마무리로");
 				states.gameState = GameState.FINISH;
 			}
 		}else {
 			if(dealerDto.isAce()) {
-				System.out.println("인슈어런스로");
 				states.gameState = GameState.INSURANCE;
 			}else if(dealerDto.isTenValue()){
-				System.out.println("딜러블랙잭으로");
 				states.gameState = GameState.DEALERHASBLACKJACK;
 			}else {
-				System.out.println("플레이어 턴으로");
 				states.gameState = GameState.PLAYERTURN;
 			}
 		}
@@ -220,21 +206,19 @@ public class GameServiceImplV1 implements GameService {
 	}
 	
 	private void dealerHasBlackjack() {
+		states.exceptionState = ExceptionState.NONE;	// 예외메시지.
 		if(dealerDto.isBlackJack()) {
 			dealerDto.setOpen();
 			paint();
 			dealerDto.setResultState();
 			paint();
-			System.out.println("마무리로");
 			states.gameState = GameState.FINISH;
 		}else {
 			if(playerDto.getResultState() == PlayResultState.BLACKJACK) {
 				paint();
-				System.out.println("마무리로");
 				states.gameState = GameState.FINISH;
 			}else {
 				paint();
-				System.out.println("플레이어 턴으로");
 				states.gameState = GameState.PLAYERTURN;
 			}
 		}
@@ -325,7 +309,6 @@ public class GameServiceImplV1 implements GameService {
 					break;
 				}
 			}
-//			playerDto.setResultState(PlayResultState.NONE);
 			
 			// 스플릿이 있는지 확인.
 			if(playerDto.isSplit()) {
@@ -342,6 +325,14 @@ public class GameServiceImplV1 implements GameService {
 					}else {
 						states.playMenu[3] = PlayChoose.NONE;
 					}
+					
+					// 21이면 자동 스탠드
+					if(splitDto.getHandsScore() == 21) {
+						splitDto.setResultState(PlayResultState.STAND);
+						paint();
+						states.gameState = GameState.DEALERTURN;
+						break;
+					}	
 					
 					// 힛, 스탠드, (더블) 입력 출력부
 					paint();
@@ -369,21 +360,14 @@ public class GameServiceImplV1 implements GameService {
 							paint();
 							if(splitDto.getHandsScore() > 21) {
 								splitDto.setResultState(PlayResultState.BUST);
-								paint();
+							}else {
+								splitDto.setResultState(PlayResultState.STAND);
 							}
-							splitDto.setResultState(PlayResultState.STAND);
+							paint();
 							states.gameState = GameState.DEALERTURN;
 							break;
 						}
 					}
-					
-					// 21이면 자동 스탠드
-					if(splitDto.getHandsScore() == 21) {
-						splitDto.setResultState(PlayResultState.STAND);
-						paint();
-						states.gameState = GameState.DEALERTURN;
-						break;
-					}	
 					
 					// 버스트 확인.
 					if(splitDto.getHandsScore() > 21) {
@@ -398,42 +382,33 @@ public class GameServiceImplV1 implements GameService {
 	}
 	
 	private void dealerTurn(){
+		states.exceptionState = ExceptionState.NONE;	// 예외메시지.
 		dealerDto.setOpen();
 		paint();
 		while(true) {
+			if(dealerDto.setResultState() == PlayResultState.BUST 
+					|| dealerDto.getHandsScore() >= 17) {
+				paint();
+				states.gameState = GameState.FINISH;
+				break;
+			}
 			// 딜
 			deal(dealerDto);
 			paint();
-			if(dealerDto.setResultState() == PlayResultState.BUST 
-					|| dealerDto.getHandsScore() >= 17) {
-				System.out.println(dealerDto.getResultState());
-				paint();
-				states.gameState = GameState.FINISH;
-				System.out.println(dealerDto.getHandsScore());
-				break;
-			}
 		}
 	}
 	
 	private void finish() {
-		// 딜러 블랙잭 확인
-			// 플레이어 인슈어런스 확인
-			// 플레이어 블랙잭 확인
-		// 블랙잭 확인
-		// 버스트 확인
-		// 인슈어런스 확인
-		// 점수 확인
-		
-		
+		states.exceptionState = ExceptionState.NONE;	// 예외메시지.
 		paint();
-		
-		// 인슈어런스 정산
+		// 인슈어런스 성공여부 저장.
 		if(playerDto.isInsurance()) {
 			if(dealerDto.getResultState() == PlayResultState.BLACKJACK) {
 				playerDto.insuranceWon();
 			}
 		}
 		
+		// 승패 계산
 		calcResult(playerDto);
 		paint();
 		if(playerDto.isSplit()) {
@@ -446,9 +421,9 @@ public class GameServiceImplV1 implements GameService {
 		if(playerDto.isSplit()) {
 			resultCalculator.calcResultState(playerDto.getSplitDto());
 		}
-		paint();
-		
 		states.gameState = GameState.READY;
+		paint();
+		sc.pressAndKey();
 	}
 
 	private void calcResult(IPlayerChip playerDto) {
@@ -477,21 +452,25 @@ public class GameServiceImplV1 implements GameService {
 					// 비김.
 					playerDto.setResultState(PlayResultState.PUSH);
 				}else {
-					System.out.println("문제 발생.");
+					System.out.println("문제 발생1.");
 				}
 			}
 		}else {
-			System.out.println("문제 발생.");
+			if(dealerDto.setResultState() == PlayResultState.BLACKJACK) {
+				playerDto.setResultState(PlayResultState.LOSS);
+			}else {
+				System.out.println("문제 발생2.");
+			}
 		}
 	}
-	// 플레이어 진행
-		// 스플릿 가능확인
-		// 스플릿 시도확인
-		// 플레이어 남은 진행
-			// 스플릿 진행
-	// 딜러 진행
-	// 결과 계산
-	// 초기화
+	
+	private void ready() {
+		cData.reset();
+		
+		paint();
+		sc.pressAndKey();
+		states.gameState = GameState.PLAYERBETTING;
+	}
 	
 	private void deal(ICardHand dto) {
 		dto.addCard(cData.getDeckDto().takeCard());	
