@@ -173,28 +173,21 @@ public class UIBoardRenderer {
 		
 		// boardComposer로 출력 데이터 정리 (Block : 3줄짜리 문자열)
 		boardComposer.initStrLine(null, boardWidth);
-		UIStr left = uiStrFactory.getUIStr("[", ANSIColor.CYAN);
-		UIStr right = uiStrFactory.getUIStr("]", ANSIColor.CYAN);
-		UIStr totalTitle = uiStrFactory.getUIStr("Total: ");
-		UIStr totalChip = uiStrFactory.getUIStr(""+playerDto.totalChip(),ANSIColor.YELLOW);
 		
-		UIStrBundle uiTotal = new UIStrBundle();
-		uiTotal.addStr(left);
-		uiTotal.addStr(totalTitle);
-		uiTotal.addStr(totalChip);
-		uiTotal.addStr(right);
+		UIStrBundle uiTotal = 
+				uiStrFactory.getUIStrBundleScore("Total: ", null, 
+						playerDto.totalChip(), ANSIColor.YELLOW, 
+						"[", "]", ANSIColor.CYAN); 
 		boardComposer.addStr(uiTotal);
 		
 		// totalbet
 		int totalBets = playerDto.getTotalBet() + playerDto.getSplitDto().getBetChip();
-		UIStr betTitle = uiStrFactory.getUIStr("Bet: ");
-		UIStr betChips = uiStrFactory.getUIStr("" + totalBets, ANSIColor.RED);
-		UIStrBundle uiBets = new UIStrBundle();
-		uiBets.addStr(left);
-		uiBets.addStr(betTitle);
-		uiBets.addStr(betChips);
-		uiBets.addStr(right);
+		UIStrBundle uiBets = 
+				uiStrFactory.getUIStrBundleScore("Bet: ", null, 
+						totalBets, ANSIColor.RED, 
+						"[", "]", ANSIColor.CYAN); 
 
+		// winbet
 		int intWinChips = 0;
 		if(cData.getStates().gameState == GameState.READY) {
 			intWinChips += resultCalculator.getCalcChips(playerDto);
@@ -202,13 +195,10 @@ public class UIBoardRenderer {
 				intWinChips += resultCalculator.getCalcChips(playerDto.getSplitDto());
 			}
 		}
-		UIStr winTitle = uiStrFactory.getUIStr("Win: ");
-		UIStr winChips = uiStrFactory.getUIStr("" + intWinChips, ANSIColor.GREEN);
-		UIStrBundle uiWin = new UIStrBundle();
-		uiWin.addStr(left);
-		uiWin.addStr(winTitle);
-		uiWin.addStr(winChips);
-		uiWin.addStr(right);
+		UIStrBundle uiWin = 
+				uiStrFactory.getUIStrBundleScore("Win: ", null, 
+						intWinChips, ANSIColor.GREEN, 
+						"[", "]", ANSIColor.CYAN); 
 		
 		UIStrBundle rightScore = new UIStrBundle();
 		rightScore.addStr(uiBets);
@@ -217,6 +207,7 @@ public class UIBoardRenderer {
 		
 		addStrLineToBoard(index, boardComposer.getStrLine());
 	}
+	
 	private UIBlockBundle getUICardList(ArrayList<Card> arrCard) {
 		UIBlockBundle result = new UIBlockBundle();
 		for(Card element : arrCard) {

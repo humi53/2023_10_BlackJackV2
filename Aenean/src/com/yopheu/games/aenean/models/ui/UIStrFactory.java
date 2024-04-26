@@ -54,4 +54,32 @@ public class UIStrFactory {
 		result.addBlock(getUIStr(right, sideColor));
 		return result;
 	}
+	
+	public UIStrBundle getUIStrBundleScore(String title, ANSIColor titleColor, int score, ANSIColor scoreColor, String left, String right, ANSIColor sideColor) {
+		UIStr uiTitle = getUIStr(title, titleColor);
+		UIStr uiScore = getUIStr("" + score, scoreColor);
+		UIStr uiLeft = getUIStr(left, sideColor);
+		UIStr uiRight = getUIStr(right, sideColor);
+		UIStrBundle result = new UIStrBundle();
+		result.addStr(uiLeft);
+		result.addStr(uiTitle);
+		result.addStr(uiScore);
+		result.addStr(uiRight);
+		
+		return result;
+	}
+	
+	public UIStrBundle getUIStrBundleMenuItem(String key, ANSIColor keyColor, String content, ANSIColor contentColor, String left, String right, ANSIColor sideColor) {
+		UIStr uiKey = getUIStr(key, keyColor);
+		UIStr uiContent = getUIStr(content, contentColor);
+		UIStr uiLeft = getUIStr(left, sideColor);
+		UIStr uiRight = getUIStr(right, sideColor);
+		UIStrBundle result = new UIStrBundle();
+		result.addStr(uiKey);
+		result.addStr(uiLeft);
+		result.addStr(uiContent);
+		result.addStr(uiRight);
+		
+		return result;
+	}
 }

@@ -1,5 +1,9 @@
 package com.yopheu.games.aenean.models.ui;
 
+import java.util.ArrayList;
+
+import com.yopheu.games.aenean.config.ANSIColor;
+import com.yopheu.games.aenean.config.Confirm;
 import com.yopheu.games.aenean.config.ExceptionState;
 import com.yopheu.games.aenean.config.GameState;
 import com.yopheu.games.aenean.config.PlayChoose;
@@ -10,11 +14,15 @@ public class UIMessageRenderer {
 	private String exceptionMsg;
 	private String guideMsg;
 	private String promptMsg;
+	
+	private UIStrFactory strFactory;
+	
 	public UIMessageRenderer(States states) {
 		this.states = states;
 		exceptionMsg = "";
 		guideMsg = "";
 		promptMsg = getPrompt();
+		strFactory = new UIStrFactory(null);
 	}
 	
 	public void printMessages() {
@@ -69,25 +77,48 @@ public class UIMessageRenderer {
 				selectionsMsg += i + "[" + states.playMenu[i].getText() + "] ";
 			}
 		}
-		return selectionsMsg;
+		
+		UIStrBundle msg = new UIStrBundle();
+		msg.addStr(strFactory.getUIStr("선택: "));
+		for(int i = 1; i < states.playMenu.length; i++) {
+			if(states.playMenu[i] != PlayChoose.NONE) {
+				msg.addStr(strFactory.getUIStrBundleMenuItem("" + i, ANSIColor.CYAN,
+						states.playMenu[i].getText(), null, "[", "] ", null));
+			}
+		}
+		return msg.getStr();
 	}
 	
 	private String getConfirmMenu() {
-		String selectionsMsg = "";
+		UIStrBundle msg = new UIStrBundle();
 		for(int i = 1; i < states.confirmMenu.length; i++) {
-			 selectionsMsg += i + "[" + states.confirmMenu[i].getStr() + "] ";
+			ANSIColor textColor = null;
+			if(states.confirmMenu[i] == Confirm.YES) {
+				textColor = ANSIColor.CYAN;
+			}else if(states.confirmMenu[i] == Confirm.NO) {
+				textColor = ANSIColor.RED;
+			}
+			msg.addStr(strFactory.getUIStrBundleMenuItem("" + i, ANSIColor.CYAN,
+					states.confirmMenu[i].getStr(), textColor, "[", "] ", null));
 		}
-		return selectionsMsg;
+		return msg.getStr();
 	}
 	
 	private String getBetMenu() {
-		String selectionsMsg = "";
+		UIStrBundle msg = strFactory.getUIStrBundle("Now : " + states.chipBet,
+				ANSIColor.YELLOW, "[", "] ", ANSIColor.CYAN);
+		
 		for(int i = 1; i < states.chipMenu.length; i++) {
-			 selectionsMsg += i + "[" + states.chipMenu[i].value() + "] ";
+			msg.addStr(strFactory.getUIStrBundleMenuItem("" + i, ANSIColor.GREEN,
+					"" + states.chipMenu[i].value(), null, 
+					"[", "] ", null));
 		}
-		selectionsMsg += 0 + "[취소] " + "Enter" + "[완료] ";
-		selectionsMsg += "(now : " + states.chipBet + ")";
-		return selectionsMsg;
+		msg.addStr(strFactory.getUIStrBundleMenuItem("0", ANSIColor.RED,
+				"취소", ANSIColor.RED, "[", "] ", null));
+		msg.addStr(strFactory.getUIStrBundleMenuItem("Enter", ANSIColor.CYAN,
+				"완료", ANSIColor.CYAN, "[", "] ", null));
+		
+		return msg.getStr();
 	}
 	
 	
