@@ -1,0 +1,75 @@
+블랙잭 프로그램 구조 초안
+
+GameService: 전반적인 프로그램적 알고리즘
+UIService: 순수하게 출력위주의 구조
+ScanService: Scanner를 통한 입력 모음.
+
+CommDataWrapper: Service 간의 공유할 데이터 묶음
+
+(흐름도 표현)
+
+Card는 Suit(문양) Denomination(숫자)로 이루어져있다.
+Suit와 Denomination은 enum으로 구현.
+
+
+UIService는 
+출력을 위한 paint()라는 메소드를 제공하고, 외부에서 paint()를 호출하는 식으로 콘솔출력.
+CommDataWrapper의 데이터를 먼저 변환하고 paint()를 호출하는 식으로 동적화면을 표현.
+
+BoardRenderer: 게임board를 출력.
+MessageRenderer: 메뉴및 오류메시지 기타 게임정보를 담고있는 메시지를 출력.
+
+
+출력을 위한 블럭
+IUIBlock: 3줄짜리 출력을 위한
+IUIBorderBlock: 테두리로 둘러싼 문자열을 위해 (3줄)
+IUIStr: 1줄짜리 문자열
+
+3가지의 인터페이스를 조합하여 클래스들을 구성.
+board의 크기는 정해놓고 시작과 끝 중간에 색상이 있는 텍스트를 집어넣기 위해.
+핵심포인트는 
+ANSIColor와 width
+width: ANSI코드가 있는 문자열이 화면에 출력될때 공간을 얼마나 차지하는지 출력.
+
+UI 접두사를 붙여 UI에서 쓰는 객체임을 표현
+UICard, UIBorderStr, UIStr
+
+Block(3줄) Str(1줄) 문자열을 Ansi코드등 여러가지 정보를 포함하고 있는 객체.
+UICardFactory: Card 객체를 출력할 UICard 객체로 변환
+UIStrFactory: 문자열을 여러가지 형태의 객체로 만들어줌
+UIBlockBundle: Block을 합칠수 있는 객체. 합친 결과물
+UIStrBundle: Str을 합칠 수 있는 객체. 합친 결과물
+UICard: 테두리와 색상을 가진 2width의 Block객체
+
+
+BoardComposer: Board에 출력할 Block 객체를 조합하는 클래스 Str조합기능도 제공
+
+
+
+
+ScanService: scanner를 통한 순수입력만을 받지만 콘솔입력 특성상 원하지 않는 입력을 예외처리하기 위해
+출력을 자체처리한다.
+GameService의 paint() 메소드를 콜백으로 받아서 사용한다.
+GameService는 UIService의 paint()메소드를 호출한다. 
+
+CommDataWrapper: 플레이어, 딜러, 덱, 각종 상태값, 베팅등 데이터를 가지고 있고
+GameService와 UIService에서 같은 객체를 가져 게임진행과 출력 데이터를 공유한다.
+크게
+
+GameService는 
+전체적인 흐름은 GameState라는 상태값을 가지고 진행이 된다.
+GameState는 CommDataWrapper가 가지고 있다.
+PLAYERBETTING: 플레이어 배팅 제공.
+DEALINITCARD: 2장씩 초반딜링
+INSURANCE: 인슈어런스 확인, 선택 제공.
+DEALERHASBLACKJACK: 딜러 블랙잭 확인
+PLAYERHASBLACKJACK: 플레이어 블랙잭 확인
+PLAYERTURN: 힛, 스탠드, 더블, 스플릿 제공 / 스플릿도 이곳에서 진행
+DEALERTURN: 딜러딜링 진행.
+FINISH: 게임결과 정리. 칩 정산
+READY: 다음 게임을 위한 초기화.
+
+(전체적은 flowChart)
+(playerTurn의 세부적인 흐름도)
+(dealerTrun의 세부적 흐름도)
+(승패 결정의 흐름도)

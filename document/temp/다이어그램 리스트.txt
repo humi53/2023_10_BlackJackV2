@@ -1,0 +1,20 @@
+1. 기본동작 구조
+
+2. CommDataWrapper와 Service들 간의 관계구조
+
+3. 카드의 구조
+
+4. UIService의 구조
+
+5. board의 구조
+block과 str 이란.
+
+6. UI 관련 클래스들의 UML 필요?
+factory
+BoardComposer
+
+7. ScanService의 일반적 동작방식
+
+8. GameService의 동작구조
+
+9. 게임 FlowChart

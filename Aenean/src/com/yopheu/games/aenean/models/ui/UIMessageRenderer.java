@@ -71,13 +71,6 @@ public class UIMessageRenderer {
 	}
 	
 	private String getPlayChooseMenu() {
-		String selectionsMsg = "";
-		for(int i = 1; i < states.playMenu.length; i++) {
-			if(states.playMenu[i] != PlayChoose.NONE) {
-				selectionsMsg += i + "[" + states.playMenu[i].getText() + "] ";
-			}
-		}
-		
 		UIStrBundle msg = new UIStrBundle();
 		msg.addStr(strFactory.getUIStr("선택: "));
 		for(int i = 1; i < states.playMenu.length; i++) {
