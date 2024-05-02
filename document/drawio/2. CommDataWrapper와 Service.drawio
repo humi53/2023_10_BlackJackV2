@@ -1,0 +1,54 @@
+<mxfile host="app.diagrams.net" modified="2024-05-02T05:57:08.467Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" etag="Twupx1LHVa3ZotfX-xeC" version="24.3.1" type="device">
+  <diagram name="Page-1" id="eh8cXVBHgLPIEmCUNcP1">
+    <mxGraphModel dx="1434" dy="746" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="RQ-eT57vSj2m_J20gEa4-1" value="UIService" style="html=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="190" y="420" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="RQ-eT57vSj2m_J20gEa4-2" value="GameService" style="html=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="355" y="420" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="RQ-eT57vSj2m_J20gEa4-3" value="ScanService" style="html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="520" y="420" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="RQ-eT57vSj2m_J20gEa4-4" value="&lt;b&gt;CommDataWrapper&lt;/b&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#ffe6cc;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="340" y="210" width="140" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="RQ-eT57vSj2m_J20gEa4-5" value="+ deckDto: DeckDto" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="RQ-eT57vSj2m_J20gEa4-4">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RQ-eT57vSj2m_J20gEa4-6" value="+ dealerDto: DealerDto" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="RQ-eT57vSj2m_J20gEa4-4">
+          <mxGeometry y="52" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RQ-eT57vSj2m_J20gEa4-7" value="+ playerDto: PlayerDto" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="RQ-eT57vSj2m_J20gEa4-4">
+          <mxGeometry y="78" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RQ-eT57vSj2m_J20gEa4-8" value="+ states: States" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="RQ-eT57vSj2m_J20gEa4-4">
+          <mxGeometry y="104" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RQ-eT57vSj2m_J20gEa4-15" value="게임진행을 위한 데이터&amp;nbsp;&lt;br&gt;조회, 변경" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="RQ-eT57vSj2m_J20gEa4-2" target="RQ-eT57vSj2m_J20gEa4-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="410" as="sourcePoint" />
+            <mxPoint x="450" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RQ-eT57vSj2m_J20gEa4-16" value="메뉴 정보 조회&lt;div&gt;예외정보 변경&lt;/div&gt;" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1.029;entryY=1.154;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="RQ-eT57vSj2m_J20gEa4-3" target="RQ-eT57vSj2m_J20gEa4-8">
+          <mxGeometry x="-0.2647" y="-29" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="590" y="420" as="sourcePoint" />
+            <mxPoint x="590" y="340" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RQ-eT57vSj2m_J20gEa4-18" value="출력을 위한 조회&lt;div&gt;보드, 메뉴, 예외메시지&lt;/div&gt;" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.021;exitY=1.115;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="RQ-eT57vSj2m_J20gEa4-8" target="RQ-eT57vSj2m_J20gEa4-1">
+          <mxGeometry x="0.4408" y="-36" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="410" as="sourcePoint" />
+            <mxPoint x="450" y="360" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
