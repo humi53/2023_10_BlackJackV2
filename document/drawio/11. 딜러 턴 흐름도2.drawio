@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net" modified="2024-05-03T13:35:02.493Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" etag="iOw7L0ItWeioIhU-WIaz" version="24.3.1" type="device">
+  <diagram name="Page-1" id="tnvgZM0FmMJcun1g3rQK">
+    <mxGraphModel dx="1434" dy="746" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="CBmkhV6_umnjb5PWB3v--26" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="fBTSU7Vrl2NQmRgdZAIL-24" target="CBmkhV6_umnjb5PWB3v--22" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fBTSU7Vrl2NQmRgdZAIL-24" value="위에서부터" style="ellipse;whiteSpace=wrap;html=1;align=center;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="200" y="280" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="CBmkhV6_umnjb5PWB3v--17" value="Finish로" style="ellipse;whiteSpace=wrap;html=1;align=center;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="200" y="540" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="CBmkhV6_umnjb5PWB3v--24" value="N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="CBmkhV6_umnjb5PWB3v--22" target="CBmkhV6_umnjb5PWB3v--23" edge="1">
+          <mxGeometry x="0.2" y="10" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CBmkhV6_umnjb5PWB3v--27" value="Y" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="CBmkhV6_umnjb5PWB3v--22" target="CBmkhV6_umnjb5PWB3v--17" edge="1">
+          <mxGeometry x="-0.8519" y="-10" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="170" y="380" />
+              <mxPoint x="170" y="510" />
+              <mxPoint x="250" y="510" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CBmkhV6_umnjb5PWB3v--22" value="버스트 확인&lt;div&gt;17Over 확인&lt;/div&gt;" style="whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="200" y="360" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="CBmkhV6_umnjb5PWB3v--23" value="카드 받기" style="whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="200" y="430" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="yHgaMk_xjgwsY4HYsGT0-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.58;entryY=0.025;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="CBmkhV6_umnjb5PWB3v--23" target="CBmkhV6_umnjb5PWB3v--22">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="450" />
+              <mxPoint x="340" y="340" />
+              <mxPoint x="258" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
